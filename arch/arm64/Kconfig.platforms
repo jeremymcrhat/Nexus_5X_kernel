@@ -82,9 +82,27 @@ config ARCH_MVEBU
 
 config ARCH_QCOM
 	bool "Qualcomm Platforms"
+	select ARCH_REQUIRE_GPIOLIB
+	select CLKDEV_LOOKUP
+	select HAVE_CLK
+	select HAVE_CLK_PREPARE
 	select PINCTRL
+	select SOC_BUS
+	select PCI
+	select ARCH_HAS_CPUFREQ
+	select CPU_FREQ_MSM
+	select PM_OPP
+	select PM_DEVFREQ
+	select DEVFREQ_GOV_MSM_BW_HWMON
+	select DEVFREQ_SIMPLE_DEV
 	help
 	  This enables support for the ARMv8 based Qualcomm chipsets.
+	  
+config ARCH_MSM8994
+	bool "Qualcomm MSM8994"
+	select ARCH_QCOM
+	help
+	  This enables support for the Qualcomm MSM8994 
 
 config ARCH_ROCKCHIP
 	bool "Rockchip Platforms"
@@ -180,5 +198,5 @@ config ARCH_ZYNQMP
 	bool "Xilinx ZynqMP Family"
 	help
 	  This enables support for Xilinx ZynqMP Family
-
+	  
 endmenu
