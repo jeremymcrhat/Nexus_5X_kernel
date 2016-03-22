@@ -13,6 +13,7 @@
 /memreserve/ 0x00000000 0x00001000;
 /memreserve/ 0xac1c0000 0x00001000;
 
+#include <dt-bindings/interrupt-controller/arm-gic.h>
 #include <dt-bindings/clock/msm-clocks-8994.h>
 
 / {
@@ -21,6 +22,9 @@
 	qcom,msm-id = <207 0x0>;
 	qcom,pmic-id = <0x10009 0x1000A 0x0 0x0>;
 	interrupt-parent = <&intc>;
+        
+        #address-cells = <2>;
+	#size-cells = <2>;
 
 	chosen {
 		bootargs = "sched_enable_hmp=1 sched_enable_power_aware=1";
@@ -381,10 +385,16 @@
 	soc: soc { };
 
 	memory {
-		#address-cells = <2>;
+		device_type = "memory";
+		/* We expect the bootloader to fill in the reg */
+		reg = <0 0 0 0>;
+	};
+        
+        reserved-memory {
+                #address-cells = <2>;
 		#size-cells = <2>;
-
-		secure_mem: secure_region@0 {
+            
+                secure_mem: secure_region@0 {
 			linux,reserve-contiguous-region;
 			reg = <0 0 0 0x12c00000>;
 			label = "secure_mem";
@@ -446,7 +456,7 @@
 			reg = <0 0x07000000 0 0x5a00000>;
 			label = "modem_mem";
 		};
-	};
+        };
 };
 
 #include "msm-gdsc.dtsi"
@@ -673,25 +683,25 @@
 		reg = <0xfc4ab000 0x4>;
 	};
 
-	blsp1_uart3: serial@f991f000 {
-		compatible = "qcom,msm-lsuart-v14";
-		reg = <0xf991f000 0x1000>;
-		interrupts = <0 109 0>;
-		status = "disabled";
-		clock-names = "core_clk", "iface_clk";
-		clocks = <&clock_gcc clk_gcc_blsp1_uart3_apps_clk>,
-			<&clock_gcc clk_gcc_blsp1_ahb_clk>;
-	};
+    blsp1_uart3: serial@f991f000 {
+        compatible = "qcom,msm-lsuart-v14";
+        reg = <0xf991f000 0x1000>;
+        interrupts = <0 109 0>;
+        status = "disabled";
+        clock-names = "core_clk", "iface_clk";
+        clocks = <&clock_gcc clk_gcc_blsp1_uart3_apps_clk>,
+            <&clock_gcc clk_gcc_blsp1_ahb_clk>;
+    };
 
-	blsp1_uart2: serial@f991e000 {
-		compatible = "qcom,msm-lsuart-v14";
-		reg = <0xf991e000 0x1000>;
-		interrupts = <0 108 0>;
-		status = "disabled";
-		clock-names = "core_clk", "iface_clk";
-		clocks = <&clock_gcc clk_gcc_blsp1_uart2_apps_clk>,
-			<&clock_gcc clk_gcc_blsp1_ahb_clk>;
-	};
+    blsp1_uart2: serial@f991e000 {
+        compatible = "qcom,msm-lsuart-v14";
+        reg = <0xf991e000 0x1000>;
+        interrupts = <0 108 0>;
+        status = "disabled";
+        clock-names = "core_clk", "iface_clk";
+        clocks = <&clock_gcc clk_gcc_blsp1_uart2_apps_clk>,
+            <&clock_gcc clk_gcc_blsp1_ahb_clk>;
+    };
 
 	blsp2_uart2: uart@f995e000 { /* BLSP2 UART2 */
 		compatible = "qcom,msm-hsuart-v14";
