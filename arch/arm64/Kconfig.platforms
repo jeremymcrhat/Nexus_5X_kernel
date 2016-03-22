@@ -100,7 +100,7 @@ config ARCH_QCOM
 	  
 config ARCH_MSM8994
 	bool "Qualcomm MSM8994"
-	select ARCH_QCOM
+	depends on ARCH_QCOM
 	help
 	  This enables support for the Qualcomm MSM8994 
 
