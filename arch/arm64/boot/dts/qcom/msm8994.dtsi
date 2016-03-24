@@ -83,7 +83,8 @@
 			device_type = "cpu";
 			compatible = "arm,cortex-a53";
 			reg = <0x0>;
-			enable-method = "qcom,8994-arm-cortex-acc";
+			enable-method = "psci";
+			cpu-idle-states = <&CPU_SPC>;
 			qcom,acc = <&acc0>;
 			qcom,ldo = <&ldo0>;
 			next-level-cache = <&L2_0>;
@@ -123,7 +124,8 @@
 			device_type = "cpu";
 			compatible = "arm,cortex-a53";
 			reg = <0x1>;
-			enable-method = "qcom,8994-arm-cortex-acc";
+			enable-method = "psci";
+			cpu-idle-states = <&CPU_SPC>;
 			qcom,acc = <&acc1>;
 			qcom,ldo = <&ldo1>;
 			next-level-cache = <&L2_0>;
@@ -154,7 +156,8 @@
 			device_type = "cpu";
 			compatible = "arm,cortex-a53";
 			reg = <0x2>;
-			enable-method = "qcom,8994-arm-cortex-acc";
+			enable-method = "psci";
+			cpu-idle-states = <&CPU_SPC>;
 			qcom,acc = <&acc2>;
 			qcom,ldo = <&ldo2>;
 			next-level-cache = <&L2_0>;
@@ -185,7 +188,8 @@
 			device_type = "cpu";
 			compatible = "arm,cortex-a53";
 			reg = <0x3>;
-			enable-method = "qcom,8994-arm-cortex-acc";
+			enable-method = "psci";
+			cpu-idle-states = <&CPU_SPC>;
 			qcom,acc = <&acc3>;
 			qcom,ldo = <&ldo3>;
 			next-level-cache = <&L2_0>;
@@ -216,7 +220,8 @@
 			device_type = "cpu";
 			compatible = "arm,cortex-a57";
 			reg = <0x100>;
-			enable-method = "qcom,8994-arm-cortex-acc";
+			enable-method = "psci";
+			cpu-idle-states = <&CPU_SPC>;
 			qcom,acc = <&acc4>;
 			qcom,ldo = <&ldo4>;
 			next-level-cache = <&L2_1>;
@@ -265,7 +270,8 @@
 			device_type = "cpu";
 			compatible = "arm,cortex-a57";
 			reg = <0x101>;
-			enable-method = "qcom,8994-arm-cortex-acc";
+			enable-method = "psci";
+			cpu-idle-states = <&CPU_SPC>;
 			qcom,acc = <&acc5>;
 			qcom,ldo = <&ldo5>;
 			next-level-cache = <&L2_1>;
@@ -305,7 +311,8 @@
 			device_type = "cpu";
 			compatible = "arm,cortex-a57";
 			reg = <0x102>;
-			enable-method = "qcom,8994-arm-cortex-acc";
+			enable-method = "psci";
+			cpu-idle-states = <&CPU_SPC>;
 			qcom,acc = <&acc6>;
 			qcom,ldo = <&ldo6>;
 			next-level-cache = <&L2_1>;
@@ -345,7 +352,8 @@
 			device_type = "cpu";
 			compatible = "arm,cortex-a57";
 			reg = <0x103>;
-			enable-method = "qcom,8994-arm-cortex-acc";
+			enable-method = "psci";
+			cpu-idle-states = <&CPU_SPC>;
 			qcom,acc = <&acc7>;
 			qcom,ldo = <&ldo7>;
 			next-level-cache = <&L2_1>;
@@ -380,6 +388,22 @@
 				qcom,dump-size = <0x9040>;
 			};
 		};
+		
+		idle-states {
+			CPU_SPC: spc {
+				compatible = "arm,idle-state";
+				arm,psci-suspend-param = <0x40000002>;
+				entry-latency-us = <130>;
+				exit-latency-us = <150>;
+				min-residency-us = <2000>;
+				local-timer-stop;
+			};
+		};
+	};
+	
+	psci {
+		compatible = "arm,psci-1.0";
+		method = "smc";
 	};
 
 	soc: soc { };
