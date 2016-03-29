@@ -13,7 +13,6 @@
 /dts-v1/;
 
 #include "../qcom/msm8994-v2.0.dtsi"
-#include "../qcom/msm8994-pinctrl.dtsi"
 #include "../qcom/msm8994-mtp.dtsi"
 #include "huawei-common.dtsi"
 #include "huawei_msm8994_angler_v1/huawei.dtsi"

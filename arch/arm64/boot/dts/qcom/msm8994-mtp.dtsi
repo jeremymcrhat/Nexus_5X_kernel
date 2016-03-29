@@ -11,6 +11,7 @@
  */
 
 #include "msm8994-pinctrl.dtsi"
+#include "msm8994-pins.dtsi"
 #include "msm8994-camera-sensor-mtp.dtsi"
 
 / {
@@ -695,7 +696,7 @@
 };
 
 &blsp1_uart2 {
-	status= "ok";
+	 status= "ok";
 	 pinctrl-names = "default";
 	 pinctrl-0 = <&uart_console_sleep>;
 };
@@ -817,3 +818,23 @@
 &qusb_phy {
 	status = "ok";
 };
+
+/ {
+	aliases {
+		serial0 = &blsp1_uart2;
+	};
+
+	chosen {
+		stdout-path = "serial0";
+	};
+
+	soc {
+		serial@f991e000 {
+			status = "okay";
+			pinctrl-names = "default", "sleep";
+			pinctrl-0 = <&blsp1_uart2_default>;
+			pinctrl-1 = <&blsp1_uart2_sleep>;
+		};
+	};
+};
+
