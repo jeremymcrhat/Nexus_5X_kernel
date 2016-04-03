@@ -19,6 +19,8 @@
 #include <linux/of.h>
 #include <linux/platform_device.h>
 #include <linux/module.h>
+#include <linux/regmap.h>
+
 #include <dt-bindings/clock/msm-clocks-8994.h>
 #include <dt-bindings/clock/qcom,gcc-msm8994.h>
 
@@ -28,7 +30,6 @@
 #include "clk-rcg.h"
 #include "clk-branch.h"
 #include "reset.h"
-#include "vdd-level-8994.h"
 
 enum {
     P_XO,
@@ -990,7 +991,7 @@ static struct clk_rcg2 pdm2_clk_src = {
     .cmd_rcgr = 0x0CD0,
     .hid_width = 5,
     .parent_map = gcc_xo_gpll0_map,
-    .freq_tbl = ftbl_gp3_clk_src,
+    .freq_tbl = ftbl_pdm2_clk_src,
     .clkr.hw.init = &(struct clk_init_data){
         .name = "pdm2_clk_src",
         .parent_names = gcc_xo_gpll0,
@@ -1732,23 +1733,6 @@ static struct clk_branch gcc_blsp2_uart4_apps_clk = {
     },
 };
 
-static struct clk_branch gcc_blsp2_uart4_apps_clk = {
-    .halt_reg = 0x0B44,
-    .clkr = {
-        .enable_reg = 0x0B44,
-        .enable_mask = BIT(0),
-        .hw.init = &(struct clk_init_data){
-            .name = "gcc_blsp2_uart4_apps_clk",
-            .parent_names = (const char *[]){
-                "blsp2_uart4_apps_clk_src",
-            },
-            .num_parents = 1,
-            .flags = CLK_SET_RATE_PARENT,
-            .ops = &clk_branch2_ops,
-        },
-    },
-};
-
 static struct clk_branch gcc_blsp2_uart5_apps_clk = {
 	.halt_reg = 0x0BC4,
 	.clkr = {
@@ -2195,9 +2179,9 @@ static struct clk_branch gcc_usb_hs_system_clk = {
 
 static struct clk_regmap *gcc_msm8994_clocks[] = {
 	[GPLL0] = &gpll0.clkr,
-	[GPLL0_VOTE] = &gpll0_vote.clkr,
+    [GPLL0_VOTE] = &gpll0_vote,
 	[GPLL4] = &gpll4.clkr,
-	[GPLL4_VOTE] = &gpll4_vote.clkr,
+    [GPLL4_VOTE] = &gpll4_vote,
 	[UFS_AXI_CLK_SRC] = &ufs_axi_clk_src.clkr,
 	[USB30_MASTER_CLK_SRC] = &usb30_master_clk_src.clkr,
 	[BLSP1_QUP1_I2C_APPS_CLK_SRC] = &blsp1_qup1_i2c_apps_clk_src.clkr,
@@ -2263,16 +2247,16 @@ static struct clk_regmap *gcc_msm8994_clocks[] = {
 	[GCC_BLSP1_AHB_CLK] = &gcc_blsp1_ahb_clk.clkr,
 	[GCC_BLSP1_QUP1_I2C_APPS_CLK] = &gcc_blsp1_qup1_i2c_apps_clk.clkr,
 	[GCC_BLSP1_QUP1_SPI_APPS_CLK] = &gcc_blsp1_qup1_spi_apps_clk.clkr,
-	[GCC_BLSP1_QUP2_I2C_APPS_CLK] = &gcc_blsp2_qup1_i2c_apps_clk.clkr,
-	[GCC_BLSP1_QUP2_SPI_APPS_CLK] = &gcc_blsp2_qup1_spi_apps_clk.clkr,
-	[GCC_BLSP1_QUP3_I2C_APPS_CLK] = &gcc_blsp3_qup1_i2c_apps_clk.clkr,
-	[GCC_BLSP1_QUP3_SPI_APPS_CLK] = &gcc_blsp3_qup1_spi_apps_clk.clkr,
-	[GCC_BLSP1_QUP4_I2C_APPS_CLK] = &gcc_blsp4_qup1_i2c_apps_clk.clkr,
-	[GCC_BLSP1_QUP4_SPI_APPS_CLK] = &gcc_blsp4_qup1_spi_apps_clk.clkr,
-	[GCC_BLSP1_QUP5_I2C_APPS_CLK] = &gcc_blsp5_qup1_i2c_apps_clk.clkr,
-	[GCC_BLSP1_QUP5_SPI_APPS_CLK] = &gcc_blsp5_qup1_spi_apps_clk.clkr,
-	[GCC_BLSP1_QUP6_I2C_APPS_CLK] = &gcc_blsp6_qup1_i2c_apps_clk.clkr,
-	[GCC_BLSP1_QUP6_SPI_APPS_CLK] = &gcc_blsp6_qup1_spi_apps_clk.clkr,
+    [GCC_BLSP1_QUP2_I2C_APPS_CLK] = &gcc_blsp1_qup2_i2c_apps_clk.clkr,
+    [GCC_BLSP1_QUP2_SPI_APPS_CLK] = &gcc_blsp1_qup2_spi_apps_clk.clkr,
+    [GCC_BLSP1_QUP3_I2C_APPS_CLK] = &gcc_blsp1_qup3_i2c_apps_clk.clkr,
+    [GCC_BLSP1_QUP3_SPI_APPS_CLK] = &gcc_blsp1_qup3_spi_apps_clk.clkr,
+    [GCC_BLSP1_QUP4_I2C_APPS_CLK] = &gcc_blsp1_qup4_i2c_apps_clk.clkr,
+    [GCC_BLSP1_QUP4_SPI_APPS_CLK] = &gcc_blsp1_qup4_spi_apps_clk.clkr,
+    [GCC_BLSP1_QUP5_I2C_APPS_CLK] = &gcc_blsp1_qup5_i2c_apps_clk.clkr,
+    [GCC_BLSP1_QUP5_SPI_APPS_CLK] = &gcc_blsp1_qup5_spi_apps_clk.clkr,
+    [GCC_BLSP1_QUP6_I2C_APPS_CLK] = &gcc_blsp1_qup6_i2c_apps_clk.clkr,
+    [GCC_BLSP1_QUP6_SPI_APPS_CLK] = &gcc_blsp1_qup6_spi_apps_clk.clkr,
 	[GCC_BLSP1_UART1_APPS_CLK] = &gcc_blsp1_uart1_apps_clk.clkr,
 	[GCC_BLSP1_UART2_APPS_CLK] = &gcc_blsp1_uart2_apps_clk.clkr,
 	[GCC_BLSP1_UART3_APPS_CLK] = &gcc_blsp1_uart3_apps_clk.clkr,
@@ -2368,7 +2352,7 @@ static void msm_gcc_8994v2_fixup(void)
     blsp2_qup6_spi_apps_clk_src.freq_tbl = ftbl_blspqup_spi_apps_clk_src_v2;
 }
 
-static const struct regmap_config gcc_msm8916_regmap_config = {
+static const struct regmap_config gcc_msm8994_regmap_config = {
 	.reg_bits	= 32,
 	.reg_stride	= 4,
 	.val_bits	= 32,
@@ -2376,7 +2360,7 @@ static const struct regmap_config gcc_msm8916_regmap_config = {
 	.fast_io	= true,
 };
 
-static const struct qcom_cc_desc gcc_msm8916_desc = {
+static const struct qcom_cc_desc gcc_msm8994_desc = {
 	.config = &gcc_msm8994_regmap_config,
 	.clks = gcc_msm8994_clocks,
 	.num_clks = ARRAY_SIZE(gcc_msm8994_clocks),
@@ -2396,11 +2380,15 @@ MODULE_DEVICE_TABLE(of, gcc_msm8994_match_table);
 
 static int gcc_msm8994_probe(struct platform_device *pdev)
 {
-	int ret;
-	struct device *dev = &pdev->dev;
+    struct device *dev = &pdev->dev;
+    struct clk *clk;
 	const char *compat = NULL;
 	int compatlen = 0;
 	bool is_v2 = false;
+
+    clk = devm_clk_register(dev, &xo.hw);
+    if (IS_ERR(clk))
+        return PTR_ERR(clk);
 
 	compat = of_get_property(pdev->dev.of_node, "compatible", &compatlen);
 	if (!compat || (compatlen <= 0))
@@ -2436,85 +2424,3 @@ module_exit(gcc_msm8994_exit);
 MODULE_DESCRIPTION("Qualcomm GCC MSM8994 Driver");
 MODULE_LICENSE("GPL v2");
 MODULE_ALIAS("platform:gcc-msm8994");
-
-static int msm_gcc_8994_probe(struct platform_device *pdev)
-{
-    struct resource *res;
-    struct clk *tmp_clk;
-    int ret;
-    const char *compat = NULL;
-    int compatlen = 0;
-    bool is_v2 = false;
-
-    res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "cc_base");
-    if (!res) {
-        dev_err(&pdev->dev, "Failed to get CC base.\n");
-        return -EINVAL;
-    }
-    virt_base = devm_ioremap(&pdev->dev, res->start, resource_size(res));
-    if (!virt_base) {
-        dev_err(&pdev->dev, "Failed to map in CC registers.\n");
-        return -ENOMEM;
-    }
-
-    vdd_dig.regulator[0] = devm_regulator_get(&pdev->dev, "vdd_dig");
-    if (IS_ERR(vdd_dig.regulator[0])) {
-        if (!(PTR_ERR(vdd_dig.regulator[0]) == -EPROBE_DEFER))
-            dev_err(&pdev->dev, "Unable to get vdd_dig regulator!");
-        return PTR_ERR(vdd_dig.regulator[0]);
-    }
-
-    tmp_clk = gcc_xo.c.parent = devm_clk_get(&pdev->dev, "xo");
-    if (IS_ERR(tmp_clk)) {
-        if (!(PTR_ERR(tmp_clk) == -EPROBE_DEFER))
-            dev_err(&pdev->dev, "Unable to get xo clock!");
-        return PTR_ERR(tmp_clk);
-    }
-
-    tmp_clk = gcc_xo_a_clk.c.parent = devm_clk_get(&pdev->dev, "xo_a_clk");
-    if (IS_ERR(tmp_clk)) {
-        if (!(PTR_ERR(tmp_clk) == -EPROBE_DEFER))
-            dev_err(&pdev->dev, "Unable to get xo_a_clk clock!");
-        return PTR_ERR(tmp_clk);
-    }
-
-    /* Perform revision specific fixes */
-    compat = of_get_property(pdev->dev.of_node, "compatible", &compatlen);
-    if (!compat || (compatlen <= 0))
-        return -EINVAL;
-    is_v2 = !strcmp(compat, "qcom,gcc-8994v2");
-    if (is_v2)
-        msm_gcc_8994v2_fixup();
-
-    /* register common clock table */
-    ret = of_msm_clock_register(pdev->dev.of_node, gcc_clocks_8994_common,
-                    ARRAY_SIZE(gcc_clocks_8994_common));
-    if (ret)
-        return ret;
-
-    if (!is_v2) {
-        /* register v1 specific clocks */
-        ret = of_msm_clock_register(pdev->dev.of_node,
-            gcc_clocks_8994_v1, ARRAY_SIZE(gcc_clocks_8994_v1));
-        if (ret)
-            return ret;
-    }
-
-    dev_info(&pdev->dev, "Registered GCC clocks.\n");
-    return 0;
-}
-
-static struct platform_driver msm_clock_gcc_driver = {
-    .probe = msm_gcc_8994_probe,
-    .driver = {
-        .name = "qcom,gcc-8994",
-        .of_match_table = msm_clock_gcc_match_table,
-        .owner = THIS_MODULE,
-    },
-};
-
-int __init msm_gcc_8994_init(void)
-{
-    return platform_driver_register(&msm_clock_gcc_driver);
-}
-arch_initcall(msm_gcc_8994_init);
