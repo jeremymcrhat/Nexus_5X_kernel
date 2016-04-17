@@ -1151,7 +1151,20 @@ static struct clk_rcg2 usb_hs_system_clk_src = {
     },
 };
 
-// TODO, removed all gate cloks, all reset clocks, clock gcc_bam_dma_ahb_clk and gcc_blsp1_ahb_clk
+// TODO, removed all gate cloks, all reset clocks, clock gcc_bam_dma_ahb_clk
+
+static struct clk_branch gcc_blsp1_ahb_clk = {
+    .halt_reg = 0x05C4,
+    .halt_check = BRANCH_HALT_VOTED,
+    .clkr = {
+        .enable_reg = 0x1484,
+        .enable_mask = BIT(17),
+        .hw.init = &(struct clk_init_data){
+            .name = "gcc_blsp1_ahb_clk",
+            .ops = &clk_branch2_ops,
+        },
+    },
+};
 
 static struct clk_branch gcc_blsp1_qup1_i2c_apps_clk = {
     .halt_reg = 0x0648,
@@ -1459,7 +1472,18 @@ static struct clk_branch gcc_blsp1_uart6_apps_clk = {
     },
 };
 
-// TODO removed gcc_blsp2_ahb_clk
+static struct clk_branch gcc_blsp2_ahb_clk = {
+    .halt_reg = 0x0944,
+    .halt_check = BRANCH_HALT_VOTED,
+    .clkr = {
+        .enable_reg = 0x1484,
+        .enable_mask = BIT(15),
+        .hw.init = &(struct clk_init_data){
+            .name = "gcc_blsp2_ahb_clk",
+            .ops = &clk_branch2_ops,
+        },
+    },
+};
 
 static struct clk_branch gcc_blsp2_qup1_i2c_apps_clk = {
     .halt_reg = 0x0988,
@@ -2236,15 +2260,7 @@ static struct clk_regmap *gcc_msm8994_clocks[] = {
 	[USB30_MOCK_UTMI_CLK_SRC] = &usb30_mock_utmi_clk_src.clkr,
 	[USB3_PHY_AUX_CLK_SRC] = &usb3_phy_aux_clk_src.clkr,
 	[USB_HS_SYSTEM_CLK_SRC] = &usb_hs_system_clk_src.clkr,
-	[GCC_PCIE_PHY_0_RESET] = &gcc_pcie_phy_0_reset.clkr,
-	[GCC_PCIE_PHY_1_RESET] = &gcc_pcie_phy_1_reset.clkr,
-	[GCC_QUSB2_PHY_RESET] = &gcc_qusb2_phy_reset.clkr,
-	[GCC_USB3_PHY_RESET] = &gcc_usb3_phy_reset.clkr,
-	[PCIE_0_PHY_LDO] = &pcie_0_phy_ldo.clkr,
-	[PCIE_1_PHY_LDO] = &pcie_1_phy_ldo.clkr,
-	[UFS_PHY_LDO] = &ufs_phy_ldo.clkr,
-	[USB_SS_PHY_LDO] = &usb_ss_phy_ldo.clkr,
-	[GCC_BLSP1_AHB_CLK] = &gcc_blsp1_ahb_clk.clkr,
+    [GCC_BLSP1_AHB_CLK] = &gcc_blsp1_ahb_clk.clkr,
 	[GCC_BLSP1_QUP1_I2C_APPS_CLK] = &gcc_blsp1_qup1_i2c_apps_clk.clkr,
 	[GCC_BLSP1_QUP1_SPI_APPS_CLK] = &gcc_blsp1_qup1_spi_apps_clk.clkr,
     [GCC_BLSP1_QUP2_I2C_APPS_CLK] = &gcc_blsp1_qup2_i2c_apps_clk.clkr,
@@ -2263,7 +2279,7 @@ static struct clk_regmap *gcc_msm8994_clocks[] = {
 	[GCC_BLSP1_UART4_APPS_CLK] = &gcc_blsp1_uart4_apps_clk.clkr,
 	[GCC_BLSP1_UART5_APPS_CLK] = &gcc_blsp1_uart5_apps_clk.clkr,
 	[GCC_BLSP1_UART6_APPS_CLK] = &gcc_blsp1_uart6_apps_clk.clkr,
-	[GCC_BLSP2_AHB_CLK] = &gcc_blsp2_ahb_clk.clkr,
+    [GCC_BLSP2_AHB_CLK] = &gcc_blsp2_ahb_clk.clkr,
 	[GCC_BLSP2_QUP1_I2C_APPS_CLK] = &gcc_blsp2_qup1_i2c_apps_clk.clkr,
 	[GCC_BLSP2_QUP1_SPI_APPS_CLK] = &gcc_blsp2_qup1_spi_apps_clk.clkr,
 	[GCC_BLSP2_QUP2_I2C_APPS_CLK] = &gcc_blsp2_qup2_i2c_apps_clk.clkr,
@@ -2282,56 +2298,28 @@ static struct clk_regmap *gcc_msm8994_clocks[] = {
 	[GCC_BLSP2_UART4_APPS_CLK] = &gcc_blsp2_uart4_apps_clk.clkr,
 	[GCC_BLSP2_UART5_APPS_CLK] = &gcc_blsp2_uart5_apps_clk.clkr,
 	[GCC_BLSP2_UART6_APPS_CLK] = &gcc_blsp2_uart6_apps_clk.clkr,
-	[GCC_BOOT_ROM_AHB_CLK] = &gcc_boot_rom_ahb_clk.clkr,
 	[GCC_GP1_CLK] = &gcc_gp1_clk.clkr,
 	[GCC_GP2_CLK] = &gcc_gp2_clk.clkr,
 	[GCC_GP3_CLK] = &gcc_gp3_clk.clkr,
-	[GCC_LPASS_Q6_AXI_CLK] = &gcc_lpass_q6_axi_clk.clkr,
-	[GCC_MSS_Q6_BIMC_AXI_CLK] = &gcc_mss_q6_bimc_axi_clk.clkr,
 	[GCC_PCIE_0_AUX_CLK] = &gcc_pcie_0_aux_clk.clkr,
-	[GCC_PCIE_0_CFG_AHB_CLK] = &gcc_pcie_0_cfg_ahb_clk.clkr,
-	[GCC_PCIE_0_MSTR_AXI_CLK] = &gcc_pcie_0_mstr_axi_clk.clkr,
 	[GCC_PCIE_0_PIPE_CLK] = &gcc_pcie_0_pipe_clk.clkr,
-	[GCC_PCIE_0_SLV_AXI_CLK] = &gcc_pcie_0_slv_axi_clk.clkr,
 	[GCC_PCIE_1_AUX_CLK] = &gcc_pcie_1_aux_clk.clkr,
-	[GCC_PCIE_1_CFG_AHB_CLK] = &gcc_pcie_1_cfg_ahb_clk.clkr,
-	[GCC_PCIE_1_MSTR_AXI_CLK] = &gcc_pcie_1_mstr_axi_clk.clkr,
 	[GCC_PCIE_1_PIPE_CLK] = &gcc_pcie_1_pipe_clk.clkr,
-	[GCC_PCIE_1_SLV_AXI_CLK] = &gcc_pcie_1_slv_axi_clk.clkr,
 	[GCC_PDM2_CLK] = &gcc_pdm2_clk.clkr,
-	[GCC_PDM_AHB_CLK] = &gcc_pdm_ahb_clk.clkr,
-	[GCC_PRNG_AHB_CLK] = &gcc_prng_ahb_clk.clkr,
-	[GCC_SDCC1_AHB_CLK] = &gcc_sdcc1_ahb_clk.clkr,
 	[GCC_SDCC1_APPS_CLK] = &gcc_sdcc1_apps_clk.clkr,
-	[GCC_SDCC2_AHB_CLK] = &gcc_sdcc2_ahb_clk.clkr,
 	[GCC_SDCC2_APPS_CLK] = &gcc_sdcc2_apps_clk.clkr,
-	[GCC_SDCC3_AHB_CLK] = &gcc_sdcc3_ahb_clk.clkr,
 	[GCC_SDCC3_APPS_CLK] = &gcc_sdcc3_apps_clk.clkr,
-	[GCC_SDCC4_AHB_CLK] = &gcc_sdcc4_ahb_clk.clkr,
 	[GCC_SDCC4_APPS_CLK] = &gcc_sdcc4_apps_clk.clkr,
 	[GCC_SYS_NOC_UFS_AXI_CLK] = &gcc_sys_noc_ufs_axi_clk.clkr,
 	[GCC_SYS_NOC_USB3_AXI_CLK] = &gcc_sys_noc_usb3_axi_clk.clkr,
-	[GCC_TSIF_AHB_CLK] = &gcc_tsif_ahb_clk.clkr,
 	[GCC_TSIF_REF_CLK] = &gcc_tsif_ref_clk.clkr,
-	[GCC_UFS_AHB_CLK] = &gcc_ufs_ahb_clk.clkr,
 	[GCC_UFS_AXI_CLK] = &gcc_ufs_axi_clk.clkr,
 	[GCC_UFS_RX_CFG_CLK] = &gcc_ufs_rx_cfg_clk.clkr,
-	[GCC_UFS_RX_SYMBOL_0_CLK] = &gcc_ufs_rx_symbol_0_clk.clkr,
-	[GCC_UFS_RX_SYMBOL_1_CLK] = &gcc_ufs_rx_symbol_1_clk.clkr,
 	[GCC_UFS_TX_CFG_CLK] = &gcc_ufs_tx_cfg_clk.clkr,
-	[GCC_UFS_TX_SYMBOL_0_CLK] = &gcc_ufs_tx_symbol_0_clk.clkr,
-	[GCC_UFS_TX_SYMBOL_1_CLK] = &gcc_ufs_tx_symbol_1_clk.clkr,
-	[GCC_USB2_HS_PHY_SLEEP_CLK] = &gcc_usb2_hs_phy_sleep_clk.clkr,
 	[GCC_USB30_MASTER_CLK] = &gcc_usb30_master_clk.clkr,
 	[GCC_USB30_MOCK_UTMI_CLK] = &gcc_usb30_mock_utmi_clk.clkr,
-	[GCC_USB30_SLEEP_CLK] = &gcc_usb30_sleep_clk.clkr,
 	[GCC_USB3_PHY_AUX_CLK] = &gcc_usb3_phy_aux_clk.clkr,
-	[GCC_USB3_PHY_PIPE_CLK] = &gcc_usb3_phy_pipe_clk.clkr,
-	[GCC_USB3PHY_PHY_RESET] = &gcc_usb3phy_phy_reset.clkr,
-	[GCC_USB_HS_AHB_CLK] = &gcc_usb_hs_ahb_clk.clkr,
 	[GCC_USB_HS_SYSTEM_CLK] = &gcc_usb_hs_system_clk.clkr,
-	[GCC_USB_PHY_CFG_AHB2PHY_CLK] = &gcc_usb_phy_cfg_ahb2phy_clk.clkr,
-	[GCC_BAM_DMA_AHB_CLK] = &gcc_bam_dma_ahb_clk.clkr
 };
 
 static void msm_gcc_8994v2_fixup(void)
@@ -2374,7 +2362,7 @@ static struct of_device_id gcc_msm8994_match_table[] = {
 	{ .compatible = "qcom,gcc-8994" },
 	{ .compatible = "qcom,gcc-8994v2" },
 	{}
-};
+}
 
 MODULE_DEVICE_TABLE(of, gcc_msm8994_match_table);
 
