@@ -240,6 +240,71 @@ config PCI_SYSCALL
 	def_bool PCI
 
 source "drivers/pci/Kconfig"
+source "drivers/pci/pcie/Kconfig"
+source "drivers/pci/hotplug/Kconfig"
+
+config ARCH_MSM
+	bool "Qualcomm Platforms"
+	select ARCH_REQUIRE_GPIOLIB
+	select CLKDEV_LOOKUP
+	select HAVE_CLK
+	select HAVE_CLK_PREPARE
+	select MSM_IRQ
+	select PINCTRL
+	select SOC_BUS
+	select PCI
+	select ARCH_HAS_CPUFREQ
+	select CPU_FREQ_MSM
+	select PM_OPP
+	select PM_DEVFREQ
+	select MSM_DEVFREQ_DEVBW
+	select MSM_BIMC_BWMON
+	select DEVFREQ_GOV_MSM_BW_HWMON
+	select DEVFREQ_SIMPLE_DEV
+	help
+	  This enables support for the ARMv8 based Qualcomm chipsets.
+
+config ARCH_MSM8994
+	bool "Enable Support for Qualcomm MSM8994"
+	depends on ARCH_MSM
+	help
+	  This enables support for the MSM8994 chipset. If you dont
+	  know what do here, say N
+
+config ARCH_MSM8994_V1_TLBI_WA
+	bool "Enable MSM8994 v1 TLBI workaround"
+	depends on ARCH_MSM8994
+	help
+	  This enables support for the MSM8994 v1 TLBI workaround. This
+	  workaround is required for MSM8994 V1 revision where the
+	  [39:38] bits of VA are tied to zero and due to which TLBI
+	  operations with VA or ASID will not work.
+
+config MSM8994_V1_PMUIRQ_WA
+	bool "Enable MSM8994 v1 PMU-CTI IRQ workaround"
+	depends on ARCH_MSM8994 && CORESIGHT_CTI
+	help
+	  This enables support for the MSM8994 v1 PMU-CTI IRQ workaround.
+	  This workaround is required for MSM8994 V1 revision where the
+	  percpu PMU interrupt is incorrectly connected to the corresponding
+	  CPUs in the other cluster.
+
+config ARCH_MSM8992
+	bool "Enable Support for Qualcomm MSM8992"
+	depends on ARCH_MSM
+	help
+	  Enable kernel support for the MSM8992 chipset. If you don't
+	  know what this is, you can safely say 'N' here.
+
+config MACH_LGE
+	bool
+
+config MACH_MSM8992_BULLHEAD
+	bool "MSM8992 BULLHEAD"
+	depends on ARCH_MSM8992
+	select MACH_LGE
+	help
+	  Support for the LGE MSM8992 BULLHEAD. (aka Nexus 5X)
 
 endmenu
 
@@ -942,6 +1007,21 @@ config DMI
 	  This option is only useful on systems that have UEFI firmware.
 	  However, even with this option, the resultant kernel should
 	  continue to boot on existing non-UEFI platforms.
+
+config BUILD_ARM64_APPENDED_DTB_IMAGE
+	bool "Build a concatenated Image.gz/dtb by default"
+	depends on OF
+	help
+	  Enabling this option will cause a concatenated Image.gz and list of
+	  DTBs to be built by default (instead of a standalone Image.gz.)
+	  The image will built in arch/arm64/boot/Image.gz-dtb
+
+config BUILD_ARM64_APPENDED_DTB_IMAGE_NAMES
+	string "Default dtb names"
+	depends on BUILD_ARM64_APPENDED_DTB_IMAGE
+	help
+	  Space separated list of names of dtbs to append when
+	  building a concatenated Image.gz-dtb.
 
 endmenu
 
