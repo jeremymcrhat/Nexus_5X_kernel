@@ -106,6 +106,25 @@ static inline u64 __raw_readq(const volatile void __iomem *addr)
 	return val;
 }
 
+static inline void __raw_writel_no_log(u32 val, volatile void __iomem *addr)
+{
+        asm volatile("str %w0, [%1]" : : "r" (val), "r" (addr));
+}
+
+static inline void __raw_writeq_no_log(u64 val, volatile void __iomem *addr)
+{
+        asm volatile("str %0, [%1]" : : "r" (val), "r" (addr));
+}
+
+static inline u32 __raw_readl_no_log(const volatile void __iomem *addr)
+{
+	        u32 val;
+		        asm volatile("ldar %w0, [%1]" : "=r" (val) : "r" (addr));
+			        return val;
+}
+
+
+
 /* IO barriers */
 #define __iormb()		rmb()
 #define __iowmb()		wmb()
