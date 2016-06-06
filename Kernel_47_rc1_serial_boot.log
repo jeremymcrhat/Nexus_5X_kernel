@@ -1,0 +1,938 @@
+[8950] bootcmd: androidboot.revision=rev_1.0                                                                                                                              
+[8950] bootcmd: bootcable.type=400MA                                                                                                                                      
+[8950] bootcmd: fakebattery=disable                                                                                                                                       
+[8960] HARDWARE_SKU1                                                                                                                                                      
+[8960] cmdline: console=ttyHSL0,115200,n8 androidboot.hardware=bullhead boot_cpus=0-5 lpm_levels.sleep_disabled=1 msm_poweroff.download_mode=0 earlycon=msm_serial_dm,0xfg
+[8990] Updating device tree: start                                                                                                                                        
+[9000] Updating device tree: done                                                                                                                                         
+[9000] Qseecom De-Init Done in Appsbl                                                                                                                                     
+[9010] Channel alloc freed                                                                                                                                                
+[9020] Turn off MIPI_CMD_PANEL.                                                                                                                                           
+[9020] Continuous splash enabled, keeping panel alive.                                                                                                                    
+[9020] booting linux @ 0x80000, ramdisk @ 0x2a00000 (2058919), tags/device tree @ 0x2800000                                                                               
+[9030] Jumping to kernel via monitor                                                                                                                                      
+[    0.000000] Booting Linux on physical CPU 0x0                                                                                                                          
+[    0.000000] Linux version 4.7.0-rc1-dirty (jmcnicol@mini-rhel) (gcc version 4.9.3 20141031 (prerelease) (Linaro GCC 2014.11) ) #32 SMP PREEMPT Fri Jun 3 19:28:57 PDT 6
+[    0.000000] Boot CPU: AArch64 Processor [410fd033]                                                                                                                     
+[    0.000000] earlycon: msm_serial_dm0 at MMIO 0x00000000f991e000 (options '')                                                                                           
+[    0.000000] bootconsole [msm_serial_dm0] enabled                                                                                                                       
+[    0.000000] On node 0 totalpages: 524288                                                                                                                               
+[    0.000000]   DMA zone: 8192 pages used for memmap                                                                                                                     
+[    0.000000]   DMA zone: 0 pages reserved                                                                                                                               
+[    0.000000]   DMA zone: 524288 pages, LIFO batch:31                                                                                                                    
+[    0.000000] Unsupported enable-method: qcom,8994-arm-cortex-acc                                                                                                        
+[    0.000000] Unsupported enable-method: qcom,8994-arm-cortex-acc                                                                                                        
+[    0.000000] Unsupported enable-method: qcom,8994-arm-cortex-acc                                                                                                        
+[    0.000000] Unsupported enable-method: qcom,8994-arm-cortex-acc                                                                                                        
+[    0.000000] Unsupported enable-method: qcom,8994-arm-cortex-acc                                                                                                        
+[    0.000000] Unsupported enable-method: qcom,8994-arm-cortex-acc                                                                                                        
+[    0.000000] percpu: Embedded 17 pages/cpu @ffffffc07feea000 s37888 r0 d31744 u69632                                                                                    
+[    0.000000] pcpu-alloc: s37888 r0 d31744 u69632 alloc=17*4096                                                                                                          
+[    0.000000] pcpu-alloc: [0] 0                                                                                                                                          
+[    0.000000] Detected VIPT I-cache on CPU0                                                                                                                              
+[    0.000000] CPU features: enabling workaround for ARM erratum 845719                                                                                                   
+[    0.000000] Built 1 zonelists in Zone order, mobility grouping on.  Total pages: 516096                                                                                
+[    0.000000] Kernel command line: sched_enable_hmp=1 sched_enable_power_aware=1 console=ttyHSL0,115200,n8 androidboot.hardware=bullhead boot_cpus=0-5 lpm_levels.sleep_e
+[    0.000000] PID hash table entries: 4096 (order: 3, 32768 bytes)                                                                                                       
+[    0.000000] Dentry cache hash table entries: 262144 (order: 9, 2097152 bytes)                                                                                          
+[    0.000000] Inode-cache hash table entries: 131072 (order: 8, 1048576 bytes)                                                                                           
+[    0.000000] software IO TLB [mem 0x79a00000-0x7da00000] (64MB) mapped at [ffffffc079a00000-ffffffc07d9fffff]                                                           
+[    0.000000] Memory: 1983420K/2097152K available (4462K kernel code, 564K rwdata, 1872K rodata, 320K init, 1340K bss, 113732K reserved, 0K cma-reserved)                
+[    0.000000] Virtual kernel memory layout:                                                                                                                              
+[    0.000000]     modules : 0xffffff8000000000 - 0xffffff8008000000   (   128 MB)                                                                                        
+[    0.000000]     vmalloc : 0xffffff8008000000 - 0xffffffbebfff0000   (   250 GB)                                                                                        
+[    0.000000]       .text : 0xffffff8008080000 - 0xffffff80084d0000   (  4416 KB)                                                                                        
+[    0.000000]     .rodata : 0xffffff80084d0000 - 0xffffff80086b0000   (  1920 KB)                                                                                        
+[    0.000000]       .init : 0xffffff80086b0000 - 0xffffff8008700000   (   320 KB)                                                                                        
+[    0.000000]       .data : 0xffffff8008700000 - 0xffffff800878d000   (   564 KB)                                                                                        
+[    0.000000]        .bss : 0xffffff800878d000 - 0xffffff80088dc180   (  1341 KB)                                                                                        
+[    0.000000]     fixed   : 0xffffffbefe7fd000 - 0xffffffbefec00000   (  4108 KB)                                                                                        
+[    0.000000]     PCI I/O : 0xffffffbefee00000 - 0xffffffbeffe00000   (    16 MB)                                                                                        
+[    0.000000]     vmemmap : 0xffffffbf00000000 - 0xffffffc000000000   (     4 GB maximum)                                                                                
+[    0.000000]               0xffffffbf00000000 - 0xffffffbf02000000   (    32 MB actual)                                                                                 
+[    0.000000]     memory  : 0xffffffc000000000 - 0xffffffc080000000   (  2048 MB)                                                                                        
+[    0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=1, Nodes=1                                                                                                 
+[    0.000000] Preemptible hierarchical RCU implementation.                                                                                                               
+[    0.000000]  Build-time adjustment of leaf fanout to 64.                                                                                                               
+[    0.000000]  RCU restricting CPUs from NR_CPUS=6 to nr_cpu_ids=1.                                                                                                      
+[    0.000000] RCU: Adjusting geometry for rcu_fanout_leaf=64, nr_cpu_ids=1                                                                                               
+[    0.000000] NR_IRQS:64 nr_irqs:64 0                                                                                                                                    
+[    0.000000] Architected cp15 and mmio timer(s) running at 19.20MHz (virt/virt).                                                                                        
+[    0.000000] clocksource: arch_sys_counter: mask: 0xffffffffffffff max_cycles: 0x46d987e47, max_idle_ns: 440795202767 ns                                                
+[    0.000006] sched_clock: 56 bits at 19MHz, resolution 52ns, wraps every 4398046511078ns                                                                                
+[    0.011836] Calibrating delay loop (skipped), value calculated using timer frequency.. 38.00 BogoMIPS (lpj=64000)                                                      
+[    0.026730] pid_max: default: 32768 minimum: 301                                                                                                                       
+[    0.029081] Security Framework initialized                                                                                                                             
+[    0.033893] Mount-cache hash table entries: 4096 (order: 3, 32768 bytes)                                                                                               
+[    0.037767] Mountpoint-cache hash table entries: 4096 (order: 3, 32768 bytes)                                                                                          
+[    0.045628] Unable to find CPU node for /cpus/cpu@1                                                                                                                    
+[    0.051665] /cpus/cpu-map/cluster0/core1: Can't get CPU for leaf core                                                                                                  
+[    0.056358] ASID allocator initialised with 65536 entries                                                                                                              
+[    0.083088] Brought up 1 CPUs                                                                                                                                          
+[    0.083118] SMP: Total of 1 processors activated.                                                                                                                      
+[    0.085040] CPU features: detected feature: 32-bit EL0 Support                                                                                                         
+[    0.089762] CPU: All CPU(s) started at EL1                                                                                                                             
+[    0.095479] alternatives: patching kernel code                                                                                                                         
+[    0.100287] device: 'platform': device_add                                                                                                                             
+[    0.104091] bus: 'platform': registered                                                                                                                                
+[    0.108127] bus: 'cpu': registered                                                                                                                                     
+[    0.111811] device: 'cpu': device_add                                                                                                                                  
+[    0.115357] bus: 'container': registered                                                                                                                               
+[    0.118991] device: 'container': device_add                                                                                                                            
+[    0.183688] bus: 'workqueue': registered                                                                                                                               
+[    0.183726] device: 'workqueue': device_add                                                                                                                            
+[    0.186797] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 6370867519511994 ns                                                            
+[    0.190731] pinctrl core: initialized pinctrl subsystem                                                                                                                
+[    0.200479] bus: 'gpio': registered                                                                                                                                    
+[    0.205598] bus: 'soc': registered                                                                                                                                     
+[    0.209034] bus: 'platform': add driver gcc-msm8960                                                                                                                    
+[    0.212515] bus: 'platform': add driver gcc-msm8974                                                                                                                    
+[    0.217286] bus: 'platform': add driver gcc-msm8996                                                                                                                    
+[    0.222533] NET: Registered protocol family 16                                                                                                                         
+[    0.227364] device class 'bdi': registering                                                                                                                            
+[    0.231527] bus: 'platform': add driver ramoops                                                                                                                        
+[    0.235611] device class 'gpio': registering                                                                                                                           
+[    0.240107] device class 'pci_bus': registering                                                                                                                        
+[    0.244658] bus: 'pci': registered                                                                                                                                     
+[    0.248889] bus: 'amba': registered                                                                                                                                    
+[    0.252313] device class 'tty': registering                                                                                                                            
+[    0.255716] device class 'iommu': registering                                                                                                                          
+[    0.259898] bus: 'platform': add driver syscon                                                                                                                         
+[    0.264464] bus: 'spmi': registered                                                                                                                                    
+[    0.268769] bus: 'i2c': registered                                                                                                                                     
+[    0.272117] bus: 'i2c': add driver dummy                                                                                                                               
+[    0.285626] cpuidle: using governor ladder                                                                                                                             
+[    0.295651] cpuidle: using governor menu                                                                                                                               
+[    0.296024] vdso: 2 pages (1 code @ ffffff80084d6000, 1 data @ ffffff8008704000)                                                                                       
+[    0.298649] hw-breakpoint: found 6 breakpoint and 4 watchpoint registers.                                                                                              
+[    0.306176] DMA: preallocated 256 KiB pool for atomic allocations                                                                                                      
+[    0.312714] bus: 'platform': add driver msm8960-pinctrl                                                                                                                
+[    0.318825] bus: 'platform': add driver msm8x74-pinctrl                                                                                                                
+[    0.323857] bus: 'platform': add driver msm8996-pinctrl                                                                                                                
+[    0.329394] device: 'soc': device_add                                                                                                                                  
+[    0.334261] bus: 'platform': add device soc                                                                                                                            
+[    0.338226] device: 'fd8c1024.qcom,gdsc': device_add                                                                                                                   
+[    0.342073] bus: 'platform': add device fd8c1024.qcom,gdsc                                                                                                             
+[    0.347401] device: 'fd8c1040.qcom,gdsc': device_add                                                                                                                   
+[    0.352577] bus: 'platform': add device fd8c1040.qcom,gdsc                                                                                                             
+[    0.357816] device: 'fd8c1044.qcom,gdsc': device_add                                                                                                                   
+[    0.362993] bus: 'platform': add device fd8c1044.qcom,gdsc                                                                                                             
+[    0.368253] device: 'fd8c34a0.qcom,gdsc': device_add                                                                                                                   
+[    0.373410] bus: 'platform': add device fd8c34a0.qcom,gdsc                                                                                                             
+[    0.378645] device: 'fd8c2304.qcom,gdsc': device_add                                                                                                                   
+[    0.383831] bus: 'platform': add device fd8c2304.qcom,gdsc                                                                                                             
+[    0.389063] device: 'fd8c35a4.qcom,gdsc': device_add                                                                                                                   
+[    0.394242] bus: 'platform': add device fd8c35a4.qcom,gdsc                                                                                                             
+[    0.399483] device: 'fd8c36a4.qcom,gdsc': device_add                                                                                                                   
+[    0.404658] bus: 'platform': add device fd8c36a4.qcom,gdsc                                                                                                             
+[    0.409896] device: 'fd8c36d4.qcom,gdsc': device_add                                                                                                                   
+[    0.415076] bus: 'platform': add device fd8c36d4.qcom,gdsc                                                                                                             
+[    0.420311] device: 'fd8c4024.qcom,gdsc': device_add                                                                                                                   
+[    0.425493] bus: 'platform': add device fd8c4024.qcom,gdsc                                                                                                             
+[    0.430730] device: 'fd8c4034.qcom,gdsc': device_add                                                                                                                   
+[    0.435914] bus: 'platform': add device fd8c4034.qcom,gdsc                                                                                                             
+[    0.441154] device: 'fc401ac4.qcom,gdsc': device_add                                                                                                                   
+[    0.446325] bus: 'platform': add device fc401ac4.qcom,gdsc                                                                                                             
+[    0.451569] device: 'fc4003c4.qcom,gdsc': device_add                                                                                                                   
+[    0.456743] bus: 'platform': add device fc4003c4.qcom,gdsc                                                                                                             
+[    0.462185] device: 'f900d008.qcom,smp2p-modem': device_add                                                                                                            
+[    0.467162] bus: 'platform': add device f900d008.qcom,smp2p-modem                                                                                                      
+[    0.472856] device: 'f900d008.qcom,smp2p-adsp': device_add                                                                                                             
+[    0.478881] bus: 'platform': add device f900d008.qcom,smp2p-adsp                                                                                                       
+[    0.484346] device: 'soc:qcom,smp2pgpio-smp2p-7-in': device_add                                                                                                        
+[    0.490429] bus: 'platform': add device soc:qcom,smp2pgpio-smp2p-7-in                                                                                                  
+[    0.496147] device: 'soc:qcom,smp2pgpio_test_smp2p_7_in': device_add                                                                                                   
+[    0.502665] bus: 'platform': add device soc:qcom,smp2pgpio_test_smp2p_7_in                                                                                             
+[    0.509172] device: 'soc:qcom,smp2pgpio-smp2p-7-out': device_add                                                                                                       
+[    0.515772] bus: 'platform': add device soc:qcom,smp2pgpio-smp2p-7-out                                                                                                 
+[    0.522020] device: 'soc:qcom,smp2pgpio_test_smp2p_7_out': device_add                                                                                                  
+[    0.528274] bus: 'platform': add device soc:qcom,smp2pgpio_test_smp2p_7_out                                                                                            
+[    0.534874] device: 'soc:qcom,smp2pgpio-smp2p-1-in': device_add                                                                                                        
+[    0.541554] bus: 'platform': add device soc:qcom,smp2pgpio-smp2p-1-in                                                                                                  
+[    0.547541] device: 'soc:qcom,smp2pgpio_test_smp2p_1_in': device_add                                                                                                   
+[    0.554055] bus: 'platform': add device soc:qcom,smp2pgpio_test_smp2p_1_in                                                                                             
+[    0.560562] device: 'soc:qcom,smp2pgpio-smp2p-1-out': device_add                                                                                                       
+[    0.567161] bus: 'platform': add device soc:qcom,smp2pgpio-smp2p-1-out                                                                                                 
+[    0.573404] device: 'soc:qcom,smp2pgpio_test_smp2p_1_out': device_add                                                                                                  
+[    0.579662] bus: 'platform': add device soc:qcom,smp2pgpio_test_smp2p_1_out                                                                                            
+[    0.586261] device: 'soc:qcom,smp2pgpio-smp2p-2-in': device_add                                                                                                        
+[    0.592942] bus: 'platform': add device soc:qcom,smp2pgpio-smp2p-2-in                                                                                                  
+[    0.598925] device: 'soc:qcom,smp2pgpio_test_smp2p_2_in': device_add                                                                                                   
+[    0.605442] bus: 'platform': add device soc:qcom,smp2pgpio_test_smp2p_2_in                                                                                             
+[    0.611957] device: 'soc:qcom,smp2pgpio-smp2p-2-out': device_add                                                                                                       
+[    0.618551] bus: 'platform': add device soc:qcom,smp2pgpio-smp2p-2-out                                                                                                 
+[    0.624798] device: 'soc:qcom,smp2pgpio_test_smp2p_2_out': device_add                                                                                                  
+[    0.631051] bus: 'platform': add device soc:qcom,smp2pgpio_test_smp2p_2_out                                                                                            
+[    0.637647] device: 'soc:qcom,smp2pgpio-ssr-smp2p-2-in': device_add                                                                                                    
+[    0.644332] bus: 'platform': add device soc:qcom,smp2pgpio-ssr-smp2p-2-in                                                                                              
+[    0.650665] device: 'soc:qcom,smp2pgpio-ssr-smp2p-2-out': device_add                                                                                                   
+[    0.657527] bus: 'platform': add device soc:qcom,smp2pgpio-ssr-smp2p-2-out                                                                                             
+[    0.664040] device: 'soc:qcom,smp2pgpio-ssr-smp2p-1-in': device_add                                                                                                    
+[    0.670633] bus: 'platform': add device soc:qcom,smp2pgpio-ssr-smp2p-1-in                                                                                              
+[    0.676886] device: 'soc:qcom,smp2pgpio-ssr-smp2p-1-out': device_add                                                                                                   
+[    0.683742] bus: 'platform': add device soc:qcom,smp2pgpio-ssr-smp2p-1-out                                                                                             
+[    0.690366] device: 'fd994300.qcom,mdss_dsi_pll': device_add                                                                                                           
+[    0.696848] bus: 'platform': add device fd994300.qcom,mdss_dsi_pll                                                                                                     
+[    0.702811] device: 'fd996300.qcom,mdss_dsi_pll': device_add                                                                                                           
+[    0.708655] bus: 'platform': add device fd996300.qcom,mdss_dsi_pll                                                                                                     
+[    0.714645] device: 'fd9a0600.qcom,mdss_hdmi_pll': device_add                                                                                                          
+[    0.720461] bus: 'platform': add device fd9a0600.qcom,mdss_hdmi_pll                                                                                                    
+[    0.726579] device: 'fd900000.qcom,mdss_mdp': device_add                                                                                                               
+[    0.732353] bus: 'platform': add device fd900000.qcom,mdss_mdp                                                                                                         
+[    0.738124] device: 'fd994000.qcom,mdss_dsi': device_add                                                                                                               
+[    0.743548] bus: 'platform': add device fd994000.qcom,mdss_dsi                                                                                                         
+[    0.749106] device: 'soc:qcom,mdss_wb_panel': device_add                                                                                                               
+[    0.754660] bus: 'platform': add device soc:qcom,mdss_wb_panel                                                                                                         
+[    0.760277] device: 'fd9a0000.qcom,hdmi_tx': device_add                                                                                                                
+[    0.765770] bus: 'platform': add device fd9a0000.qcom,hdmi_tx                                                                                                          
+[    0.771113] device: 'fc460000.ad-hoc-bus': device_add                                                                                                                  
+[    0.776796] bus: 'platform': add device fc460000.ad-hoc-bus                                                                                                            
+[    0.781916] device: 'soc:static-rules': device_add                                                                                                                     
+[    0.787215] bus: 'platform': add device soc:static-rules                                                                                                               
+[    0.792167] device: 'soc:devfreq_spdm_cpu': device_add                                                                                                                 
+[    0.797541] bus: 'platform': add device soc:devfreq_spdm_cpu                                                                                                           
+[    0.802676] device: 'soc:devfreq_spdm_gov': device_add                                                                                                                 
+[    0.808307] bus: 'platform': add device soc:devfreq_spdm_gov                                                                                                           
+[    0.813395] device: 'f9000000.interrupt-controller': device_add                                                                                                        
+[    0.819071] bus: 'platform': add device f9000000.interrupt-controller                                                                                                  
+[    0.825080] device: 'soc:timer': device_add                                                                                                                            
+[    0.831307] bus: 'platform': add device soc:timer                                                                                                                      
+[    0.835415] device: 'f9020000.timer': device_add                                                                                                                       
+[    0.840166] bus: 'platform': add device f9020000.timer                                                                                                                 
+[    0.845019] device: 'f9070000.clock-controller': device_add                                                                                                            
+[    0.849800] bus: 'platform': add device f9070000.clock-controller                                                                                                      
+[    0.855434] device: 'f9071000.clock-controller': device_add                                                                                                            
+[    0.861518] bus: 'platform': add device f9071000.clock-controller                                                                                                      
+[    0.867072] device: 'f9072000.clock-controller': device_add                                                                                                            
+[    0.873150] bus: 'platform': add device f9072000.clock-controller                                                                                                      
+[    0.878696] device: 'f9073000.clock-controller': device_add                                                                                                            
+[    0.884782] bus: 'platform': add device f9073000.clock-controller                                                                                                      
+[    0.890331] device: 'f9074000.clock-controller': device_add                                                                                                            
+[    0.896418] bus: 'platform': add device f9074000.clock-controller                                                                                                      
+[    0.901963] device: 'f9075000.clock-controller': device_add                                                                                                            
+[    0.908046] bus: 'platform': add device f9075000.clock-controller                                                                                                      
+[    0.913542] device: 'f9070000.ldo-vref': device_add                                                                                                                    
+[    0.919676] bus: 'platform': add device f9070000.ldo-vref                                                                                                              
+[    0.924477] device: 'f9071000.ldo-vref': device_add                                                                                                                    
+[    0.929919] bus: 'platform': add device f9071000.ldo-vref                                                                                                              
+[    0.934720] device: 'f9072000.ldo-vref': device_add                                                                                                                    
+[    0.940162] bus: 'platform': add device f9072000.ldo-vref                                                                                                              
+[    0.944968] device: 'f9073000.ldo-vref': device_add                                                                                                                    
+[    0.950405] bus: 'platform': add device f9073000.ldo-vref                                                                                                              
+[    0.955209] device: 'f9074000.ldo-vref': device_add                                                                                                                    
+[    0.960648] bus: 'platform': add device f9074000.ldo-vref                                                                                                              
+[    0.965449] device: 'f9075000.ldo-vref': device_add                                                                                                                    
+[    0.970891] bus: 'platform': add device f9075000.ldo-vref                                                                                                              
+[    0.975724] device: 'f900d000.clock-controller': device_add                                                                                                            
+[    0.981136] bus: 'platform': add device f900d000.clock-controller                                                                                                      
+[    0.986657] device: 'f900f000.clock-controller': device_add                                                                                                            
+[    0.992766] bus: 'platform': add device f900f000.clock-controller                                                                                                      
+[    0.998761] device: 'f9100000.arm64-cpu-erp': device_add                                                                                                               
+[    1.004401] bus: 'platform': add device f9100000.arm64-cpu-erp                                                                                                         
+[    1.009906] device: 'fc4ab000.restart': device_add                                                                                                                     
+[    1.015423] bus: 'platform': add device fc4ab000.restart                                                                                                               
+[    1.020310] device: 'fe80f000.qcom,msm-imem': device_add                                                                                                               
+[    1.025667] bus: 'platform': add device fe80f000.qcom,msm-imem                                                                                                         
+[    1.031263] device: 'f9017000.qcom,wdt': device_add                                                                                                                    
+[    1.036605] bus: 'platform': add device f9017000.qcom,wdt                                                                                                              
+[    1.041459] device: 'soc:qcom,msm-rtb': device_add                                                                                                                     
+[    1.046932] bus: 'platform': add device soc:qcom,msm-rtb                                                                                                               
+[    1.051739] device: 'fc4be024.jtagfuse': device_add                                                                                                                    
+[    1.057088] bus: 'platform': add device fc4be024.jtagfuse                                                                                                              
+[    1.061828] device: 'fb840000.jtagmm': device_add                                                                                                                      
+[    1.067245] bus: 'platform': add device fb840000.jtagmm                                                                                                                
+[    1.072077] device: 'fb940000.jtagmm': device_add                                                                                                                      
+[    1.076967] bus: 'platform': add device fb940000.jtagmm                                                                                                                
+[    1.081969] device: 'fba40000.jtagmm': device_add                                                                                                                      
+[    1.086863] bus: 'platform': add device fba40000.jtagmm                                                                                                                
+[    1.091866] device: 'fbb40000.jtagmm': device_add                                                                                                                      
+[    1.096760] bus: 'platform': add device fbb40000.jtagmm                                                                                                                
+[    1.101766] device: 'fbc40000.jtagmm': device_add                                                                                                                      
+[    1.106655] bus: 'platform': add device fbc40000.jtagmm                                                                                                                
+[    1.111658] device: 'fbd40000.jtagmm': device_add                                                                                                                      
+[    1.116550] bus: 'platform': add device fbd40000.jtagmm                                                                                                                
+[    1.121488] device: 'soc:qcom,sps': device_add                                                                                                                         
+[    1.126444] bus: 'platform': add device soc:qcom,sps                                                                                                                   
+[    1.131181] device: 'f991e000.serial': device_add                                                                                                                      
+[    1.136083] bus: 'platform': add device f991e000.serial                                                                                                                
+[    1.141529] irq: no irq domain found for /soc/pinctrl@fd510000/gp/msm_gpio !                                                                                           
+[    1.145734] device: 'f995e000.uart': device_add                                                                                                                        
+[    1.153012] bus: 'platform': add device f995e000.uart                                                                                                                  
+[    1.157387] device: 'fc400000.qcom,gcc': device_add                                                                                                                    
+[    1.162473] bus: 'platform': add device fc400000.qcom,gcc                                                                                                              
+[    1.167278] device: 'fc401880.qcom,rpmcc': device_add                                                                                                                  
+[    1.172716] bus: 'platform': add device fc401880.qcom,rpmcc                                                                                                            
+[    1.177866] device: 'fd8c0000.qcom,mmsscc': device_add                                                                                                                 
+[    1.183132] bus: 'platform': add device fd8c0000.qcom,mmsscc                                                                                                           
+[    1.188457] device: 'fc401880.qcom,cc-debug': device_add                                                                                                               
+[    1.194155] bus: 'platform': add device fc401880.qcom,cc-debug                                                                                                         
+[    1.199533] device: 'soc:qcom,cci': device_add                                                                                                                         
+[    1.205094] bus: 'platform': add device soc:qcom,cci                                                                                                                   
+[    1.209600] device: 'soc:qcom,cpubw': device_add                                                                                                                       
+[    1.214639] bus: 'platform': add device soc:qcom,cpubw                                                                                                                 
+[    1.219493] device: 'fc388000.qcom,cpu-bwmon': device_add                                                                                                              
+[    1.224192] bus: 'platform': add device fc388000.qcom,cpu-bwmon                                                                                                        
+[    1.229746] device: 'soc:qcom,mincpubw': device_add                                                                                                                    
+[    1.235387] bus: 'platform': add device soc:qcom,mincpubw                                                                                                              
+[    1.240333] device: 'soc:qcom,msm-cpufreq': device_add                                                                                                                 
+[    1.245805] bus: 'platform': add device soc:qcom,msm-cpufreq                                                                                                           
+[    1.251122] device: 'f9015000.qcom,cpu-clock-8992': device_add                                                                                                         
+[    1.256661] bus: 'platform': add device f9015000.qcom,cpu-clock-8992                                                                                                   
+[    1.262388] device: 'soc:dummy_vreg': device_add                                                                                                                       
+[    1.268807] bus: 'platform': add device soc:dummy_vreg                                                                                                                 
+[    1.273685] device: 'fc4cf000.qcom,spmi': device_add                                                                                                                   
+[    1.278358] bus: 'platform': add device fc4cf000.qcom,spmi                                                                                                             
+[    1.283650] device: 'soc:cpu-pmu': device_add                                                                                                                          
+[    1.288773] bus: 'platform': add device soc:cpu-pmu                                                                                                                    
+[    1.297375] device: 'fc520000.qcom,pcie': device_add                                                                                                                   
+[    1.297874] bus: 'platform': add device fc520000.qcom,pcie                                                                                                             
+[    1.303188] device: 'soc:qcom,cnss': device_add                                                                                                                        
+[    1.308390] bus: 'platform': add device soc:qcom,cnss                                                                                                                  
+[    1.313157] device: 'fd4c0000.qcom,ipa': device_add                                                                                                                    
+[    1.318028] bus: 'platform': add device fd4c0000.qcom,ipa                                                                                                              
+[    1.322795] device: 'soc:qcom,rmnet-ipa': device_add                                                                                                                   
+[    1.328271] bus: 'platform': add device soc:qcom,rmnet-ipa                                                                                                             
+[    1.333539] device: 'f9924000.i2c': device_add                                                                                                                         
+[    1.338600] bus: 'platform': add device f9924000.i2c                                                                                                                   
+[    1.343291] irq: no irq domain found for /soc/pinctrl@fd510000/gp/msm_gpio !                                                                                           
+[    1.348156] device: 'soc:wcd9xxx-irq': device_add                                                                                                                      
+[    1.355179] bus: 'platform': add device soc:wcd9xxx-irq                                                                                                                
+[    1.360022] device: 'f9967000.i2c': device_add                                                                                                                         
+[    1.364814] bus: 'platform': add device f9967000.i2c                                                                                                                   
+[    1.369568] device: 'f9928000.i2c': device_add                                                                                                                         
+[    1.374451] bus: 'platform': add device f9928000.i2c                                                                                                                   
+[    1.378929] device: 'f9904000.qcom,sps-dma': device_add                                                                                                                
+[    1.383827] bus: 'platform': add device f9904000.qcom,sps-dma                                                                                                          
+[    1.388985] device: 'f9944000.qcom,sps-dma': device_add                                                                                                                
+[    1.394677] bus: 'platform': add device f9944000.qcom,sps-dma                                                                                                          
+[    1.400040] device: 'fe12f000.slim': device_add                                                                                                                        
+[    1.405615] bus: 'platform': add device fe12f000.slim                                                                                                                  
+[    1.410167] device: 'fe034000.sound': device_add                                                                                                                       
+[    1.415162] bus: 'platform': add device fe034000.sound                                                                                                                 
+[    1.419933] device: 'soc:qcom,msm-adsp-loader': device_add                                                                                                             
+[    1.424799] bus: 'platform': add device soc:qcom,msm-adsp-loader                                                                                                       
+[    1.430347] device: 'soc:qcom,msm-audio-ion': device_add                                                                                                               
+[    1.436431] bus: 'platform': add device soc:qcom,msm-audio-ion                                                                                                         
+[    1.441806] device: 'soc:qcom,msm-pcm': device_add                                                                                                                     
+[    1.447366] bus: 'platform': add device soc:qcom,msm-pcm                                                                                                               
+[    1.452223] device: 'soc:qcom,msm-pcm-lpa': device_add                                                                                                                 
+[    1.457610] bus: 'platform': add device soc:qcom,msm-pcm-lpa                                                                                                           
+[    1.462650] device: 'soc:qcom,msm-ultra-low-latency': device_add                                                                                                       
+[    1.468377] bus: 'platform': add device soc:qcom,msm-ultra-low-latency                                                                                                 
+[    1.474448] device: 'soc:qcom,msm-pcm-low-latency': device_add                                                                                                         
+[    1.480703] bus: 'platform': add device soc:qcom,msm-pcm-low-latency                                                                                                   
+[    1.486600] device: 'soc:qcom,msm-pcm-routing': device_add                                                                                                             
+[    1.493028] bus: 'platform': add device soc:qcom,msm-pcm-routing                                                                                                       
+[    1.498403] device: 'soc:qcom,msm-compr-dsp': device_add                                                                                                               
+[    1.504486] bus: 'platform': add device soc:qcom,msm-compr-dsp                                                                                                         
+[    1.509864] device: 'soc:qcom,msm-compress-dsp': device_add                                                                                                            
+[    1.515428] bus: 'platform': add device soc:qcom,msm-compress-dsp                                                                                                      
+[    1.520975] device: 'soc:qcom,msm-voip-dsp': device_add                                                                                                                
+[    1.527143] bus: 'platform': add device soc:qcom,msm-voip-dsp                                                                                                          
+[    1.532257] device: 'soc:qcom,msm-pcm-voice': device_add                                                                                                               
+[    1.538080] bus: 'platform': add device soc:qcom,msm-pcm-voice                                                                                                         
+[    1.543542] device: 'soc:qcom,msm-stub-codec': device_add                                                                                                              
+[    1.549104] bus: 'platform': add device soc:qcom,msm-stub-codec                                                                                                        
+[    1.554651] device: 'soc:qcom,msm-dai-fe': device_add                                                                                                                  
+[    1.560300] bus: 'platform': add device soc:qcom,msm-dai-fe                                                                                                            
+[    1.565589] device: 'soc:qcom,msm-pcm-afe': device_add                                                                                                                 
+[    1.570897] bus: 'platform': add device soc:qcom,msm-pcm-afe                                                                                                           
+[    1.576187] device: 'soc:qcom,msm-dai-q6-hdmi': device_add                                                                                                             
+[    1.581917] bus: 'platform': add device soc:qcom,msm-dai-q6-hdmi                                                                                                       
+[    1.587294] device: 'soc:qcom,msm-lsm-client': device_add                                                                                                              
+[    1.593376] bus: 'platform': add device soc:qcom,msm-lsm-client                                                                                                        
+[    1.598762] device: 'soc:qcom,msm-pcm-loopback': device_add                                                                                                            
+[    1.604399] bus: 'platform': add device soc:qcom,msm-pcm-loopback                                                                                                      
+[    1.610035] device: 'soc:qcom,msm-voice-svc': device_add                                                                                                               
+[    1.616205] bus: 'platform': add device soc:qcom,msm-voice-svc                                                                                                         
+[    1.621667] device: 'soc:qcom,msm-cpe-lsm': device_add                                                                                                                 
+[    1.627234] bus: 'platform': add device soc:qcom,msm-cpe-lsm                                                                                                           
+[    1.632433] device: 'soc:qcom,msm-dai-q6': device_add                                                                                                                  
+[    1.638165] bus: 'platform': add device soc:qcom,msm-dai-q6                                                                                                            
+[    1.643201] device: 'soc:qcom,msm-pri-auxpcm': device_add                                                                                                              
+[    1.648496] bus: 'platform': add device soc:qcom,msm-pri-auxpcm                                                                                                        
+[    1.654136] device: 'soc:qcom,msm-sec-auxpcm': device_add                                                                                                              
+[    1.659781] bus: 'platform': add device soc:qcom,msm-sec-auxpcm                                                                                                        
+[    1.665415] device: 'soc:qcom,msm-dai-mi2s': device_add                                                                                                                
+[    1.671064] bus: 'platform': add device soc:qcom,msm-dai-mi2s                                                                                                          
+[    1.676361] device: 'soc:qcom,msm-pcm-hostless': device_add                                                                                                            
+[    1.682176] bus: 'platform': add device soc:qcom,msm-pcm-hostless                                                                                                      
+[    1.687912] device: 'f9824900.sdhci': device_add                                                                                                                       
+[    1.693810] bus: 'platform': add device f9824900.sdhci                                                                                                                 
+[    1.698622] device: '0.qcom,rmtfs_sharedmem': device_add                                                                                                               
+[    1.703445] bus: 'platform': add device 0.qcom,rmtfs_sharedmem                                                                                                         
+[    1.709029] device: '0.qcom,dsp_sharedmem': device_add                                                                                                                 
+[    1.714555] bus: 'platform': add device 0.qcom,dsp_sharedmem                                                                                                           
+[    1.719792] device: '0.qcom,mdm_sharedmem': device_add                                                                                                                 
+[    1.725492] bus: 'platform': add device 0.qcom,mdm_sharedmem                                                                                                           
+[    1.730562] device: '0.qcom,sensors_sharedmem': device_add                                                                                                             
+[    1.736258] bus: 'platform': add device 0.qcom,sensors_sharedmem                                                                                                       
+[    1.741671] device: 'fdce0000.qcom,venus': device_add                                                                                                                  
+[    1.747714] bus: 'platform': add device fdce0000.qcom,venus                                                                                                            
+[    1.752986] device: 'fc880000.qcom,mss': device_add                                                                                                                    
+[    1.758045] bus: 'platform': add device fc880000.qcom,mss                                                                                                              
+[    1.763142] device: 'fe200000.qcom,lpass': device_add                                                                                                                  
+[    1.768463] bus: 'platform': add device fe200000.qcom,lpass                                                                                                            
+[    1.773611] device: 'fd484000.qcom,ipc-spinlock': device_add                                                                                                           
+[    1.778879] bus: 'platform': add device fd484000.qcom,ipc-spinlock                                                                                                     
+[    1.785022] device: 'fdc00000.qcom,vidc': device_add                                                                                                                   
+[    1.790773] bus: 'platform': add device fdc00000.qcom,vidc                                                                                                             
+[    1.796095] device: '6a00000.qcom,smem': device_add                                                                                                                    
+[    1.801187] bus: 'platform': add device 6a00000.qcom,smem                                                                                                              
+[    1.806040] device: 'soc:qcom,smdpkt': device_add                                                                                                                      
+[    1.811515] bus: 'platform': add device soc:qcom,smdpkt                                                                                                                
+[    1.816281] device: 'soc:qcom,smdtty': device_add                                                                                                                      
+[    1.821237] bus: 'platform': add device soc:qcom,smdtty                                                                                                                
+[    1.826179] device: 'soc:qcom,ipc_router': device_add                                                                                                                  
+[    1.831134] bus: 'platform': add device soc:qcom,ipc_router                                                                                                            
+[    1.836428] device: 'soc:qcom,ipc_router_modem_xprt': device_add                                                                                                       
+[    1.841728] bus: 'platform': add device soc:qcom,ipc_router_modem_xprt                                                                                                 
+[    1.848058] device: 'soc:qcom,ipc_router_q6_xprt': device_add                                                                                                          
+[    1.854313] bus: 'platform': add device soc:qcom,ipc_router_q6_xprt                                                                                                    
+[    1.860380] device: 'fc4a8000.tsens': device_add                                                                                                                       
+[    1.866205] bus: 'platform': add device fc4a8000.tsens                                                                                                                 
+[    1.871452] device: 'fdd00000.qcom,ocmem': device_add                                                                                                                  
+[    1.876016] bus: 'platform': add device fdd00000.qcom,ocmem                                                                                                            
+[    1.881219] device: 'soc:qcom,rpm-smd': device_add                                                                                                                     
+[    1.886521] bus: 'platform': add device soc:qcom,rpm-smd                                                                                                               
+[    1.891495] device: 'f9bff000.qcom,msm-rng': device_add                                                                                                                
+[    1.896850] bus: 'platform': add device f9bff000.qcom,msm-rng                                                                                                          
+[    1.901913] device: '6500000.qcom,qseecom': device_add                                                                                                                 
+[    1.907698] bus: 'platform': add device 6500000.qcom,qseecom                                                                                                           
+[    1.912844] device: 'fe80f720.tz-log': device_add                                                                                                                      
+[    1.918549] bus: 'platform': add device fe80f720.tz-log                                                                                                                
+[    1.923409] device: 'fd440000.qcrypto': device_add                                                                                                                     
+[    1.928185] bus: 'platform': add device fd440000.qcrypto                                                                                                               
+[    1.933290] device: 'fd440000.qcedev': device_add                                                                                                                      
+[    1.938518] bus: 'platform': add device fd440000.qcedev                                                                                                                
+[    1.943192] device: 'soc:qcom,sensor-information': device_add                                                                                                          
+[    1.948152] bus: 'platform': add device soc:qcom,sensor-information                                                                                                    
+[    1.954147] device: 'soc:qcom,msm-thermal': device_add                                                                                                                 
+[    1.960127] bus: 'platform': add device soc:qcom,msm-thermal                                                                                                           
+[    1.965417] device: 'soc:qcom,bcl': device_add                                                                                                                         
+[    1.971150] bus: 'platform': add device soc:qcom,bcl                                                                                                                   
+[    1.975628] device: 'f9117000.qcom,lmh': device_add                                                                                                                    
+[    1.980528] bus: 'platform': add device f9117000.qcom,lmh                                                                                                              
+[    1.985476] device: 'f9200000.ssusb': device_add                                                                                                                       
+[    1.990688] bus: 'platform': add device f9200000.ssusb                                                                                                                 
+[    1.995523] device: 'f92f8800.hsphy': device_add                                                                                                                       
+[    2.000318] bus: 'platform': add device f92f8800.hsphy                                                                                                                 
+[    2.005236] device: 'f9b38000.ssphy': device_add                                                                                                                       
+[    2.010042] bus: 'platform': add device f9b38000.ssphy                                                                                                                 
+[    2.014927] device: 'f92f8000.dbm': device_add                                                                                                                         
+[    2.019761] bus: 'platform': add device f92f8000.dbm                                                                                                                   
+[    2.024416] device: 'f9304000.qcom,usbbam': device_add                                                                                                                 
+[    2.029313] bus: 'platform': add device f9304000.qcom,usbbam                                                                                                           
+[    2.034398] device: 'fe80f0c8.android_usb': device_add                                                                                                                 
+[    2.040076] bus: 'platform': add device fe80f0c8.android_usb                                                                                                           
+[    2.045107] device: 'soc:audio_heap': device_add                                                                                                                       
+[    2.050840] bus: 'platform': add device soc:audio_heap                                                                                                                 
+[    2.055519] device: 'soc:adsp_heap': device_add                                                                                                                        
+[    2.060386] bus: 'platform': add device soc:adsp_heap                                                                                                                  
+[    2.064893] device: 'soc:qcom,msm-ssc-sensors': device_add                                                                                                             
+[    2.070026] bus: 'platform': add device soc:qcom,msm-ssc-sensors                                                                                                       
+[    2.075550] device: 'fe09c00c.qcom,avtimer': device_add                                                                                                                
+[    2.081569] bus: 'platform': add device fe09c00c.qcom,avtimer                                                                                                          
+[    2.086604] device: 'soc:cpuss_dump': device_add                                                                                                                       
+[    2.092419] bus: 'platform': add device soc:cpuss_dump                                                                                                                 
+[    2.097220] device: 'fc4b8000.qcom,msm-core': device_add                                                                                                               
+[    2.102056] bus: 'platform': add device fc4b8000.qcom,msm-core                                                                                                         
+[    2.107603] device: 'soc:qcom,ion': device_add                                                                                                                         
+[    2.113164] bus: 'platform': add device soc:qcom,ion                                                                                                                   
+[    2.117915] device: 'f9019000.regulator': device_add                                                                                                                   
+[    2.122717] bus: 'platform': add device f9019000.regulator                                                                                                             
+[    2.127970] device: 'f901a000.regulator': device_add                                                                                                                   
+[    2.132959] bus: 'platform': add device f901a000.regulator                                                                                                             
+[    2.138174] device: 'soc:bt_vreg': device_add                                                                                                                          
+[    2.143373] bus: 'platform': add device soc:bt_vreg                                                                                                                    
+[    2.147879] device: 'soc:wlan_vreg': device_add                                                                                                                        
+[    2.152488] bus: 'platform': add device soc:wlan_vreg                                                                                                                  
+[    2.157122] device: 'f9065000.qcom,spm': device_add                                                                                                                    
+[    2.162211] bus: 'platform': add device f9065000.qcom,spm                                                                                                              
+[    2.167046] device: 'f9012000.qcom,spm': device_add                                                                                                                    
+[    2.172454] bus: 'platform': add device f9012000.qcom,spm                                                                                                              
+[    2.177299] device: 'f9013000.qcom,spm': device_add                                                                                                                    
+[    2.182698] bus: 'platform': add device f9013000.qcom,spm                                                                                                              
+[    2.187545] device: 'f9089000.qcom,spm': device_add                                                                                                                    
+[    2.192940] bus: 'platform': add device f9089000.qcom,spm                                                                                                              
+[    2.197773] device: 'f9099000.qcom,spm': device_add                                                                                                                    
+[    2.203184] bus: 'platform': add device f9099000.qcom,spm                                                                                                              
+[    2.208016] device: 'f90a9000.qcom,spm': device_add                                                                                                                    
+[    2.213426] bus: 'platform': add device f90a9000.qcom,spm                                                                                                              
+[    2.218260] device: 'f90b9000.qcom,spm': device_add                                                                                                                    
+[    2.223669] bus: 'platform': add device f90b9000.qcom,spm                                                                                                              
+[    2.228502] device: 'f90c9000.qcom,spm': device_add                                                                                                                    
+[    2.233916] bus: 'platform': add device f90c9000.qcom,spm                                                                                                              
+[    2.238746] device: 'f90d9000.qcom,spm': device_add                                                                                                                    
+[    2.244154] bus: 'platform': add device f90d9000.qcom,spm                                                                                                              
+[    2.248922] device: 'soc:qcom,lpm-levels': device_add                                                                                                                  
+[    2.254399] bus: 'platform': add device soc:qcom,lpm-levels                                                                                                            
+[    2.259692] device: 'fc4281d0.qcom,mpm': device_add                                                                                                                    
+[    2.264818] bus: 'platform': add device fc4281d0.qcom,mpm                                                                                                              
+[    2.269801] device: 'fe80f664.qcom,pm': device_add                                                                                                                     
+[    2.275232] bus: 'platform': add device fe80f664.qcom,pm                                                                                                               
+[    2.280035] device: 'f908b008.qcom,cpu-sleep-status': device_add                                                                                                       
+[    2.285396] bus: 'platform': add device f908b008.qcom,cpu-sleep-status                                                                                                 
+[    2.291523] device: 'fc000000.qcom,rpm-log': device_add                                                                                                                
+[    2.297716] bus: 'platform': add device fc000000.qcom,rpm-log                                                                                                          
+[    2.303004] device: 'fc000000.qcom,rpm-stats': device_add                                                                                                              
+[    2.308741] bus: 'platform': add device fc000000.qcom,rpm-stats                                                                                                        
+[    2.314236] device: 'fc000000.qcom,rpm-rbcpr-stats': device_add                                                                                                        
+[    2.319853] bus: 'platform': add device fc000000.qcom,rpm-rbcpr-stats                                                                                                  
+[    2.325870] device: 'fc428150.qcom,rpm-master-stats': device_add                                                                                                       
+[    2.332352] bus: 'platform': add device fc428150.qcom,rpm-master-stats                                                                                                 
+[    2.338652] device: 'fd510000.pinctrl': device_add                                                                                                                     
+[    2.344770] bus: 'platform': add device fd510000.pinctrl                                                                                                               
+[    2.349881] device: 'f9966000.spi_fpc': device_add                                                                                                                     
+[    2.355007] bus: 'platform': add device f9966000.spi_fpc                                                                                                               
+[    2.359943] device: 'f9965000.i2c': device_add                                                                                                                         
+[    2.365083] bus: 'platform': add device f9965000.i2c                                                                                                                   
+[    2.369415] device: 'soc:ramoops': device_add                                                                                                                          
+[    2.374449] bus: 'platform': add device soc:ramoops                                                                                                                    
+[    2.378781] device: 'soc:bt_qca6174': device_add                                                                                                                       
+[    2.383390] bus: 'platform': add device soc:bt_qca6174                                                                                                                 
+[    2.388611] irq: no irq domain found for /soc/pinctrl@fd510000/gp/msm_gpio !                                                                                           
+[    2.393208] device: 'soc:earjack-debugger': device_add                                                                                                                 
+[    2.400405] bus: 'platform': add device soc:earjack-debugger                                                                                                           
+[    2.405433] device: 'soc:gpio_keys': device_add                                                                                                                        
+[    2.411168] bus: 'platform': add device soc:gpio_keys                                                                                                                  
+[    2.415851] device: 'cpu0': device_add                                                                                                                                 
+[    2.420640] bus: 'cpu': add device cpu0                                                                                                                                
+[    2.440993] device: 'writeback': device_add                                                                                                                            
+[    2.441039] bus: 'workqueue': add device writeback                                                                                                                     
+[    2.451048] device class 'block': registering                                                                                                                          
+[    2.454449] device class 'pwm': registering                                                                                                                            
+[    2.454517] device class 'misc': registering                                                                                                                           
+[    2.458503] bus: 'usb': registered                                                                                                                                     
+[    2.462906] bus: 'usb': add driver usbfs                                                                                                                               
+[    2.466144] usbcore: registered new interface driver usbfs                                                                                                             
+[    2.470202] bus: 'usb': add driver hub                                                                                                                                 
+[    2.475527] usbcore: registered new interface driver hub                                                                                                               
+[    2.479251] bus: 'usb': add driver usb                                                                                                                                 
+[    2.484721] usbcore: registered new device driver usb                                                                                                                  
+[    2.488246] device class 'udc': registering                                                                                                                            
+[    2.493433] bus: 'serio': registered                                                                                                                                   
+[    2.497358] device class 'input': registering                                                                                                                          
+[    2.501217] device class 'rtc': registering                                                                                                                            
+[    2.505449] device class 'power_supply': registering                                                                                                                   
+[    2.509490] bus: 'mmc': registered                                                                                                                                     
+[    2.514631] device class 'mmc_host': registering                                                                                                                       
+[    2.517894] bus: 'sdio': registered                                                                                                                                    
+[    2.522617] device class 'leds': registering                                                                                                                           
+[    2.525847] device class 'devfreq': registering                                                                                                                        
+[    2.533805] device class 'net': registering                                                                                                                            
+[    2.534633] device: 'lo': device_add                                                                                                                                   
+[    2.539723] clocksource: Switched to clocksource arch_sys_counter                                                                                                      
+[    2.542853] device class 'mem': registering                                                                                                                            
+[    2.548602] device: 'null': device_add                                                                                                                                 
+[    2.552636] device: 'port': device_add                                                                                                                                 
+[    2.556457] device: 'zero': device_add                                                                                                                                 
+[    2.560175] device: 'full': device_add                                                                                                                                 
+[    2.563908] device: 'random': device_add                                                                                                                               
+[    2.567640] device: 'urandom': device_add                                                                                                                              
+[    2.571720] device: 'kmsg': device_add                                                                                                                                 
+[    2.575634] device: 'tty': device_add                                                                                                                                  
+[    2.579284] device: 'console': device_add                                                                                                                              
+[    2.583013] device class 'thermal': registering                                                                                                                        
+[    2.587565] NET: Registered protocol family 2                                                                                                                          
+[    2.591999] TCP established hash table entries: 16384 (order: 5, 131072 bytes)                                                                                         
+[    2.596045] TCP bind hash table entries: 16384 (order: 6, 262144 bytes)                                                                                                
+[    2.603368] TCP: Hash tables configured (established 16384 bind 16384)                                                                                                 
+[    2.609502] UDP hash table entries: 1024 (order: 3, 32768 bytes)                                                                                                       
+[    2.616085] UDP-Lite hash table entries: 1024 (order: 3, 32768 bytes)                                                                                                  
+[    2.622403] NET: Registered protocol family 1                                                                                                                          
+[    2.628559] PCI: CLS 0 bytes, default 128                                                                                                                              
+[    2.633160] Trying to unpack rootfs image as initramfs...                                                                                                              
+[    2.637466] rootfs image is not initramfs (no cpio magic); looks like an initrd                                                                                        
+[    2.647685] Freeing initrd memory: 2008K (ffffffc002a00000 - ffffffc002bf6000)                                                                                         
+[    2.649789] bus: 'platform': add driver armv8-pmu                                                                                                                      
+[    2.657198] bus: 'platform': driver_probe_device: matched device soc:cpu-pmu with driver armv8-pmu                                                                     
+[    2.661436] bus: 'platform': really_probe: probing driver armv8-pmu with device soc:cpu-pmu                                                                            
+[    2.670309] armv8-pmu soc:cpu-pmu: no default pinctrl state                                                                                                            
+[    2.678556] devices_kset: Moving soc:cpu-pmu to end of list                                                                                                            
+[    2.684276] hw perfevents: enabled with armv8_pmuv3 PMU driver, 7 counters available                                                                                   
+[    2.689646] driver: 'armv8-pmu': driver_bound: bound to device 'soc:cpu-pmu'                                                                                           
+[    2.697629] bus: 'platform': really_probe: bound device soc:cpu-pmu to driver armv8-pmu                                                                                
+[    2.708076] bus: 'clocksource': registered                                                                                                                             
+[    2.712443] device: 'clocksource': device_add                                                                                                                          
+[    2.716735] device: 'clocksource0': device_add                                                                                                                         
+[    2.721027] bus: 'clocksource': add device clocksource0                                                                                                                
+[    2.725444] bus: 'platform': add driver alarmtimer                                                                                                                     
+[    2.730788] Registering platform device 'alarmtimer'. Parent at platform                                                                                               
+[    2.735301] device: 'alarmtimer': device_add                                                                                                                           
+[    2.742167] bus: 'platform': add device alarmtimer                                                                                                                     
+[    2.746472] bus: 'platform': driver_probe_device: matched device alarmtimer with driver alarmtimer                                                                     
+[    2.751017] bus: 'platform': really_probe: probing driver alarmtimer with device alarmtimer                                                                            
+[    2.759965] alarmtimer alarmtimer: no of_node; not parsing pinctrl DT                                                                                                  
+[    2.768202] alarmtimer alarmtimer: no default pinctrl state                                                                                                            
+[    2.774814] devices_kset: Moving alarmtimer to end of list                                                                                                             
+[    2.780177] driver: 'alarmtimer': driver_bound: bound to device 'alarmtimer'                                                                                           
+[    2.785737] bus: 'platform': really_probe: bound device alarmtimer to driver alarmtimer                                                                                
+[    2.792993] bus: 'clockevents': registered                                                                                                                             
+[    2.800660] device: 'clockevents': device_add                                                                                                                          
+[    2.804844] device: 'clockevent0': device_add                                                                                                                          
+[    2.809267] bus: 'clockevents': add device clockevent0                                                                                                                 
+[    2.813637] device: 'broadcast': device_add                                                                                                                            
+[    2.818640] bus: 'clockevents': add device broadcast                                                                                                                   
+[    2.822756] futex hash table entries: 256 (order: 3, 32768 bytes)                                                                                                      
+[    2.828031] bus: 'event_source': registered                                                                                                                            
+[    2.833913] device: 'armv8_pmuv3': device_add                                                                                                                          
+[    2.838083] bus: 'event_source': add device armv8_pmuv3                                                                                                                
+[    2.842458] device: 'breakpoint': device_add                                                                                                                           
+[    2.847461] bus: 'event_source': add device breakpoint                                                                                                                 
+[    2.852000] device: 'software': device_add                                                                                                                             
+[    2.856920] bus: 'event_source': add device software                                                                                                                   
+[    2.864689] workingset: timestamp_bits=60 max_order=19 bucket_order=0                                                                                                  
+[    2.880747] Key type asymmetric registered                                                                                                                             
+[    2.880777] Asymmetric key parser 'x509' registered                                                                                                                    
+[    2.883987] device class 'bsg': registering                                                                                                                            
+[    2.888729] Block layer SCSI generic (bsg) driver version 0.4 loaded (major 252)                                                                                       
+[    2.892733] io scheduler noop registered                                                                                                                               
+[    2.900389] io scheduler deadline registered                                                                                                                           
+[    2.904395] io scheduler cfq registered (default)                                                                                                                      
+[    2.908501] device class 'phy': registering                                                                                                                            
+[    2.913115] bus: 'platform': add driver qcom-spmi-gpio                                                                                                                 
+[    2.918185] bus: 'platform': add driver qcom-spmi-mpp                                                                                                                  
+[    2.923225] bus: 'platform': add driver qcom-ssbi-gpio                                                                                                                 
+[    2.928276] bus: 'platform': add driver qcom-ssbi-mpp                                                                                                                  
+[    2.933310] bus: 'platform': add driver basic-mmio-gpio                                                                                                                
+[    2.937883] bus: 'pci_express': registered                                                                                                                             
+[    2.942605] bus: 'pci': add driver pcieport                                                                                                                            
+[    2.946826] bus: 'pci_express': add driver aer                                                                                                                         
+[    2.950890] bus: 'platform': add driver qcom-pcie                                                                                                                      
+[    2.955999] bus: 'platform': add driver gsbi                                                                                                                           
+[    2.960682] device: 'ptmx': device_add                                                                                                                                 
+[    2.964571] Serial: 8250/16550 driver, 4 ports, IRQ sharing disabled                                                                                                   
+[    2.968069] Registering platform device 'serial8250'. Parent at platform                                                                                               
+[    2.974551] device: 'serial8250': device_add                                                                                                                           
+[    2.981245] bus: 'platform': add device serial8250                                                                                                                     
+[    2.985573] device: 'ttyS0': device_add                                                                                                                                
+[    2.990235] device: 'ttyS1': device_add                                                                                                                                
+[    2.993952] device: 'ttyS2': device_add                                                                                                                                
+[    2.997778] device: 'ttyS3': device_add                                                                                                                                
+[    3.001588] bus: 'platform': add driver serial8250                                                                                                                     
+[    3.005485] bus: 'platform': driver_probe_device: matched device serial8250 with driver serial8250                                                                     
+[    3.010147] bus: 'platform': really_probe: probing driver serial8250 with device serial8250                                                                            
+[    3.019096] serial8250 serial8250: no of_node; not parsing pinctrl DT                                                                                                  
+[    3.027333] serial8250 serial8250: no default pinctrl state                                                                                                            
+[    3.033945] devices_kset: Moving serial8250 to end of list                                                                                                             
+[    3.039309] driver: 'serial8250': driver_bound: bound to device 'serial8250'                                                                                           
+[    3.044865] bus: 'platform': really_probe: bound device serial8250 to driver serial8250                                                                                
+[    3.052098] bus: 'pci': add driver serial                                                                                                                              
+[    3.059884] bus: 'platform': add driver msm_serial_hsl                                                                                                                 
+[    3.064147] bus: 'platform': driver_probe_device: matched device f991e000.serial with driver msm_serial_hsl                                                            
+[    3.069002] bus: 'platform': really_probe: probing driver msm_serial_hsl with device f991e000.serial                                                                   
+[    3.078649] msm_serial_hsl f991e000.serial: no default pinctrl state                                                                                                   
+[    3.088025] devices_kset: Moving f991e000.serial to end of list                                                                                                        
+[    3.094354] msm_serial_hsl_probe: JRM detected port #0 (ttyHSL0)                                                                                                       
+[    3.099981] msm_serial_hsl_probe:  Getting GSBI resource                                                                                                               
+[    3.106365]  msm_serial_hsl_probe:: IRQ -107880448 mapBASE: 0x12                                                                                                       
+[    3.111589] f991e000.serial: ttyHSL0 at MMIO 0xf991e000 (irq = 18, base_baud = 460800) is a MSM                                                                        
+[    3.117617]  msm_hsl_console_setup ?[    3.130658] msm_hsl_console_setup: console setup on port #0                                                                     
+[    3.130730] console [ttyHSL0] enabled                                                                                                                                  
+[    3.135042] bootconsole [msm_serial_dm0] disabled                                                                                                                      
+[    3.139114] msm_console_set_enable: enable uart console                                                                                                                
+[    3.148749] msm_console_set_enable:  Scheduling delayed work                                                                                                           
+[    3.154480] driver: 'msm_serial_hsl': driver_bound: bound to device 'f991e000.serial'                                                                                  
+[    3.162292] bus: 'platform': really_probe: bound device f991e000.serial to driver msm_serial_hsl                                                                       
+[    3.171396] msm_serial_hsl_init: driver initialized                                                                                                                    
+[    3.175944] bus: 'platform': add driver msm_serial                                                                                                                     
+[    3.181285] msm_serial: driver initialized                                                                                                                             
+[    3.184787] device: 'ttyprintk': device_add                                                                                                                            
+[    3.189003] device: 'hw_random': device_add                                                                                                                            
+[    3.193189] bus: 'platform': add driver msm_rng                                                                                                                        
+[    3.198192] device: 'cache': device_add                                                                                                                                
+[    3.201465] device: 'index0': device_add                                                                                                                               
+[    3.205424] device: 'index1': device_add                                                                                                                               
+[    3.209321] device: 'index2': device_add                                                                                                                               
+[    3.236407]  -- console_enable_work --                                                                                                                                 
+[    3.270667] device: '1:0': device_add                                                                                                                                  
+[    3.273443] device: 'ram0': device_add                                                                                                                                 
+[    3.277676] device: '1:1': device_add                                                                                                                                  
+[    3.280823] device: 'ram1': device_add                                                                                                                                 
+[    3.284902] device: '1:2': device_add                                                                                                                                  
+[    3.288185] device: 'ram2': device_add                                                                                                                                 
+[    3.292254] device: '1:3': device_add                                                                                                                                  
+[    3.295583] device: 'ram3': device_add                                                                                                                                 
+[    3.299622] device: '1:4': device_add                                                                                                                                  
+[    3.302947] device: 'ram4': device_add                                                                                                                                 
+[    3.307000] device: '1:5': device_add                                                                                                                                  
+[    3.310320] device: 'ram5': device_add                                                                                                                                 
+[    3.314387] device: '1:6': device_add                                                                                                                                  
+[    3.317699] device: 'ram6': device_add                                                                                                                                 
+[    3.321758] device: '1:7': device_add                                                                                                                                  
+[    3.325076] device: 'ram7': device_add                                                                                                                                 
+[    3.329141] device: '1:8': device_add                                                                                                                                  
+[    3.332457] device: 'ram8': device_add                                                                                                                                 
+[    3.336559] device: '1:9': device_add                                                                                                                                  
+[    3.339835] device: 'ram9': device_add                                                                                                                                 
+[    3.343886] device: '1:10': device_add                                                                                                                                 
+[    3.347302] device: 'ram10': device_add                                                                                                                                
+[    3.351475] device: '1:11': device_add                                                                                                                                 
+[    3.354870] device: 'ram11': device_add                                                                                                                                
+[    3.358996] device: '1:12': device_add                                                                                                                                 
+[    3.362403] device: 'ram12': device_add                                                                                                                                
+[    3.366596] device: '1:13': device_add                                                                                                                                 
+[    3.369949] device: 'ram13': device_add                                                                                                                                
+[    3.374103] device: '1:14': device_add                                                                                                                                 
+[    3.377510] device: 'ram14': device_add                                                                                                                                
+[    3.381650] device: '1:15': device_add                                                                                                                                 
+[    3.385058] device: 'ram15': device_add                                                                                                                                
+[    3.389206] brd: module loaded                                                                                                                                         
+[    3.391839] device: 'loop-control': device_add                                                                                                                         
+[    3.399973] device: '7:0': device_add                                                                                                                                  
+[    3.402687] device: 'loop0': device_add                                                                                                                                
+[    3.410381] device: '7:1': device_add                                                                                                                                  
+[    3.413114] device: 'loop1': device_add                                                                                                                                
+[    3.420772] device: '7:2': device_add                                                                                                                                  
+[    3.423521] device: 'loop2': device_add                                                                                                                                
+[    3.431176] device: '7:3': device_add                                                                                                                                  
+[    3.433908] device: 'loop3': device_add                                                                                                                                
+[    3.441564] device: '7:4': device_add                                                                                                                                  
+[    3.444301] device: 'loop4': device_add                                                                                                                                
+[    3.451967] device: '7:5': device_add                                                                                                                                  
+[    3.454698] device: 'loop5': device_add                                                                                                                                
+[    3.462374] device: '7:6': device_add                                                                                                                                  
+[    3.465110] device: 'loop6': device_add                                                                                                                                
+[    3.472764] device: '7:7': device_add                                                                                                                                  
+[    3.475501] device: 'loop7': device_add                                                                                                                                
+[    3.479600] loop: module loaded                                                                                                                                        
+[    3.482354] device class 'zram-control': registering                                                                                                                   
+[    3.490837] device: '254:0': device_add                                                                                                                                
+[    3.493746] device: 'zram0': device_add                                                                                                                                
+[    3.497891] zram: Added device: zram0                                                                                                                                  
+[    3.501133] bus: 'platform': add driver spmi_pmic_arb                                                                                                                  
+[    3.506548] bus: 'platform': driver_probe_device: matched device fc4cf000.qcom,spmi with driver spmi_pmic_arb                                                          
+[    3.516050] bus: 'platform': really_probe: probing driver spmi_pmic_arb with device fc4cf000.qcom,spmi                                                                 
+[    3.525356] spmi_pmic_arb fc4cf000.qcom,spmi: no default pinctrl state                                                                                                 
+[    3.531872] devices_kset: Moving fc4cf000.qcom,spmi to end of list                                                                                                     
+[    3.538076] spmi spmi-0: PMIC Arb Version-1 (0x20000002)                                                                                                               
+[    3.543370] spmi_pmic_arb: probe of fc4cf000.qcom,spmi rejects match -6                                                                                                
+[    3.550429] bus: 'platform': add driver dwc3                                                                                                                           
+[    3.554834] bus: 'pci': add driver dwc3-pci                                                                                                                            
+[    3.558401] bus: 'platform': add driver dwc3-of-simple                                                                                                                 
+[    3.564017] ehci_hcd: USB 2.0 'Enhanced' Host Controller (EHCI) Driver                                                                                                 
+[    3.569971] ehci-pci: EHCI PCI platform driver                                                                                                                         
+[    3.574383] bus: 'pci': add driver ehci-pci                                                                                                                            
+[    3.578594] ehci-msm: Qualcomm On-Chip EHCI Host Controller                                                                                                            
+[    3.584108] bus: 'platform': add driver msm_hsusb_host                                                                                                                 
+[    3.589728] bus: 'pci': add driver xhci_hcd                                                                                                                            
+[    3.593445] bus: 'platform': add driver xhci-hcd                                                                                                                       
+[    3.598923] bus: 'usb': add driver cdc_acm                                                                                                                             
+[    3.602127] usbcore: registered new interface driver cdc_acm                                                                                                           
+[    3.607713] cdc_acm: USB Abstract Control Model driver for USB modems and ISDN adapters                                                                                
+[    3.615701] bus: 'usb': add driver cdc_wdm                                                                                                                             
+[    3.619822] usbcore: registered new interface driver cdc_wdm                                                                                                           
+[    3.625489] bus: 'usb-serial': registered                                                                                                                              
+[    3.629432] bus: 'usb': add driver usbserial                                                                                                                           
+[    3.633703] usbcore: registered new interface driver usbserial                                                                                                         
+[    3.639490] bus: 'usb': add driver usbserial_generic                                                                                                                   
+[    3.644470] usbcore: registered new interface driver usbserial_generic                                                                                                 
+[    3.650947] bus: 'usb-serial': add driver generic                                                                                                                      
+[    3.655669] usbserial: USB Serial support registered for generic                                                                                                       
+[    3.661626] bus: 'usb': add driver usb_debug                                                                                                                           
+[    3.665906] usbcore: registered new interface driver usb_debug                                                                                                         
+[    3.671692] bus: 'usb-serial': add driver debug                                                                                                                        
+[    3.676241] usbserial: USB Serial support registered for debug                                                                                                         
+[    3.682024] bus: 'usb': add driver ftdi_sio                                                                                                                            
+[    3.686217] usbcore: registered new interface driver ftdi_sio                                                                                                          
+[    3.691917] bus: 'usb-serial': add driver ftdi_sio                                                                                                                     
+[    3.696728] usbserial: USB Serial support registered for FTDI USB Serial Device                                                                                        
+[    3.703987] bus: 'usb': add driver mos7720                                                                                                                             
+[    3.708092] usbcore: registered new interface driver mos7720                                                                                                           
+[    3.713707] bus: 'usb-serial': add driver moschip7720                                                                                                                  
+[    3.718780] usbserial: USB Serial support registered for Moschip 2 port adapter                                                                                        
+[    3.726035] bus: 'usb': add driver mos7840                                                                                                                             
+[    3.730146] usbcore: registered new interface driver mos7840                                                                                                           
+[    3.735753] bus: 'usb-serial': add driver mos7840                                                                                                                      
+[    3.740479] usbserial: USB Serial support registered for Moschip 7840/7820 USB Serial Driver                                                                           
+[    3.748865] bus: 'usb': add driver pl2303                                                                                                                              
+[    3.752884] usbcore: registered new interface driver pl2303                                                                                                            
+[    3.758411] bus: 'usb-serial': add driver pl2303                                                                                                                       
+[    3.763061] usbserial: USB Serial support registered for pl2303                                                                                                        
+[    3.768916] bus: 'usb': add driver qcaux                                                                                                                               
+[    3.772850] usbcore: registered new interface driver qcaux                                                                                                             
+[    3.778288] bus: 'usb-serial': add driver qcaux                                                                                                                        
+[    3.782838] usbserial: USB Serial support registered for qcaux                                                                                                         
+[    3.788621] bus: 'usb': add driver qcserial                                                                                                                            
+[    3.792816] usbcore: registered new interface driver qcserial                                                                                                          
+[    3.798515] bus: 'usb-serial': add driver qcserial                                                                                                                     
+[    3.803329] usbserial: USB Serial support registered for Qualcomm USB modem                                                                                            
+[    3.810237] bus: 'usb': add driver usb_serial_simple                                                                                                                   
+[    3.815211] usbcore: registered new interface driver usb_serial_simple                                                                                                 
+[    3.821694] bus: 'usb-serial': add driver carelink                                                                                                                     
+[    3.826501] usbserial: USB Serial support registered for carelink                                                                                                      
+[    3.832543] bus: 'usb-serial': add driver zio                                                                                                                          
+[    3.836921] usbserial: USB Serial support registered for zio                                                                                                           
+[    3.842526] bus: 'usb-serial': add driver funsoft                                                                                                                      
+[    3.847248] usbserial: USB Serial support registered for funsoft                                                                                                       
+[    3.853202] bus: 'usb-serial': add driver flashloader                                                                                                                  
+[    3.858272] usbserial: USB Serial support registered for flashloader                                                                                                   
+[    3.864575] bus: 'usb-serial': add driver google                                                                                                                       
+[    3.869210] usbserial: USB Serial support registered for google                                                                                                        
+[    3.875079] bus: 'usb-serial': add driver vivopay                                                                                                                      
+[    3.879803] usbserial: USB Serial support registered for vivopay                                                                                                       
+[    3.885755] bus: 'usb-serial': add driver moto_modem                                                                                                                   
+[    3.890737] usbserial: USB Serial support registered for moto_modem                                                                                                    
+[    3.896953] bus: 'usb-serial': add driver novatel_gps                                                                                                                  
+[    3.902021] usbserial: USB Serial support registered for novatel_gps                                                                                                   
+[    3.908324] bus: 'usb-serial': add driver hp4x                                                                                                                         
+[    3.912787] usbserial: USB Serial support registered for hp4x                                                                                                          
+[    3.918481] bus: 'usb-serial': add driver suunto                                                                                                                       
+[    3.923115] usbserial: USB Serial support registered for suunto                                                                                                        
+[    3.928984] bus: 'usb-serial': add driver siemens_mpi                                                                                                                  
+[    3.934053] usbserial: USB Serial support registered for siemens_mpi                                                                                                   
+[    3.940357] bus: 'usb': add driver emi26 - firmware loader                                                                                                             
+[    3.945865] usbcore: registered new interface driver emi26 - firmware loader                                                                                           
+[    3.952858] bus: 'usb': add driver emi62 - firmware loader                                                                                                             
+[    3.958370] usbcore: registered new interface driver emi62 - firmware loader                                                                                           
+[    3.965355] bus: 'usb': add driver usb_ehset_test                                                                                                                      
+[    3.970084] usbcore: registered new interface driver usb_ehset_test                                                                                                    
+[    3.976410] bus: 'usb': add driver usb_acecad                                                                                                                          
+[    3.980676] usbcore: registered new interface driver usb_acecad                                                                                                        
+[    3.986537] bus: 'usb': add driver aiptek                                                                                                                              
+[    3.990570] usbcore: registered new interface driver aiptek                                                                                                            
+[    3.996085] bus: 'usb': add driver gtco                                                                                                                                
+[    3.999944] usbcore: registered new interface driver gtco                                                                                                              
+[    4.005286] bus: 'usb': add driver hanwang                                                                                                                             
+[    4.009414] usbcore: registered new interface driver hanwang                                                                                                           
+[    4.015008] bus: 'usb': add driver kbtab                                                                                                                               
+[    4.018955] usbcore: registered new interface driver kbtab                                                                                                             
+[    4.024387] device: 'uinput': device_add                                                                                                                               
+[    4.028359] bus: 'platform': add driver i2c_qup                                                                                                                        
+[    4.033496] bus: 'platform': add driver msm-restart                                                                                                                    
+[    4.037826] bus: 'platform': driver_probe_device: matched device fc4ab000.restart with driver msm-restart                                                              
+[    4.047213] bus: 'platform': really_probe: probing driver msm-restart with device fc4ab000.restart                                                                     
+[    4.056168] msm-restart fc4ab000.restart: no default pinctrl state                                                                                                     
+[    4.062341] devices_kset: Moving fc4ab000.restart to end of list                                                                                                       
+[    4.068332] driver: 'msm-restart': driver_bound: bound to device 'fc4ab000.restart'                                                                                    
+[    4.075947] bus: 'platform': really_probe: bound device fc4ab000.restart to driver msm-restart                                                                         
+[    4.084893] bus: 'platform': add driver cpufreq-dt                                                                                                                     
+[    4.089589] bus: 'platform': add driver pwrseq_simple                                                                                                                  
+[    4.094818] bus: 'platform': add driver pwrseq_emmc                                                                                                                    
+[    4.099691] bus: 'mmc': add driver mmcblk                                                                                                                              
+[    4.103239] bus: 'mmc': add driver mmc_test                                                                                                                            
+[    4.107399] sdhci: Secure Digital Host Controller Interface driver                                                                                                     
+[    4.113529] sdhci: Copyright(c) Pierre Ossman                                                                                                                          
+[    4.117868] sdhci-pltfm: SDHCI platform and OF driver helper                                                                                                           
+[    4.123514] bus: 'platform': add driver sdhci_msm                                                                                                                      
+[    4.128701] bus: 'platform': add driver fw_cfg                                                                                                                         
+[    4.133113] bus: 'platform': add driver qcrypto                                                                                                                        
+[    4.137670] bus: 'hid': registered                                                                                                                                     
+[    4.140533] device class 'hidraw': registering                                                                                                                         
+[    4.144976] hidraw: raw HID events driver (C) Jiri Kosina                                                                                                              
+[    4.150355] device: 'uhid': device_add                                                                                                                                 
+[    4.154138] bus: 'hid': add driver hid-generic                                                                                                                         
+[    4.158540] bus: 'hid': add driver a4tech                                                                                                                              
+[    4.162531] bus: 'hid': add driver acrux                                                                                                                               
+[    4.166439] bus: 'hid': add driver apple                                                                                                                               
+[    4.170343] bus: 'hid': add driver belkin                                                                                                                              
+[    4.174335] bus: 'hid': add driver cherry                                                                                                                              
+[    4.178328] bus: 'hid': add driver chicony                                                                                                                             
+[    4.182412] bus: 'hid': add driver cypress                                                                                                                             
+[    4.186489] bus: 'hid': add driver dragonrise                                                                                                                          
+[    4.190827] bus: 'hid': add driver hkems                                                                                                                               
+[    4.194735] bus: 'hid': add driver elecom                                                                                                                              
+[    4.198727] bus: 'hid': add driver ezkey                                                                                                                               
+[    4.202633] bus: 'hid': add driver gyration                                                                                                                            
+[    4.206800] bus: 'hid': add driver holtek_kbd                                                                                                                          
+[    4.211147] bus: 'hid': add driver holtek_mouse                                                                                                                        
+[    4.215655] bus: 'hid': add driver holtek                                                                                                                              
+[    4.219649] bus: 'hid': add driver icade                                                                                                                               
+[    4.223555] bus: 'hid': add driver kensington                                                                                                                          
+[    4.227895] bus: 'hid': add driver keytouch                                                                                                                            
+[    4.232066] bus: 'hid': add driver kye                                                                                                                                 
+[    4.235795] bus: 'hid': add driver LC RC1000MCE                                                                                                                        
+[    4.240313] bus: 'hid': add driver logitech                                                                                                                            
+[    4.244476] bus: 'hid': add driver logitech-djreceiver                                                                                                                 
+[    4.249597] bus: 'hid': add driver logitech-hidpp-device                                                                                                               
+[    4.254892] bus: 'hid': add driver magicmouse                                                                                                                          
+[    4.259233] bus: 'hid': add driver microsoft                                                                                                                           
+[    4.263546] bus: 'hid': add driver monterey                                                                                                                            
+[    4.267656] bus: 'hid': add driver hid-multitouch                                                                                                                      
+[    4.272344] bus: 'hid': add driver ntrig                                                                                                                               
+[    4.276247] bus: 'hid': add driver ortek                                                                                                                               
+[    4.280152] bus: 'hid': add driver pantherlord                                                                                                                         
+[    4.284578] bus: 'hid': add driver petalynx                                                                                                                            
+[    4.288746] bus: 'hid': add driver hid-picolcd                                                                                                                         
+[    4.293174] bus: 'hid': add driver primax                                                                                                                              
+[    4.297173] device class 'arvo': registering                                                                                                                           
+[    4.301401] bus: 'hid': add driver arvo                                                                                                                                
+[    4.305240] device class 'isku': registering                                                                                                                           
+[    4.309471] bus: 'hid': add driver isku                                                                                                                                
+[    4.313310] device class 'kone': registering                                                                                                                           
+[    4.317543] bus: 'hid': add driver kone                                                                                                                                
+[    4.321382] device class 'koneplus': registering                                                                                                                       
+[    4.325968] bus: 'hid': add driver koneplus                                                                                                                            
+[    4.330149] device class 'konepure': registering                                                                                                                       
+[    4.334729] bus: 'hid': add driver konepure                                                                                                                            
+[    4.338918] device class 'kovaplus': registering                                                                                                                       
+[    4.343498] bus: 'hid': add driver kovaplus                                                                                                                            
+[    4.347693] bus: 'hid': add driver lua                                                                                                                                 
+[    4.351418] device class 'pyra': registering                                                                                                                           
+[    4.355651] bus: 'hid': add driver pyra                                                                                                                                
+[    4.359489] device class 'ryos': registering                                                                                                                           
+[    4.363723] bus: 'hid': add driver ryos                                                                                                                                
+[    4.367564] device class 'savu': registering                                                                                                                           
+[    4.371797] bus: 'hid': add driver savu                                                                                                                                
+[    4.375639] bus: 'hid': add driver saitek                                                                                                                              
+[    4.379631] bus: 'hid': add driver samsung                                                                                                                             
+[    4.383717] bus: 'hid': add driver smartjoyplus                                                                                                                        
+[    4.388227] bus: 'hid': add driver sony                                                                                                                                
+[    4.392047] bus: 'hid': add driver speedlink                                                                                                                           
+[    4.396299] bus: 'hid': add driver steelseries_srws1                                                                                                                   
+[    4.401247] bus: 'hid': add driver sunplus                                                                                                                             
+[    4.405332] bus: 'hid': add driver greenasia                                                                                                                           
+[    4.409581] bus: 'hid': add driver thingm                                                                                                                              
+[    4.413579] bus: 'hid': add driver thrustmaster                                                                                                                        
+[    4.418089] bus: 'hid': add driver tivo_slide                                                                                                                          
+[    4.422427] bus: 'hid': add driver topseed                                                                                                                             
+[    4.426508] bus: 'hid': add driver twinhan                                                                                                                             
+[    4.430586] bus: 'hid': add driver uclogic                                                                                                                             
+[    4.434669] bus: 'hid': add driver zeroplus                                                                                                                            
+[    4.438834] bus: 'hid': add driver zydacron                                                                                                                            
+[    4.443005] bus: 'hid': add driver wacom                                                                                                                               
+[    4.446907] bus: 'hid': add driver waltop                                                                                                                              
+[    4.450901] bus: 'hid': add driver wiimote                                                                                                                             
+[    4.454984] bus: 'usb': add driver usbhid                                                                                                                              
+[    4.458975] usbcore: registered new interface driver usbhid                                                                                                            
+[    4.464481] usbhid: USB HID core driver                                                                                                                                
+[    4.468308] bus: 'platform': add driver gpio-clk                                                                                                                       
+[    4.473483] bus: 'platform': add driver lcc-msm8960                                                                                                                    
+[    4.478347] bus: 'platform': add driver mmcc-msm8960                                                                                                                   
+[    4.483309] bus: 'platform': add driver mmcc-msm8974                                                                                                                   
+[    4.488151] bus: 'platform': add driver mmcc-msm8996                                                                                                                   
+[    4.494111] NET: Registered protocol family 10                                                                                                                         
+[    4.501830] sit: IPv6 over IPv4 tunneling driver                                                                                                                       
+[    4.505515] device: 'sit0': device_add                                                                                                                                 
+[    4.510338] device: 'cpu_dma_latency': device_add                                                                                                                      
+[    4.514104] device: 'network_latency': device_add                                                                                                                      
+[    4.518781] device: 'network_throughput': device_add                                                                                                                   
+[    4.523732] device: 'memory_bandwidth': device_add                                                                                                                     
+[    4.529092] Key type encrypted registered                                                                                                                              
+[    4.539487] bus: 'platform': add driver gpio-keys                                                                                                                      
+[    4.543976] bus: 'platform': driver_probe_device: matched device soc:gpio_keys with driver gpio-keys                                                                   
+[    4.552319] bus: 'platform': really_probe: probing driver gpio-keys with device soc:gpio_keys                                                                          
+[    4.560835] gpio-keys soc:gpio_keys: no default pinctrl state                                                                                                          
+[    4.566549] devices_kset: Moving soc:gpio_keys to end of list                                                                                                          
+[    4.572403] of_get_named_gpiod_flags: parsed 'gpios' property of node '/soc/gpio_keys/vol_up[0]' - status (-517)                                                       
+[    4.582425] platform soc:gpio_keys: Driver gpio-keys requests probe deferral                                                                                           
+[    4.589440] platform soc:gpio_keys: Added to deferred list                                                                                                             
+[    4.594948] hctosys: unable to open rtc device (rtc0)                                                                                                                  
+[    4.601516]  -> msm_hsl?[    4.604021] RAMDISK: gzip image found at block 0                                                                                            
+[    4.766884] EXT4-fs (ram0): couldn't mount as ext3 due to feature incompatibilities                                                                                    
+[    4.773786] EXT4-fs (ram0): mounting ext2 file system using the ext4 subsystem                                                                                         
+[    4.784804] EXT4-fs warning (device ram0): ext4_update_dynamic_rev:746: updating to rev 1 because of new feature flag, running e2fsck is recommended                   
+[    4.797688] EXT4-fs (ram0): mounted filesystem without journal. Opts: (null)                                                                                           
+[    4.804168] VFS: Mounted root (ext2 filesystem) on device 1:0.                                                                                                         
+[    4.810204] Freeing unused kernel memory: 320K (ffffffc0006b0000 - ffffffc000700000)                                                                                   
+[    4.817668] This architecture does not have kernel memory protection.                                                                                                  
+                                                                                                                                                                          
+Please press Enter to activate this console.                                                                                                                              
+#                                                                                                                                                                         
+# cat /proc/version                                                                                                                                                       
+cat: can't open '/proc/version': No such file or directory                                                                                                                
+# uname -a                                                                                                                                                                
+Linux (none) 4.7.0-rc1-dirty #32 SMP PREEMPT Fri Jun 3 19:28:57 PDT 2016 aarch64 GNU/Linux                                                                                
+# 
+
