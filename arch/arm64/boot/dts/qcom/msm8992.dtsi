@@ -12,10 +12,9 @@
 
 /memreserve/ 0x00000000 0x00001000;
 
-#include <dt-bindings/clock/msm-clocks-8992.h>
+#include <dt-bindings/clock/qcom,gcc-msm8974.h>
+/*#include <dt-bindings/clock/qcom,gcc-msm8996.h>*/
 #include <dt-bindings/interrupt-controller/arm-gic.h>
-#include <dt-bindings/clock/qcom,gcc-msm8916.h>
-#include <dt-bindings/reset/qcom,gcc-msm8916.h>
 
 / {
 	model = "Qualcomm Technologies, Inc. MSM 8992";
@@ -241,20 +240,22 @@
 	blsp1_uart2: serial@f991e000 {
 		compatible = "qcom,msm-lsuart-v14", "qcom,msm-uartdm";
 		reg = <0xf991e000 0x1000>;
-		interrupts = <GIC_SPI 108 0>;
+		interrupts = <0 108 0>;
 		clocks = <&clock_gcc GCC_BLSP1_UART2_APPS_CLK>, <&clock_gcc GCC_BLSP1_AHB_CLK>;
 		clock-names = "core", "iface";
-		status = "disabled";
+		status = "ok";
+
+		pinctrl-names = "default";
+		pinctrl-0 = <&blsp1_uart2_pin_a>;
 	};
 
         clock_gcc: qcom,gcc@fc400000 {
-                compatible = "qcom,gcc-8992";
+                compatible = "qcom,gcc-msm8974";
                 reg = <0xfc400000 0x2000>;
-                reg-names = "cc_base";
-                /*vdd_dig-supply = <&pm8994_s1_corner>;*/
-                clock-names = "xo", "xo_a_clk";
+                /*clock-names = "xo", "xo_a_clk";
                 clocks = <&clock_rpm clk_cxo_clk_src>,
-                         <&clock_rpm clk_cxo_clk_src_ao>;
+                         <&clock_rpm clk_cxo_clk_src_ao>; */
+		#reset-cells = <1>;
                 #clock-cells = <1>;
         };
 
@@ -271,7 +272,7 @@
                 reg-names = "cc_base";
                 /*vdd_dig-supply = <&pm8994_s1_corner>;
                 mmpll4_dig-supply = <&pm8994_s1_corner>;
-                mmpll4_analog-supply = <&pm8994_l12>; */
+                mmpll4_analog-supply = <&pm8994_l12>;
                 clock-names = "xo", "gpll0", "mmssnoc_ahb",
                         "oxili_gfx3d_clk", "pclk0_src", "pclk1_src",
                         "byte0_src", "byte1_src", "extpclk_src";
@@ -279,7 +280,6 @@
                          <&clock_gcc clk_gpll0_out_mmsscc>,
                          <&clock_rpm clk_mmssnoc_ahb_clk>,
                          <&clock_rpm clk_oxili_gfx3d_clk_src>;
-			 /*
                          <&mdss_dsi0_pll clk_mdss_pixel_clk_mux>,
                          <&mdss_dsi0_pll clk_mdss_pixel_clk_mux>,
                          <&mdss_dsi0_pll clk_mdss_byte_clk_mux>,
@@ -288,6 +288,7 @@
                 #clock-cells = <1>;
         };
 
+/**
         clock_debug: qcom,cc-debug@fc401880 {
                 compatible = "qcom,cc-debug-8992";
                 reg = <0xfc401880 0x4>;
@@ -299,7 +300,6 @@
                          <&clock_cpu clk_cpu_debug_mux>;
                 #clock-cells = <1>;
         };
-
 
 	cci_cache: qcom,cci {
 		compatible = "devfreq-simple-dev";
@@ -315,7 +315,7 @@
 			<  729600 >,
 			<  787200 >;
 	};
-
+***/
 	cpubw: qcom,cpubw {
 		compatible = "qcom,devbw";
 		governor = "cpufreq";
@@ -385,7 +385,7 @@
 		};
 
 		cci-cpufreq {
-			target-dev = <&cci_cache>;
+			/*target-dev = <&cci_cache>; */
 			cpu-to-dev-map-0 =
 				<  384000 134400 >,
 				<  600000 300000 >,
@@ -408,13 +408,13 @@
 		compatible = "qcom,msm-cpufreq";
 		clock-names = "l2_clk", "cpu0_clk", "cpu1_clk", "cpu2_clk",
 				"cpu3_clk", "cpu4_clk", "cpu5_clk";
-		clocks = <&clock_cpu clk_cci_clk>,
+		/*clocks = <&clock_cpu clk_cci_clk>,
 			 <&clock_cpu clk_a53_clk>,
 			 <&clock_cpu clk_a53_clk>,
 			 <&clock_cpu clk_a53_clk>,
 			 <&clock_cpu clk_a53_clk>,
 			 <&clock_cpu clk_a57_clk>,
-			 <&clock_cpu clk_a57_clk>;
+			 <&clock_cpu clk_a57_clk>;*/
 
 		qcom,governor-per-policy;
 
@@ -522,7 +522,7 @@
 		compatible = "arm,armv8-pmuv3";
 		interrupts = <1 7 0x3f00>;
 	};
-
+/**
 	wcd9xxx_intc: wcd9xxx-irq {
 		compatible = "qcom,wcd9xxx-irq";
 		interrupt-controller;
@@ -533,7 +533,7 @@
 		pinctrl-names = "default";
 		pinctrl-0 = <&wcd_intr_default>;
 	};
-
+***/
 	cpuss_dump {
 		compatible = "qcom,cpuss-dump";
 

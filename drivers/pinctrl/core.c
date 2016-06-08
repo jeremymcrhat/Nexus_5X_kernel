@@ -882,6 +882,12 @@ struct pinctrl *pinctrl_get(struct device *dev)
 {
 	struct pinctrl *p;
 
+printk(" --- JRM! -- %s \n", __func__);
+
+	if (dev == NULL)
+	{
+		printk(" %s: Error dev is null \n", __func__);
+	}
 	if (WARN_ON(!dev))
 		return ERR_PTR(-EINVAL);
 
@@ -976,6 +982,7 @@ struct pinctrl_state *pinctrl_lookup_state(struct pinctrl *p,
 
 	state = find_state(p, name);
 	if (!state) {
+		printk(" %s no state found \n", __func__);
 		if (pinctrl_dummy_state) {
 			/* create dummy state */
 			dev_dbg(p->dev, "using pinctrl dummy state (%s)\n",
@@ -1086,13 +1093,17 @@ struct pinctrl *devm_pinctrl_get(struct device *dev)
 
 	ptr = devres_alloc(devm_pinctrl_release, sizeof(*ptr), GFP_KERNEL);
 	if (!ptr)
+	{
+		printk(" %s - no mem \n", __func__);
 		return ERR_PTR(-ENOMEM);
+	}
 
 	p = pinctrl_get(dev);
 	if (!IS_ERR(p)) {
 		*ptr = p;
 		devres_add(dev, ptr);
 	} else {
+		printk(" %s pinctrl_get err \n", __func__);
 		devres_free(ptr);
 	}
 

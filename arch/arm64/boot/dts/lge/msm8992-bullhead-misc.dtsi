@@ -12,7 +12,7 @@
  */
 
 &soc {
-	/* Ear jack debugger JRM  */
+	/* Ear jack debugger JRM
 	earjack-debugger {
 		compatible = "serial,earjack-debugger";
 		status = "ok";
@@ -23,6 +23,7 @@
 		pinctrl-0 = <&uart_disable>;
 		pinctrl-1 = <&uart_enable>;
 	};
+	*/
 
 };
 

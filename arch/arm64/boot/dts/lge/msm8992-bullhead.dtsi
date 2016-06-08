@@ -19,8 +19,5 @@
 };
 
 
-&blsp1_uart2 {
-	status= "ok";
-};
 
 #include "msm8992-bullhead-misc.dtsi"

@@ -871,6 +871,9 @@ int msm_pinctrl_probe(struct platform_device *pdev,
 	struct resource *res;
 	int ret;
 
+
+printk(" --->> Enter %s \n", __func__);
+
 	pctrl = devm_kzalloc(&pdev->dev, sizeof(*pctrl), GFP_KERNEL);
 	if (!pctrl) {
 		dev_err(&pdev->dev, "Can't allocate msm_pinctrl\n");
@@ -884,8 +887,10 @@ int msm_pinctrl_probe(struct platform_device *pdev,
 
 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 	pctrl->regs = devm_ioremap_resource(&pdev->dev, res);
-	if (IS_ERR(pctrl->regs))
+	if (IS_ERR(pctrl->regs)) {
+		dev_err(&pdev->dev, "failed to remap iomem\n");
 		return PTR_ERR(pctrl->regs);
+	}
 
 	msm_pinctrl_setup_pm_reset(pctrl);
 
@@ -906,8 +911,10 @@ int msm_pinctrl_probe(struct platform_device *pdev,
 	}
 
 	ret = msm_gpio_init(pctrl);
-	if (ret)
+	if (ret) {
+		dev_err(&pdev->dev, "Error initalizing GPIO\n");
 		return ret;
+	}
 
 	platform_set_drvdata(pdev, pctrl);
 

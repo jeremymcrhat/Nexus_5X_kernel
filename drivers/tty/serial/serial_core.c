@@ -2299,11 +2299,15 @@ uart_configure_port(struct uart_driver *drv, struct uart_state *state,
 {
 	unsigned int flags;
 
+printk(" %s :start \n", __func__);
 	/*
 	 * If there isn't a port here, don't do anything further.
 	 */
 	if (!port->iobase && !port->mapbase && !port->membase)
+	{
+		printk("%s Error no iobase, membase, or mapbase \n", __func__);
 		return;
+	}
 
 	/*
 	 * Now do the auto configuration stuff.  Note that config_port
@@ -2343,7 +2347,11 @@ uart_configure_port(struct uart_driver *drv, struct uart_state *state,
 		 * It may be that the port was not available.
 		 */
 		if (port->cons && !(port->cons->flags & CON_ENABLED))
+		{
+			//need to call this !!! JRM
 			register_console(port->cons);
+
+		}
 
 		/*
 		 * Power down all ports by default, except the
@@ -2761,6 +2769,8 @@ int uart_add_one_port(struct uart_driver *drv, struct uart_port *uport)
 	struct device *tty_dev;
 	int num_groups;
 
+printk(" %s -- Begin \n", __func__);
+
 	BUG_ON(in_interrupt());
 
 	if (uport->line >= drv->nr)
@@ -2797,6 +2807,7 @@ int uart_add_one_port(struct uart_driver *drv, struct uart_port *uport)
 	if (uport->cons && uport->dev)
 		of_console_check(uport->dev->of_node, uport->cons->name, uport->line);
 
+printk(" %s configuring UART port \n", __func__);
 	uart_configure_port(drv, state, uport);
 
 	num_groups = 2;

@@ -22,7 +22,6 @@
 #include <linux/spinlock.h>
 #include <linux/syscore_ops.h>
 #include <linux/irqchip/qpnp-int.h>
-#include <linux/wakeup_reason.h>
 #include "pinctrl-msm.h"
 
 /* config translations */

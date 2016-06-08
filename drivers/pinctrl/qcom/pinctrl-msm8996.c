@@ -1908,6 +1908,7 @@ static const struct msm_pinctrl_soc_data msm8996_pinctrl = {
 
 static int msm8996_pinctrl_probe(struct platform_device *pdev)
 {
+	printk(" JRM %s \n", __func__);
 	return msm_pinctrl_probe(pdev, &msm8996_pinctrl);
 }
 
