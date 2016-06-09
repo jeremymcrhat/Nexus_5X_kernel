@@ -12,8 +12,7 @@
 
 /memreserve/ 0x00000000 0x00001000;
 
-#include <dt-bindings/clock/qcom,gcc-msm8974.h>
-/*#include <dt-bindings/clock/qcom,gcc-msm8996.h>*/
+#include <dt-bindings/clock/qcom,gcc-msm8992.h>
 #include <dt-bindings/interrupt-controller/arm-gic.h>
 
 / {
@@ -67,6 +66,23 @@
 		};
 
 	};
+
+        clocks {
+                xo_board {
+                        compatible = "fixed-clock";
+                        #clock-cells = <0>;
+                        clock-frequency = <19200000>;
+                        clock-output-names = "xo_board";
+                };
+
+                sleep_clk {
+                        compatible = "fixed-clock";
+                        #clock-cells = <0>;
+                        clock-frequency = <32764>;
+                        clock-output-names = "sleep_clk";
+                };
+        };
+
 
 	soc: soc { };
 
@@ -249,14 +265,12 @@
 		pinctrl-0 = <&blsp1_uart2_pin_a>;
 	};
 
-        clock_gcc: qcom,gcc@fc400000 {
-                compatible = "qcom,gcc-msm8974";
+        clock_gcc: clock-controller@fc400000 {
+                compatible = "qcom,gcc-msm8992";
                 reg = <0xfc400000 0x2000>;
-                /*clock-names = "xo", "xo_a_clk";
-                clocks = <&clock_rpm clk_cxo_clk_src>,
-                         <&clock_rpm clk_cxo_clk_src_ao>; */
 		#reset-cells = <1>;
                 #clock-cells = <1>;
+		#power-domain-cells = <1>;
         };
 
         clock_rpm: qcom,rpmcc@fc401880 {
