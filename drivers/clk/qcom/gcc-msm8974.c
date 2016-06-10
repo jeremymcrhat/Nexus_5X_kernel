@@ -64,6 +64,8 @@ static const char * const gcc_xo_gpll0_gpll4[] = {
 
 #define F(f, s, h, m, n) { (f), (s), (2 * (h) - 1), (m), (n) }
 
+//JRM - in 3.10 the clocks are common for 8992 and 8994
+//  struct pll_clk is what its called in 3.10
 static struct clk_pll gpll0 = {
 	.l_reg = 0x0004,
 	.m_reg = 0x0008,

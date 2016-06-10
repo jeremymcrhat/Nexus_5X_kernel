@@ -195,7 +195,7 @@ static int wait_for_pll(struct clk_pll *pll)
 	int count;
 	int ret;
 	const char *name = clk_hw_get_name(&pll->clkr.hw);
-
+printk(" regmap %s mreg statusreg 0x%x modereg 0x%x  \n", name, pll->status_reg, pll->mode_reg);
 	/* Wait for pll to enable. */
 	for (count = 200; count > 0; count--) {
 		ret = regmap_read(pll->clkr.regmap, pll->status_reg, &val);

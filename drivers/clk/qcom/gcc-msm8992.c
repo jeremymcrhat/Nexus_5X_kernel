@@ -747,7 +747,6 @@ static int gcc_msm8992_probe(struct platform_device *pdev)
 	struct regmap *regmap;
 	int ret = 0;
 printk(" %s - qcom_cc_mapp \n", __func__);
-WARN_ON(1);
 
 	regmap = qcom_cc_map(pdev, &gcc_msm8992_desc);
 	if (IS_ERR(regmap)) {
@@ -783,7 +782,7 @@ printk(" %s - really probe \n", __func__);
 }
 
 static struct of_device_id msm_clock_gcc_match_table[] = {
-	{ .compatible = "qcom,gcc-8992" },
+	{ .compatible = "qcom,gcc-msm8992" },
 	{}
 };
 MODULE_DEVICE_TABLE(of, gcc_msm8992_match_table);

@@ -1621,14 +1621,12 @@ static int msm_serial_probe(struct platform_device *pdev)
 	}
 
 	port->uartclk = clk_get_rate(msm_port->clk);
-	//JRM from working msm_serial_hs_lite.c port->uartclk = 7372800;
-	if (port->uartclk != 7372800)
+	if (!port->uartclk)
 	{
-		printk(" %s : detected wrong frequency \n", __func__);
-		printk("    >>>> changing to 7372800 \n");
-		port->uartclk = 7372800/4;
+		WARN_ON(0);
+		dev_err(&pdev->dev, "uartclk is invalid setting to 19200000 \n");
+		port->uartclk = 19200000;
 	}
-	dev_info(&pdev->dev, "uartclk = %d\n", port->uartclk);
 
 	resource = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 	if (unlikely(!resource))
@@ -1645,6 +1643,20 @@ static int msm_serial_probe(struct platform_device *pdev)
 		return -ENXIO;
 	}
 	port->irq = irq;
+
+	//JRM from working msm_serial_hs_lite.c port->uartclk = 7372800;
+	dev_info(&pdev->dev, " orig uartclk = %d\n", port->uartclk);
+	if (!port->membase) {
+		printk(" Error MEMBase is NULL \n");
+		if (msm_request_port(port) != 0)
+		{
+			printk(" Error requesting memory address \n");
+		}
+	}
+	printk(" Membase is 0x%x \n", port->membase);
+
+	msm_serial_set_mnd_regs_from_uartclk(port);
+
 
 	platform_set_drvdata(pdev, port);
 
