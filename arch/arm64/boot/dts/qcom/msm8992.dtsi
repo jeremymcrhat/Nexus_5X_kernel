@@ -537,6 +537,16 @@
 		reg = <0xfc4ab000 0x4>;
 	};
 
+	msmgpio: pinctrl@fd510000 {
+                compatible = "qcom,msm8994-pinctrl", "qcom,msm8974-pinctrl";
+                reg = <0xfd510000 0x4000>;
+                interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+                gpio-controller;
+                #gpio-cells = <2>;
+                interrupt-controller;
+                #interrupt-cells = <2>;
+        };
+
 	qcom,msm-imem@fe80f000 {
 		compatible = "qcom,msm-imem";
 		reg = <0xfe80f000 0x1000>; /* Address and size of IMEM */
@@ -3180,10 +3190,30 @@
 };
 
 &gdsc_oxili_gx {
-	clock-names = "core_clk";
+	clock-names = "core";
 	clocks = <&clock_mmss clk_oxili_gfx3d_clk>;
 	status = "ok";
 	parent-supply = <&pmi8994_s2_corner>;
+};
+
+
+/ {
+        aliases {
+                serial0 = &blsp1_uart2;
+        };
+
+        chosen {
+                stdout-path = "serial0";
+        };
+
+        soc {
+                serial@f991e000 {
+                        status = "okay";
+                        pinctrl-names = "default", "sleep";
+                        pinctrl-0 = <&blsp1_uart2_default>;
+                        pinctrl-1 = <&blsp1_uart2_sleep>;
+                };
+        };
 };
 
 #include "msm8992-ion.dtsi"
@@ -3194,3 +3224,4 @@
 #include "msm8992-iommu.dtsi"
 #include "msm8992-iommu-domains.dtsi"
 #include "msm8992-pm.dtsi"
+#include "msm8992-pins.dtsi"
