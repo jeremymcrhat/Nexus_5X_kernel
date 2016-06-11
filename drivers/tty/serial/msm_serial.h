@@ -151,6 +151,11 @@ unsigned int msm_read(struct uart_port *port, unsigned int off)
  */
 static inline void msm_serial_set_mnd_regs_tcxo(struct uart_port *port)
 {
+	if (port->membase == NULL) {
+		WARN(1, "membase NULL not setting regs\n");
+		return;
+	}
+
 	msm_write(port, 0x06, UART_MREG);
 	msm_write(port, 0xF1, UART_NREG);
 	msm_write(port, 0x0F, UART_DREG);
@@ -174,9 +179,15 @@ static inline
 void msm_serial_set_mnd_regs_from_uartclk(struct uart_port *port)
 {
 	if (port->uartclk == 19200000)
+	{
+		printk("%s : UARTCLK 19200000 \n", __func__);
 		msm_serial_set_mnd_regs_tcxo(port);
-	else if (port->uartclk == 4800000)
+	}
+	else if (port->uartclk == 4800000) 
+	{
+		printk("%s : UARTCLK 4800000 \n", __func__);
 		msm_serial_set_mnd_regs_tcxoby4(port);
+	}
 }
 
 #define msm_serial_set_mnd_regs msm_serial_set_mnd_regs_from_uartclk
