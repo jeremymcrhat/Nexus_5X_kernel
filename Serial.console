@@ -1,0 +1,1489 @@
+[83170] Continuous splash enabled, keeping panel alive.
+[83170] booting linux @ 0x80000, ramdisk @ 0x2a00000 (2058770), tags/device tree @ 0x2800000
+[83180] Jumping to kernel via monitor
+[    0.000000] Booting Linux on physical CPU 0x0
+[    0.000000] Linux version 4.6.0-rc1-00037-gf113b62-dirty (jmcnicol@mini-rhel) (gcc version 4.9.3 20141031 (prerelease) (Linaro GCC 2014.11) ) #111 SMP PR6
+[    0.000000] Boot CPU: AArch64 Processor [410fd033]
+[    0.000000] earlycon: msm_serial_dm0 at MMIO 0x00000000f991e000 (options '')
+[    0.000000] bootconsole [msm_serial_dm0] enabled
+[    0.000000] cma: dma_contiguous_reserve(limit 80000000)
+[    0.000000] cma: dma_contiguous_reserve: reserving 16 MiB for global area
+[    0.000000] cma: Reserved 16 MiB at 0x000000007f000000
+[    0.000000] On node 0 totalpages: 524288
+[    0.000000]   DMA zone: 8192 pages used for memmap
+[    0.000000]   DMA zone: 0 pages reserved
+[    0.000000]   DMA zone: 524288 pages, LIFO batch:31
+[    0.000000] Unsupported enable-method: qcom,8994-arm-cortex-acc
+[    0.000000] Unsupported enable-method: qcom,8994-arm-cortex-acc
+[    0.000000] Unsupported enable-method: qcom,8994-arm-cortex-acc
+[    0.000000] Unsupported enable-method: qcom,8994-arm-cortex-acc
+[    0.000000] Unsupported enable-method: qcom,8994-arm-cortex-acc
+[    0.000000] Unsupported enable-method: qcom,8994-arm-cortex-acc
+[    0.000000] percpu: Embedded 17 pages/cpu @ffffffc07eeb5000 s38656 r0 d30976 u69632
+[    0.000000] pcpu-alloc: s38656 r0 d30976 u69632 alloc=17*4096
+[    0.000000] pcpu-alloc: [0] 0 
+[    0.000000] Detected VIPT I-cache on CPU0
+[    0.000000] CPU features: enabling workaround for ARM erratum 845719
+[    0.000000] Built 1 zonelists in Zone order, mobility grouping on.  Total pages: 516096
+[    0.000000] Kernel command line: sched_enable_hmp=1 sched_enable_power_aware=1 console=ttyMSM0,115200,n8 androidboot.hardware=bullhead boot_cpus=0-5 lpm_e
+[    0.000000] PID hash table entries: 4096 (order: 3, 32768 bytes)
+[    0.000000] Dentry cache hash table entries: 262144 (order: 9, 2097152 bytes)
+[    0.000000] Inode-cache hash table entries: 131072 (order: 8, 1048576 bytes)
+[    0.000000] software IO TLB [mem 0x78a00000-0x7ca00000] (64MB) mapped at [ffffffc078a00000-ffffffc07c9fffff]
+[    0.000000] Memory: 1966960K/2097152K available (4460K kernel code, 444K rwdata, 1848K rodata, 300K init, 1334K bss, 113808K reserved, 16384K cma-reserve)
+[    0.000000] Virtual kernel memory layout:
+[    0.000000]     modules : 0xffffff8000000000 - 0xffffff8008000000   (   128 MB)
+[    0.000000]     vmalloc : 0xffffff8008000000 - 0xffffffbdbfff0000   (   246 GB)
+[    0.000000]       .text : 0xffffff8008080000 - 0xffffff80084d9000   (  4452 KB)
+[    0.000000]     .rodata : 0xffffff80084d9000 - 0xffffff80086aa000   (  1860 KB)
+[    0.000000]       .init : 0xffffff80086aa000 - 0xffffff80086f5000   (   300 KB)
+[    0.000000]       .data : 0xffffff80086f5000 - 0xffffff8008764198   (   445 KB)
+[    0.000000]     vmemmap : 0xffffffbdc0000000 - 0xffffffbfc0000000   (     8 GB maximum)
+[    0.000000]               0xffffffbdc0000000 - 0xffffffbdc2000000   (    32 MB actual)
+[    0.000000]     fixed   : 0xffffffbffe7fd000 - 0xffffffbffec00000   (  4108 KB)
+[    0.000000]     PCI I/O : 0xffffffbffee00000 - 0xffffffbfffe00000   (    16 MB)
+[    0.000000]     memory  : 0xffffffc000000000 - 0xffffffc080000000   (  2048 MB)
+[    0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=1, Nodes=1
+[    0.000000] Preemptible hierarchical RCU implementation.
+[    0.000000]  Build-time adjustment of leaf fanout to 64.
+[    0.000000]  RCU restricting CPUs from NR_CPUS=6 to nr_cpu_ids=1.
+[    0.000000] RCU: Adjusting geometry for rcu_fanout_leaf=64, nr_cpu_ids=1
+[    0.000000] NR_IRQS:64 nr_irqs:64 0
+[    0.000000] Architected cp15 and mmio timer(s) running at 19.20MHz (virt/virt).
+[    0.000000] clocksource: arch_sys_counter: mask: 0xffffffffffffff max_cycles: 0x46d987e47, max_idle_ns: 440795202767 ns
+[    0.000006] sched_clock: 56 bits at 19MHz, resolution 52ns, wraps every 4398046511078ns
+[    0.012229] Calibrating delay loop (skipped), value calculated using timer frequency.. 38.00 BogoMIPS (lpj=64000)
+[    0.026729] pid_max: default: 32768 minimum: 301
+[    0.029061] Security Framework initialized
+[    0.033891] Mount-cache hash table entries: 4096 (order: 3, 32768 bytes)
+[    0.037767] Mountpoint-cache hash table entries: 4096 (order: 3, 32768 bytes)
+[    0.045624] Unable to find CPU node for /cpus/cpu@1
+[    0.051661] /cpus/cpu-map/cluster0/core1: Can't get CPU for leaf core
+[    0.056386] ASID allocator initialised with 65536 entries
+[    0.067666] Brought up 1 CPUs
+[    0.068304] SMP: Total of 1 processors activated.
+[    0.071298] CPU: All CPU(s) started at EL1
+[    0.075974] alternatives: patching kernel code
+[    0.080719] device: 'platform': device_add
+[    0.084530] bus: 'platform': registered
+[    0.088539] bus: 'cpu': registered
+[    0.092218] device: 'cpu': device_add
+[    0.095785] bus: 'container': registered
+[    0.099397] device: 'container': device_add
+[    0.175840] bus: 'workqueue': registered
+[    0.175881] device: 'workqueue': device_add
+[    0.179074] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 6370867519511994 ns
+[    0.183561] pinctrl core: initialized pinctrl subsystem
+[    0.192662] bus: 'gpio': registered
+[    0.197768] bus: 'soc': registered
+[    0.201214] bus: 'platform': add driver gcc-msm8994
+[    0.205082] NET: Registered protocol family 16
+[    0.209839] device class 'bdi': registering
+[    0.213972] bus: 'platform': add driver ramoops
+[    0.218061] device class 'gpio': registering
+[    0.222548] device class 'pci_bus': registering
+[    0.227107] bus: 'pci': registered
+[    0.231331] bus: 'amba': registered
+[    0.234757] device class 'tty': registering
+[    0.238152] device class 'iommu': registering
+[    0.242346] bus: 'platform': add driver syscon
+[    0.246899] bus: 'spmi': registered
+[    0.251205] bus: 'i2c': registered
+[    0.254545] bus: 'i2c': add driver dummy
+[    0.258041] i2c-core: driver [dummy] registered
+[    0.272138] cpuidle: using governor ladder
+[    0.282164] cpuidle: using governor menu
+[    0.282574] vdso: 2 pages (1 code @ ffffff80084df000, 1 data @ ffffff80086fc000)
+[    0.285181] hw-breakpoint: found 6 breakpoint and 4 watchpoint registers.
+[    0.293925] DMA: preallocated 256 KiB pool for atomic allocations
+[    0.299238] bus: 'platform': add driver msm8960-pinctrl
+[    0.305361] bus: 'platform': add driver msm8x74-pinctrl
+[    0.310382] bus: 'platform': add driver msm8916-pinctrl
+[    0.315587] bus: 'platform': add driver msm8996-pinctrl
+[    0.321178] device: 'soc': device_add
+[    0.325984] bus: 'platform': add device soc
+[    0.329988] device: 'fd8c1024.qcom,gdsc': device_add
+[    0.333794] bus: 'platform': add device fd8c1024.qcom,gdsc
+[    0.339154] device: 'fd8c1040.qcom,gdsc': device_add
+[    0.344297] bus: 'platform': add device fd8c1040.qcom,gdsc
+[    0.349568] device: 'fd8c1044.qcom,gdsc': device_add
+[    0.354714] bus: 'platform': add device fd8c1044.qcom,gdsc
+[    0.359997] device: 'fd8c34a0.qcom,gdsc': device_add
+[    0.365135] bus: 'platform': add device fd8c34a0.qcom,gdsc
+[    0.370406] device: 'fd8c2304.qcom,gdsc': device_add
+[    0.375547] bus: 'platform': add device fd8c2304.qcom,gdsc
+[    0.380815] device: 'fd8c35a4.qcom,gdsc': device_add
+[    0.385963] bus: 'platform': add device fd8c35a4.qcom,gdsc
+[    0.391239] device: 'fd8c36a4.qcom,gdsc': device_add
+[    0.396380] bus: 'platform': add device fd8c36a4.qcom,gdsc
+[    0.401651] device: 'fd8c36d4.qcom,gdsc': device_add
+[    0.406797] bus: 'platform': add device fd8c36d4.qcom,gdsc
+[    0.412072] device: 'fd8c4024.qcom,gdsc': device_add
+[    0.417214] bus: 'platform': add device fd8c4024.qcom,gdsc
+[    0.422490] device: 'fd8c4034.qcom,gdsc': device_add
+[    0.427631] bus: 'platform': add device fd8c4034.qcom,gdsc
+[    0.432909] device: 'fc401ac4.qcom,gdsc': device_add
+[    0.438045] bus: 'platform': add device fc401ac4.qcom,gdsc
+[    0.443318] device: 'fc4003c4.qcom,gdsc': device_add
+[    0.448472] bus: 'platform': add device fc4003c4.qcom,gdsc
+[    0.453940] device: 'f900d008.qcom,smp2p-modem': device_add
+[    0.458883] bus: 'platform': add device f900d008.qcom,smp2p-modem
+[    0.464603] device: 'f900d008.qcom,smp2p-adsp': device_add
+[    0.470601] bus: 'platform': add device f900d008.qcom,smp2p-adsp
+[    0.476108] device: 'soc:qcom,smp2pgpio-smp2p-7-in': device_add
+[    0.482146] bus: 'platform': add device soc:qcom,smp2pgpio-smp2p-7-in
+[    0.487901] device: 'soc:qcom,smp2pgpio_test_smp2p_7_in': device_add
+[    0.494387] bus: 'platform': add device soc:qcom,smp2pgpio_test_smp2p_7_in
+[    0.500933] device: 'soc:qcom,smp2pgpio-smp2p-7-out': device_add
+[    0.507494] bus: 'platform': add device soc:qcom,smp2pgpio-smp2p-7-out
+[    0.513774] device: 'soc:qcom,smp2pgpio_test_smp2p_7_out': device_add
+[    0.519995] bus: 'platform': add device soc:qcom,smp2pgpio_test_smp2p_7_out
+[    0.526624] device: 'soc:qcom,smp2pgpio-smp2p-1-in': device_add
+[    0.533275] bus: 'platform': add device soc:qcom,smp2pgpio-smp2p-1-in
+[    0.539299] device: 'soc:qcom,smp2pgpio_test_smp2p_1_in': device_add
+[    0.545777] bus: 'platform': add device soc:qcom,smp2pgpio_test_smp2p_1_in
+[    0.552316] device: 'soc:qcom,smp2pgpio-smp2p-1-out': device_add
+[    0.558883] bus: 'platform': add device soc:qcom,smp2pgpio-smp2p-1-out
+[    0.565166] device: 'soc:qcom,smp2pgpio_test_smp2p_1_out': device_add
+[    0.571384] bus: 'platform': add device soc:qcom,smp2pgpio_test_smp2p_1_out
+[    0.578017] device: 'soc:qcom,smp2pgpio-smp2p-2-in': device_add
+[    0.584663] bus: 'platform': add device soc:qcom,smp2pgpio-smp2p-2-in
+[    0.590678] device: 'soc:qcom,smp2pgpio_test_smp2p_2_in': device_add
+[    0.597163] bus: 'platform': add device soc:qcom,smp2pgpio_test_smp2p_2_in
+[    0.603714] device: 'soc:qcom,smp2pgpio-smp2p-2-out': device_add
+[    0.610278] bus: 'platform': add device soc:qcom,smp2pgpio-smp2p-2-out
+[    0.616545] device: 'soc:qcom,smp2pgpio_test_smp2p_2_out': device_add
+[    0.622772] bus: 'platform': add device soc:qcom,smp2pgpio_test_smp2p_2_out
+[    0.629397] device: 'soc:qcom,smp2pgpio-ssr-smp2p-2-in': device_add
+[    0.636054] bus: 'platform': add device soc:qcom,smp2pgpio-ssr-smp2p-2-in
+[    0.642425] device: 'soc:qcom,smp2pgpio-ssr-smp2p-2-out': device_add
+[    0.649248] bus: 'platform': add device soc:qcom,smp2pgpio-ssr-smp2p-2-out
+[    0.655786] device: 'soc:qcom,smp2pgpio-ssr-smp2p-1-in': device_add
+[    0.662354] bus: 'platform': add device soc:qcom,smp2pgpio-ssr-smp2p-1-in
+[    0.668633] device: 'soc:qcom,smp2pgpio-ssr-smp2p-1-out': device_add
+[    0.675462] bus: 'platform': add device soc:qcom,smp2pgpio-ssr-smp2p-1-out
+[    0.682123] device: 'fd994300.qcom,mdss_dsi_pll': device_add
+[    0.688569] bus: 'platform': add device fd994300.qcom,mdss_dsi_pll
+[    0.694561] device: 'fd996300.qcom,mdss_dsi_pll': device_add
+[    0.700380] bus: 'platform': add device fd996300.qcom,mdss_dsi_pll
+[    0.706401] device: 'fd9a0600.qcom,mdss_hdmi_pll': device_add
+[    0.712184] bus: 'platform': add device fd9a0600.qcom,mdss_hdmi_pll
+[    0.718321] device: 'fd900000.qcom,mdss_mdp': device_add
+[    0.724073] bus: 'platform': add device fd900000.qcom,mdss_mdp
+[    0.729860] device: 'fd994000.qcom,mdss_dsi': device_add
+[    0.735270] bus: 'platform': add device fd994000.qcom,mdss_dsi
+[    0.740978] device: 'fd996000.qcom,mdss_dsi': device_add
+[    0.746381] bus: 'platform': add device fd996000.qcom,mdss_dsi
+[    0.751962] device: 'soc:qcom,mdss_wb_panel': device_add
+[    0.757491] bus: 'platform': add device soc:qcom,mdss_wb_panel
+[    0.763137] device: 'fd9a0000.qcom,hdmi_tx': device_add
+[    0.768602] bus: 'platform': add device fd9a0000.qcom,hdmi_tx
+[    0.773841] device: 'soc:qcom,kgsl-busmon': device_add
+[    0.779625] bus: 'platform': add device soc:qcom,kgsl-busmon
+[    0.784774] device: 'soc:qcom,gpubw': device_add
+[    0.790477] bus: 'platform': add device soc:qcom,gpubw
+[    0.795352] device: 'fdb00000.qcom,kgsl-3d0': device_add
+[    0.800028] bus: 'platform': add device fdb00000.qcom,kgsl-3d0
+[    0.805749] device: 'fc460000.ad-hoc-bus': device_add
+[    0.811141] bus: 'platform': add device fc460000.ad-hoc-bus
+[    0.816369] device: 'soc:static-rules': device_add
+[    0.821640] bus: 'platform': add device soc:static-rules
+[    0.826630] device: 'soc:devfreq_spdm_cpu': device_add
+[    0.831972] bus: 'platform': add device soc:devfreq_spdm_cpu
+[    0.837138] device: 'soc:devfreq_spdm_gov': device_add
+[    0.842737] bus: 'platform': add device soc:devfreq_spdm_gov
+[    0.847856] device: 'f9000000.interrupt-controller': device_add
+[    0.853506] bus: 'platform': add device f9000000.interrupt-controller
+[    0.859537] device: 'soc:timer': device_add
+[    0.865736] bus: 'platform': add device soc:timer
+[    0.869877] device: 'f9020000.timer': device_add
+[    0.874591] bus: 'platform': add device f9020000.timer
+[    0.879490] device: 'f9070000.clock-controller': device_add
+[    0.884229] bus: 'platform': add device f9070000.clock-controller
+[    0.889893] device: 'f9071000.clock-controller': device_add
+[    0.895946] bus: 'platform': add device f9071000.clock-controller
+[    0.901526] device: 'f9072000.clock-controller': device_add
+[    0.907578] bus: 'platform': add device f9072000.clock-controller
+[    0.913177] device: 'f9073000.clock-controller': device_add
+[    0.919212] bus: 'platform': add device f9073000.clock-controller
+[    0.924790] device: 'f9074000.clock-controller': device_add
+[    0.930843] bus: 'platform': add device f9074000.clock-controller
+[    0.936428] device: 'f9075000.clock-controller': device_add
+[    0.942474] bus: 'platform': add device f9075000.clock-controller
+[    0.948003] device: 'f9070000.ldo-vref': device_add
+[    0.954105] bus: 'platform': add device f9070000.ldo-vref
+[    0.958943] device: 'f9071000.ldo-vref': device_add
+[    0.964348] bus: 'platform': add device f9071000.ldo-vref
+[    0.969193] device: 'f9072000.ldo-vref': device_add
+[    0.974592] bus: 'platform': add device f9072000.ldo-vref
+[    0.979426] device: 'f9073000.ldo-vref': device_add
+[    0.984834] bus: 'platform': add device f9073000.ldo-vref
+[    0.989668] device: 'f9074000.ldo-vref': device_add
+[    0.995082] bus: 'platform': add device f9074000.ldo-vref
+[    0.999912] device: 'f9075000.ldo-vref': device_add
+[    1.005320] bus: 'platform': add device f9075000.ldo-vref
+[    1.010186] device: 'f900d000.clock-controller': device_add
+[    1.015566] bus: 'platform': add device f900d000.clock-controller
+[    1.021125] device: 'f900f000.clock-controller': device_add
+[    1.027197] bus: 'platform': add device f900f000.clock-controller
+[    1.033194] device: 'f9100000.arm64-cpu-erp': device_add
+[    1.038830] bus: 'platform': add device f9100000.arm64-cpu-erp
+[    1.044357] device: 'fc4ab000.restart': device_add
+[    1.049852] bus: 'platform': add device fc4ab000.restart
+[    1.054894] device: 'fd510000.pinctrl': device_add
+[    1.060097] bus: 'platform': add device fd510000.pinctrl
+[    1.064768] bus: 'platform': driver_probe_device: matched device fd510000.pinctrl with driver msm8x74-pinctrl
+[    1.070157] bus: 'platform': really_probe: probing driver msm8x74-pinctrl with device fd510000.pinctrl
+[    1.079977] msm8x74-pinctrl fd510000.pinctrl: no default pinctrl state
+[    1.089179] devices_kset: Moving fd510000.pinctrl to end of list
+[    1.095755] msm8x74-pinctrl fd510000.pinctrl: try to register 152 pins ...
+[    1.101834] pinctrl core: registered pin 0 (GPIO_0) on fd510000.pinctrl
+[    1.108515] pinctrl core: registered pin 1 (GPIO_1) on fd510000.pinctrl
+[    1.115024] pinctrl core: registered pin 2 (GPIO_2) on fd510000.pinctrl
+[    1.121621] pinctrl core: registered pin 3 (GPIO_3) on fd510000.pinctrl
+[    1.128218] pinctrl core: registered pin 4 (GPIO_4) on fd510000.pinctrl
+[    1.134820] pinctrl core: registered pin 5 (GPIO_5) on fd510000.pinctrl
+[    1.141412] pinctrl core: registered pin 6 (GPIO_6) on fd510000.pinctrl
+[    1.148009] pinctrl core: registered pin 7 (GPIO_7) on fd510000.pinctrl
+[    1.154606] pinctrl core: registered pin 8 (GPIO_8) on fd510000.pinctrl
+[    1.161203] pinctrl core: registered pin 9 (GPIO_9) on fd510000.pinctrl
+[    1.167801] pinctrl core: registered pin 10 (GPIO_10) on fd510000.pinctrl
+[    1.174399] pinctrl core: registered pin 11 (GPIO_11) on fd510000.pinctrl
+[    1.181343] pinctrl core: registered pin 12 (GPIO_12) on fd510000.pinctrl
+[    1.188113] pinctrl core: registered pin 13 (GPIO_13) on fd510000.pinctrl
+[    1.194885] pinctrl core: registered pin 14 (GPIO_14) on fd510000.pinctrl
+[    1.201655] pinctrl core: registered pin 15 (GPIO_15) on fd510000.pinctrl
+[    1.208426] pinctrl core: registered pin 16 (GPIO_16) on fd510000.pinctrl
+[    1.215198] pinctrl core: registered pin 17 (GPIO_17) on fd510000.pinctrl
+[    1.221969] pinctrl core: registered pin 18 (GPIO_18) on fd510000.pinctrl
+[    1.228739] pinctrl core: registered pin 19 (GPIO_19) on fd510000.pinctrl
+[    1.235509] pinctrl core: registered pin 20 (GPIO_20) on fd510000.pinctrl
+[    1.242280] pinctrl core: registered pin 21 (GPIO_21) on fd510000.pinctrl
+[    1.249051] pinctrl core: registered pin 22 (GPIO_22) on fd510000.pinctrl
+[    1.255822] pinctrl core: registered pin 23 (GPIO_23) on fd510000.pinctrl
+[    1.262592] pinctrl core: registered pin 24 (GPIO_24) on fd510000.pinctrl
+[    1.269363] pinctrl core: registered pin 25 (GPIO_25) on fd510000.pinctrl
+[    1.276135] pinctrl core: registered pin 26 (GPIO_26) on fd510000.pinctrl
+[    1.282906] pinctrl core: registered pin 27 (GPIO_27) on fd510000.pinctrl
+[    1.289675] pinctrl core: registered pin 28 (GPIO_28) on fd510000.pinctrl
+[    1.296446] pinctrl core: registered pin 29 (GPIO_29) on fd510000.pinctrl
+[    1.303218] pinctrl core: registered pin 30 (GPIO_30) on fd510000.pinctrl
+[    1.309989] pinctrl core: registered pin 31 (GPIO_31) on fd510000.pinctrl
+[    1.316760] pinctrl core: registered pin 32 (GPIO_32) on fd510000.pinctrl
+[    1.323530] pinctrl core: registered pin 33 (GPIO_33) on fd510000.pinctrl
+[    1.330302] pinctrl core: registered pin 34 (GPIO_34) on fd510000.pinctrl
+[    1.337072] pinctrl core: registered pin 35 (GPIO_35) on fd510000.pinctrl
+[    1.343843] pinctrl core: registered pin 36 (GPIO_36) on fd510000.pinctrl
+[    1.350617] pinctrl core: registered pin 37 (GPIO_37) on fd510000.pinctrl
+[    1.357386] pinctrl core: registered pin 38 (GPIO_38) on fd510000.pinctrl
+[    1.364155] pinctrl core: registered pin 39 (GPIO_39) on fd510000.pinctrl
+[    1.370926] pinctrl core: registered pin 40 (GPIO_40) on fd510000.pinctrl
+[    1.377697] pinctrl core: registered pin 41 (GPIO_41) on fd510000.pinctrl
+[    1.384469] pinctrl core: registered pin 42 (GPIO_42) on fd510000.pinctrl
+[    1.391239] pinctrl core: registered pin 43 (GPIO_43) on fd510000.pinctrl
+[    1.398008] pinctrl core: registered pin 44 (GPIO_44) on fd510000.pinctrl
+[    1.404780] pinctrl core: registered pin 45 (GPIO_45) on fd510000.pinctrl
+[    1.411552] pinctrl core: registered pin 46 (GPIO_46) on fd510000.pinctrl
+[    1.418321] pinctrl core: registered pin 47 (GPIO_47) on fd510000.pinctrl
+[    1.425092] pinctrl core: registered pin 48 (GPIO_48) on fd510000.pinctrl
+[    1.431864] pinctrl core: registered pin 49 (GPIO_49) on fd510000.pinctrl
+[    1.438634] pinctrl core: registered pin 50 (GPIO_50) on fd510000.pinctrl
+[    1.445406] pinctrl core: registered pin 51 (GPIO_51) on fd510000.pinctrl
+[    1.452176] pinctrl core: registered pin 52 (GPIO_52) on fd510000.pinctrl
+[    1.458946] pinctrl core: registered pin 53 (GPIO_53) on fd510000.pinctrl
+[    1.465718] pinctrl core: registered pin 54 (GPIO_54) on fd510000.pinctrl
+[    1.472488] pinctrl core: registered pin 55 (GPIO_55) on fd510000.pinctrl
+[    1.479258] pinctrl core: registered pin 56 (GPIO_56) on fd510000.pinctrl
+[    1.486030] pinctrl core: registered pin 57 (GPIO_57) on fd510000.pinctrl
+[    1.492801] pinctrl core: registered pin 58 (GPIO_58) on fd510000.pinctrl
+[    1.499573] pinctrl core: registered pin 59 (GPIO_59) on fd510000.pinctrl
+[    1.506343] pinctrl core: registered pin 60 (GPIO_60) on fd510000.pinctrl
+[    1.513113] pinctrl core: registered pin 61 (GPIO_61) on fd510000.pinctrl
+[    1.519885] pinctrl core: registered pin 62 (GPIO_62) on fd510000.pinctrl
+[    1.526654] pinctrl core: registered pin 63 (GPIO_63) on fd510000.pinctrl
+[    1.533428] pinctrl core: registered pin 64 (GPIO_64) on fd510000.pinctrl
+[    1.540198] pinctrl core: registered pin 65 (GPIO_65) on fd510000.pinctrl
+[    1.546968] pinctrl core: registered pin 66 (GPIO_66) on fd510000.pinctrl
+[    1.553740] pinctrl core: registered pin 67 (GPIO_67) on fd510000.pinctrl
+[    1.560509] pinctrl core: registered pin 68 (GPIO_68) on fd510000.pinctrl
+[    1.567284] pinctrl core: registered pin 69 (GPIO_69) on fd510000.pinctrl
+[    1.574052] pinctrl core: registered pin 70 (GPIO_70) on fd510000.pinctrl
+[    1.580822] pinctrl core: registered pin 71 (GPIO_71) on fd510000.pinctrl
+[    1.587592] pinctrl core: registered pin 72 (GPIO_72) on fd510000.pinctrl
+[    1.594363] pinctrl core: registered pin 73 (GPIO_73) on fd510000.pinctrl
+[    1.601134] pinctrl core: registered pin 74 (GPIO_74) on fd510000.pinctrl
+[    1.607907] pinctrl core: registered pin 75 (GPIO_75) on fd510000.pinctrl
+[    1.614676] pinctrl core: registered pin 76 (GPIO_76) on fd510000.pinctrl
+[    1.621447] pinctrl core: registered pin 77 (GPIO_77) on fd510000.pinctrl
+[    1.628219] pinctrl core: registered pin 78 (GPIO_78) on fd510000.pinctrl
+[    1.634989] pinctrl core: registered pin 79 (GPIO_79) on fd510000.pinctrl
+[    1.641760] pinctrl core: registered pin 80 (GPIO_80) on fd510000.pinctrl
+[    1.648531] pinctrl core: registered pin 81 (GPIO_81) on fd510000.pinctrl
+[    1.655302] pinctrl core: registered pin 82 (GPIO_82) on fd510000.pinctrl
+[    1.662072] pinctrl core: registered pin 83 (GPIO_83) on fd510000.pinctrl
+[    1.668842] pinctrl core: registered pin 84 (GPIO_84) on fd510000.pinctrl
+[    1.675613] pinctrl core: registered pin 85 (GPIO_85) on fd510000.pinctrl
+[    1.682385] pinctrl core: registered pin 86 (GPIO_86) on fd510000.pinctrl
+[    1.689155] pinctrl core: registered pin 87 (GPIO_87) on fd510000.pinctrl
+[    1.695927] pinctrl core: registered pin 88 (GPIO_88) on fd510000.pinctrl
+[    1.702697] pinctrl core: registered pin 89 (GPIO_89) on fd510000.pinctrl
+[    1.709468] pinctrl core: registered pin 90 (GPIO_90) on fd510000.pinctrl
+[    1.716239] pinctrl core: registered pin 91 (GPIO_91) on fd510000.pinctrl
+[    1.723011] pinctrl core: registered pin 92 (GPIO_92) on fd510000.pinctrl
+[    1.729780] pinctrl core: registered pin 93 (GPIO_93) on fd510000.pinctrl
+[    1.736552] pinctrl core: registered pin 94 (GPIO_94) on fd510000.pinctrl
+[    1.743321] pinctrl core: registered pin 95 (GPIO_95) on fd510000.pinctrl
+[    1.750093] pinctrl core: registered pin 96 (GPIO_96) on fd510000.pinctrl
+[    1.756864] pinctrl core: registered pin 97 (GPIO_97) on fd510000.pinctrl
+[    1.763635] pinctrl core: registered pin 98 (GPIO_98) on fd510000.pinctrl
+[    1.770405] pinctrl core: registered pin 99 (GPIO_99) on fd510000.pinctrl
+[    1.777176] pinctrl core: registered pin 100 (GPIO_100) on fd510000.pinctrl
+[    1.783952] pinctrl core: registered pin 101 (GPIO_101) on fd510000.pinctrl
+[    1.790720] pinctrl core: registered pin 102 (GPIO_102) on fd510000.pinctrl
+[    1.797662] pinctrl core: registered pin 103 (GPIO_103) on fd510000.pinctrl
+[    1.804608] pinctrl core: registered pin 104 (GPIO_104) on fd510000.pinctrl
+[    1.811551] pinctrl core: registered pin 105 (GPIO_105) on fd510000.pinctrl
+[    1.818497] pinctrl core: registered pin 106 (GPIO_106) on fd510000.pinctrl
+[    1.825439] pinctrl core: registered pin 107 (GPIO_107) on fd510000.pinctrl
+[    1.832383] pinctrl core: registered pin 108 (GPIO_108) on fd510000.pinctrl
+[    1.839328] pinctrl core: registered pin 109 (GPIO_109) on fd510000.pinctrl
+[    1.846274] pinctrl core: registered pin 110 (GPIO_110) on fd510000.pinctrl
+[    1.853218] pinctrl core: registered pin 111 (GPIO_111) on fd510000.pinctrl
+[    1.860163] pinctrl core: registered pin 112 (GPIO_112) on fd510000.pinctrl
+[    1.867107] pinctrl core: registered pin 113 (GPIO_113) on fd510000.pinctrl
+[    1.874050] pinctrl core: registered pin 114 (GPIO_114) on fd510000.pinctrl
+[    1.880995] pinctrl core: registered pin 115 (GPIO_115) on fd510000.pinctrl
+[    1.887940] pinctrl core: registered pin 116 (GPIO_116) on fd510000.pinctrl
+[    1.894884] pinctrl core: registered pin 117 (GPIO_117) on fd510000.pinctrl
+[    1.901829] pinctrl core: registered pin 118 (GPIO_118) on fd510000.pinctrl
+[    1.908773] pinctrl core: registered pin 119 (GPIO_119) on fd510000.pinctrl
+[    1.915719] pinctrl core: registered pin 120 (GPIO_120) on fd510000.pinctrl
+[    1.922662] pinctrl core: registered pin 121 (GPIO_121) on fd510000.pinctrl
+[    1.929608] pinctrl core: registered pin 122 (GPIO_122) on fd510000.pinctrl
+[    1.936551] pinctrl core: registered pin 123 (GPIO_123) on fd510000.pinctrl
+[    1.943496] pinctrl core: registered pin 124 (GPIO_124) on fd510000.pinctrl
+[    1.950438] pinctrl core: registered pin 125 (GPIO_125) on fd510000.pinctrl
+[    1.957386] pinctrl core: registered pin 126 (GPIO_126) on fd510000.pinctrl
+[    1.964329] pinctrl core: registered pin 127 (GPIO_127) on fd510000.pinctrl
+[    1.971275] pinctrl core: registered pin 128 (GPIO_128) on fd510000.pinctrl
+[    1.978219] pinctrl core: registered pin 129 (GPIO_129) on fd510000.pinctrl
+[    1.985162] pinctrl core: registered pin 130 (GPIO_130) on fd510000.pinctrl
+[    1.992107] pinctrl core: registered pin 131 (GPIO_131) on fd510000.pinctrl
+[    1.999051] pinctrl core: registered pin 132 (GPIO_132) on fd510000.pinctrl
+[    2.005998] pinctrl core: registered pin 133 (GPIO_133) on fd510000.pinctrl
+[    2.012942] pinctrl core: registered pin 134 (GPIO_134) on fd510000.pinctrl
+[    2.019885] pinctrl core: registered pin 135 (GPIO_135) on fd510000.pinctrl
+[    2.026828] pinctrl core: registered pin 136 (GPIO_136) on fd510000.pinctrl
+[    2.033773] pinctrl core: registered pin 137 (GPIO_137) on fd510000.pinctrl
+[    2.040718] pinctrl core: registered pin 138 (GPIO_138) on fd510000.pinctrl
+[    2.047663] pinctrl core: registered pin 139 (GPIO_139) on fd510000.pinctrl
+[    2.054606] pinctrl core: registered pin 140 (GPIO_140) on fd510000.pinctrl
+[    2.061552] pinctrl core: registered pin 141 (GPIO_141) on fd510000.pinctrl
+[    2.068496] pinctrl core: registered pin 142 (GPIO_142) on fd510000.pinctrl
+[    2.075440] pinctrl core: registered pin 143 (GPIO_143) on fd510000.pinctrl
+[    2.082385] pinctrl core: registered pin 144 (GPIO_144) on fd510000.pinctrl
+[    2.089329] pinctrl core: registered pin 145 (GPIO_145) on fd510000.pinctrl
+[    2.096274] pinctrl core: registered pin 146 (SDC1_CLK) on fd510000.pinctrl
+[    2.103217] pinctrl core: registered pin 147 (SDC1_CMD) on fd510000.pinctrl
+[    2.110161] pinctrl core: registered pin 148 (SDC1_DATA) on fd510000.pinctrl
+[    2.117107] pinctrl core: registered pin 149 (SDC2_CLK) on fd510000.pinctrl
+[    2.124398] pinctrl core: registered pin 150 (SDC2_CMD) on fd510000.pinctrl
+[    2.131083] pinctrl core: registered pin 151 (SDC2_DATA) on fd510000.pinctrl
+[    2.138035] msm8x74-pinctrl fd510000.pinctrl: failed to lookup the default state
+[    2.145321] msm8x74-pinctrl fd510000.pinctrl: failed to lookup the sleep state
+[    2.153046] gpio gpiochip0: (fd510000.pinctrl): added GPIO chardev (254:0)
+[    2.159730] device: 'gpiochip0': device_add
+[    2.166603] bus: 'gpio': add device gpiochip0
+[    2.170763] device: 'gpiochip0': device_add
+[    2.175287] gpiochip_add_data: registered GPIOs 0 to 145 on device: gpiochip0 (fd510000.pinctrl)
+[    2.179187] gpio gpiochip0: (fd510000.pinctrl): created GPIO range 0->145 ==> fd510000.pinctrl PIN 0->145
+[    2.189664] msm8x74-pinctrl fd510000.pinctrl: Probed Qualcomm pinctrl driver
+[    2.197669] driver: 'msm8x74-pinctrl': driver_bound: bound to device 'fd510000.pinctrl'
+[    2.204786] bus: 'platform': really_probe: bound device fd510000.pinctrl to driver msm8x74-pinctrl
+[    2.212598] device: 'fe80f000.qcom,msm-imem': device_add
+[    2.221554] bus: 'platform': add device fe80f000.qcom,msm-imem
+[    2.227356] device: 'f9017000.qcom,wdt': device_add
+[    2.232665] bus: 'platform': add device f9017000.qcom,wdt
+[    2.237563] device: 'soc:qcom,msm-rtb': device_add
+[    2.242994] bus: 'platform': add device soc:qcom,msm-rtb
+[    2.247825] device: 'fc4be024.jtagfuse': device_add
+[    2.253150] bus: 'platform': add device fc4be024.jtagfuse
+[    2.257928] device: 'fb840000.jtagmm': device_add
+[    2.263307] bus: 'platform': add device fb840000.jtagmm
+[    2.268171] device: 'fb940000.jtagmm': device_add
+[    2.273028] bus: 'platform': add device fb940000.jtagmm
+[    2.278063] device: 'fba40000.jtagmm': device_add
+[    2.282925] bus: 'platform': add device fba40000.jtagmm
+[    2.287964] device: 'fbb40000.jtagmm': device_add
+[    2.292820] bus: 'platform': add device fbb40000.jtagmm
+[    2.297855] device: 'fbc40000.jtagmm': device_add
+[    2.302722] bus: 'platform': add device fbc40000.jtagmm
+[    2.307749] device: 'fbd40000.jtagmm': device_add
+[    2.312617] bus: 'platform': add device fbd40000.jtagmm
+[    2.317585] device: 'soc:qcom,sps': device_add
+[    2.322507] bus: 'platform': add device soc:qcom,sps
+[    2.327276] device: 'f991e000.serial': device_add
+[    2.332144] bus: 'platform': add device f991e000.serial
+[    2.337499] irq: no irq domain found for /soc/pinctrl@fd510000/gp/msm_gpio !
+[    2.341795] device: 'f995e000.uart': device_add
+[    2.349068] bus: 'platform': add device f995e000.uart
+[    2.353478] device: 'fc400000.qcom,gcc': device_add
+[    2.358532] bus: 'platform': add device fc400000.qcom,gcc
+[    2.363283] bus: 'platform': driver_probe_device: matched device fc400000.qcom,gcc with driver gcc-msm8994
+[    2.368767] bus: 'platform': really_probe: probing driver gcc-msm8994 with device fc400000.qcom,gcc
+[    2.378321] gcc-msm8994 fc400000.qcom,gcc: no default pinctrl state
+[    2.387267] devices_kset: Moving fc400000.qcom,gcc to end of list
+[    2.393608]   >>>> qcom_cc_probe 
+[    2.399739]    .... qcom_cc_really_probe Enter 
+[    2.403026]  num clocks 118 
+[    2.407373]  clk num 0 devm_clk_regmap 
+[    2.410508]  registering clock #0 
+[    2.414059]  clk num 1 devm_clk_regmap 
+[    2.417538]  registering clock #1 
+[    2.421263]  clk num 2 devm_clk_regmap 
+[    2.424749]  registering clock #2 
+[    2.428467]  clk num 3 devm_clk_regmap 
+[    2.431952]  registering clock #3 
+[    2.435674]  clk num 4 devm_clk_regmap 
+[    2.439163]  registering clock #4 
+[    2.442878]  clk num 5 devm_clk_regmap 
+[    2.446367]  registering clock #5 
+[    2.450082]  clk num 6 devm_clk_regmap 
+[    2.453568]  registering clock #6 
+[    2.457288]  clk num 7 devm_clk_regmap 
+[    2.460780]  registering clock #7 
+[    2.464492]  clk num 8 devm_clk_regmap 
+[    2.467979]  registering clock #8 
+[    2.471697]  clk num 9 devm_clk_regmap 
+[    2.475186]  registering clock #9 
+[    2.478902]  clk num 10 devm_clk_regmap 
+[    2.482388]  registering clock #10 
+[    2.486454]  clk num 11 devm_clk_regmap 
+[    2.489673]  registering clock #11 
+[    2.493833]  clk num 12 devm_clk_regmap 
+[    2.497047]  registering clock #12 
+[    2.501211]  clk num 13 devm_clk_regmap 
+[    2.504428]  registering clock #13 
+[    2.508590]  clk num 14 devm_clk_regmap 
+[    2.511805]  registering clock #14 
+[    2.515968]  clk num 15 devm_clk_regmap 
+[    2.519190]  registering clock #15 
+[    2.523347]  clk num 16 devm_clk_regmap 
+[    2.526562]  registering clock #16 
+[    2.530726]  clk num 17 devm_clk_regmap 
+[    2.533944]  registering clock #17 
+[    2.538104]  clk num 18 devm_clk_regmap 
+[    2.541322]  registering clock #18 
+[    2.545482]  clk num 19 devm_clk_regmap 
+[    2.548706]  registering clock #19 
+[    2.552861]  clk num 20 devm_clk_regmap 
+[    2.556080]  registering clock #20 
+[    2.560239]  clk num 21 devm_clk_regmap 
+[    2.563459]  registering clock #21 
+[    2.567617]  clk num 22 devm_clk_regmap 
+[    2.570838]  registering clock #22 
+[    2.574996]  clk num 24 devm_clk_regmap 
+[    2.578217]  registering clock #24 
+[    2.582374]  clk num 25 devm_clk_regmap 
+[    2.585594]  registering clock #25 
+[    2.589753]  clk num 26 devm_clk_regmap 
+[    2.592970]  registering clock #26 
+[    2.597132]  clk num 27 devm_clk_regmap 
+[    2.600352]  registering clock #27 
+[    2.604510]  clk num 28 devm_clk_regmap 
+[    2.607726]  registering clock #28 
+[    2.611888]  clk num 29 devm_clk_regmap 
+[    2.615108]  registering clock #29 
+[    2.619267]  clk num 30 devm_clk_regmap 
+[    2.622484]  registering clock #30 
+[    2.626646]  clk num 31 devm_clk_regmap 
+[    2.629866]  registering clock #31 
+[    2.634024]  clk num 32 devm_clk_regmap 
+[    2.637245]  registering clock #32 
+[    2.641403]  clk num 33 devm_clk_regmap 
+[    2.644623]  registering clock #33 
+[    2.648782]  clk num 34 devm_clk_regmap 
+[    2.651998]  registering clock #34 
+[    2.656158]  clk num 35 devm_clk_regmap 
+[    2.659380]  registering clock #35 
+[    2.663537]  clk num 36 devm_clk_regmap 
+[    2.666762]  registering clock #36 
+[    2.670917]  clk num 37 devm_clk_regmap 
+[    2.674138]  registering clock #37 
+[    2.678296]  clk num 38 devm_clk_regmap 
+[    2.681516]  registering clock #38 
+[    2.685673]  clk num 39 devm_clk_regmap 
+[    2.688893]  registering clock #39 
+[    2.693052]  clk num 40 devm_clk_regmap 
+[    2.696277]  registering clock #40 
+[    2.700431]  clk num 41 devm_clk_regmap 
+[    2.703652]  registering clock #41 
+[    2.707809]  clk num 42 devm_clk_regmap 
+[    2.711029]  registering clock #42 
+[    2.715188]  clk num 43 devm_clk_regmap 
+[    2.718408]  registering clock #43 
+[    2.722566]  clk num 44 devm_clk_regmap 
+[    2.725785]  registering clock #44 
+[    2.729944]  clk num 45 devm_clk_regmap 
+[    2.733163]  registering clock #45 
+[    2.737322]  clk num 46 devm_clk_regmap 
+[    2.740539]  registering clock #46 
+[    2.744701]  clk num 47 devm_clk_regmap 
+[    2.747920]  registering clock #47 
+[    2.752079]  clk num 48 devm_clk_regmap 
+[    2.755302]  registering clock #48 
+[    2.759459]  clk num 49 devm_clk_regmap 
+[    2.762677]  registering clock #49 
+[    2.766838]  clk num 50 devm_clk_regmap 
+[    2.770059]  registering clock #50 
+[    2.774215]  clk num 51 devm_clk_regmap 
+[    2.777436]  registering clock #51 
+[    2.781593]  clk num 52 devm_clk_regmap 
+[    2.784819]  registering clock #52 
+[    2.788972]  clk num 53 devm_clk_regmap 
+[    2.792193]  registering clock #53 
+[    2.796350]  clk num 54 devm_clk_regmap 
+[    2.799572]  registering clock #54 
+[    2.803729]  clk num 55 devm_clk_regmap 
+[    2.806953]  registering clock #55 
+[    2.811107]  clk num 56 devm_clk_regmap 
+[    2.814331]  registering clock #56 
+[    2.818485]  clk num 57 devm_clk_regmap 
+[    2.821707]  registering clock #57 
+[    2.825864]  clk num 58 devm_clk_regmap 
+[    2.829078]  registering clock #58 
+[    2.833242]  clk num 59 devm_clk_regmap 
+[    2.836462]  registering clock #59 
+[    2.840622]  clk num 60 devm_clk_regmap 
+[    2.843840]  registering clock #60 
+[    2.848000]  clk num 61 devm_clk_regmap 
+[    2.851219]  registering clock #61 
+[    2.855378]  clk num 62 devm_clk_regmap 
+[    2.858597]  registering clock #62 
+[    2.862757]  clk num 63 devm_clk_regmap 
+[    2.865977]  registering clock #63 
+[    2.870135]  clk num 64 devm_clk_regmap 
+[    2.873356]  registering clock #64 
+[    2.877514]  clk num 65 devm_clk_regmap 
+[    2.880737]  registering clock #65 
+[    2.884893]  clk num 66 devm_clk_regmap 
+[    2.888112]  registering clock #66 
+[    2.892271]  clk num 67 devm_clk_regmap 
+[    2.895490]  registering clock #67 
+[    2.899649]  clk num 68 devm_clk_regmap 
+[    2.902872]  registering clock #68 
+[    2.907027]  clk num 69 devm_clk_regmap 
+[    2.910247]  registering clock #69 
+[    2.914406]  clk num 70 devm_clk_regmap 
+[    2.917625]  registering clock #70 
+[    2.921784]  clk num 71 devm_clk_regmap 
+[    2.925006]  registering clock #71 
+[    2.929164]  clk num 72 devm_clk_regmap 
+[    2.932387]  registering clock #72 
+[    2.936542]  clk num 73 devm_clk_regmap 
+[    2.939768]  registering clock #73 
+[    2.943920]  clk num 74 devm_clk_regmap 
+[    2.947140]  registering clock #74 
+[    2.951298]  clk num 75 devm_clk_regmap 
+[    2.954520]  registering clock #75 
+[    2.958676]  clk num 76 devm_clk_regmap 
+[    2.961899]  registering clock #76 
+[    2.966056]  clk num 77 devm_clk_regmap 
+[    2.969273]  registering clock #77 
+[    2.973434]  clk num 78 devm_clk_regmap 
+[    2.976667]  registering clock #78 
+[    2.980812]  clk num 79 devm_clk_regmap 
+[    2.984042]  registering clock #79 
+[    2.988191]  clk num 80 devm_clk_regmap 
+[    2.991420]  registering clock #80 
+[    2.995570]  clk num 81 devm_clk_regmap 
+[    2.998802]  registering clock #81 
+[    3.002948]  clk num 82 devm_clk_regmap 
+[    3.006178]  registering clock #82 
+[    3.010327]  clk num 83 devm_clk_regmap 
+[    3.013557]  registering clock #83 
+[    3.017704]  clk num 84 devm_clk_regmap 
+[    3.020939]  registering clock #84 
+[    3.025083]  clk num 85 devm_clk_regmap 
+[    3.028312]  registering clock #85 
+[    3.032462]  clk num 86 devm_clk_regmap 
+[    3.035692]  registering clock #86 
+[    3.039840]  clk num 87 devm_clk_regmap 
+[    3.043070]  registering clock #87 
+[    3.047218]  clk num 88 devm_clk_regmap 
+[    3.050450]  registering clock #88 
+[    3.054599]  clk num 89 devm_clk_regmap 
+[    3.057832]  registering clock #89 
+[    3.061976]  clk num 90 devm_clk_regmap 
+[    3.065206]  registering clock #90 
+[    3.069353]  clk num 91 devm_clk_regmap 
+[    3.072585]  registering clock #91 
+[    3.076733]  clk num 92 devm_clk_regmap 
+[    3.079965]  registering clock #92 
+[    3.084111]  clk num 93 devm_clk_regmap 
+[    3.087341]  registering clock #93 
+[    3.091489]  clk num 94 devm_clk_regmap 
+[    3.094720]  registering clock #94 
+[    3.098868]  clk num 95 devm_clk_regmap 
+[    3.102100]  registering clock #95 
+[    3.106246]  clk num 96 devm_clk_regmap 
+[    3.109480]  registering clock #96 
+[    3.113626]  clk num 97 devm_clk_regmap 
+[    3.116861]  registering clock #97 
+[    3.121004]  clk num 98 devm_clk_regmap 
+[    3.124236]  registering clock #98 
+[    3.128382]  clk num 99 devm_clk_regmap 
+[    3.131613]  registering clock #99 
+[    3.135761]  clk num 100 devm_clk_regmap 
+[    3.138997]  registering clock #100 
+[    3.143140]  clk num 101 devm_clk_regmap 
+[    3.146817]  registering clock #101 
+[    3.150692]  clk num 102 devm_clk_regmap 
+[    3.154367]  registering clock #102 
+[    3.158244]  clk num 103 devm_clk_regmap 
+[    3.161921]  registering clock #103 
+[    3.165796]  clk num 104 devm_clk_regmap 
+[    3.169472]  registering clock #104 
+[    3.173349]  clk num 105 devm_clk_regmap 
+[    3.177037]  registering clock #105 
+[    3.180901]  clk num 106 devm_clk_regmap 
+[    3.184577]  registering clock #106 
+[    3.188452]  clk num 107 devm_clk_regmap 
+[    3.192132]  registering clock #107 
+[    3.196005]  clk num 108 devm_clk_regmap 
+[    3.199687]  registering clock #108 
+[    3.203557]  clk num 109 devm_clk_regmap 
+[    3.207242]  registering clock #109 
+[    3.211108]  clk num 110 devm_clk_regmap 
+[    3.214786]  registering clock #110 
+[    3.218660]  clk num 111 devm_clk_regmap 
+[    3.222345]  registering clock #111 
+[    3.226212]  clk num 112 devm_clk_regmap 
+[    3.229897]  registering clock #112 
+[    3.233765]  clk num 113 devm_clk_regmap 
+[    3.237455]  registering clock #113 
+[    3.241316]  clk num 114 devm_clk_regmap 
+[    3.245003]  registering clock #114 
+[    3.248869]  clk num 115 devm_clk_regmap 
+[    3.252556]  registering clock #115 
+[    3.256421]  clk num 116 devm_clk_regmap 
+[    3.260106]  registering clock #116 
+[    3.263974]  clk num 117 devm_clk_regmap 
+[    3.267654]  registering clock #117 
+[    3.271536]    .... qcom_cc_really_probe Exit 
+[    3.275176] driver: 'gcc-msm8994': driver_bound: bound to device 'fc400000.qcom,gcc'
+[    3.279437] bus: 'platform': really_probe: bound device fc400000.qcom,gcc to driver gcc-msm8994
+[    3.287417] device: 'fc401880.qcom,rpmcc': device_add
+[    3.295774] bus: 'platform': add device fc401880.qcom,rpmcc
+[    3.301139] device: 'fd8c0000.qcom,mmsscc': device_add
+[    3.306363] bus: 'platform': add device fd8c0000.qcom,mmsscc
+[    3.311721] device: 'fc401880.qcom,cc-debug': device_add
+[    3.317388] bus: 'platform': add device fc401880.qcom,cc-debug
+[    3.322806] device: 'soc:qcom,cci': device_add
+[    3.328322] bus: 'platform': add device soc:qcom,cci
+[    3.332863] device: 'soc:qcom,cpubw': device_add
+[    3.337871] bus: 'platform': add device soc:qcom,cpubw
+[    3.342764] device: 'fc388000.qcom,cpu-bwmon': device_add
+[    3.347425] bus: 'platform': add device fc388000.qcom,cpu-bwmon
+[    3.353018] device: 'soc:qcom,mincpubw': device_add
+[    3.358618] bus: 'platform': add device soc:qcom,mincpubw
+[    3.363598] device: 'soc:qcom,msm-cpufreq': device_add
+[    3.369036] bus: 'platform': add device soc:qcom,msm-cpufreq
+[    3.374380] device: 'f9015000.qcom,cpu-clock-8992': device_add
+[    3.379894] bus: 'platform': add device f9015000.qcom,cpu-clock-8992
+[    3.385647] device: 'soc:dummy_vreg': device_add
+[    3.392039] bus: 'platform': add device soc:dummy_vreg
+[    3.396946] device: 'fc4cf000.qcom,spmi': device_add
+[    3.401591] bus: 'platform': add device fc4cf000.qcom,spmi
+[    3.406920] device: 'soc:cpu-pmu': device_add
+[    3.412004] bus: 'platform': add device soc:cpu-pmu
+[    3.420862] device: 'fc520000.qcom,pcie': device_add
+[    3.421107] bus: 'platform': add device fc520000.qcom,pcie
+[    3.426454] device: 'soc:qcom,cnss': device_add
+[    3.431623] bus: 'platform': add device soc:qcom,cnss
+[    3.436418] device: 'fd4c0000.qcom,ipa': device_add
+[    3.441261] bus: 'platform': add device fd4c0000.qcom,ipa
+[    3.446058] device: 'soc:qcom,rmnet-ipa': device_add
+[    3.451501] bus: 'platform': add device soc:qcom,rmnet-ipa
+[    3.456812] device: 'f9924000.i2c': device_add
+[    3.461831] bus: 'platform': add device f9924000.i2c
+[    3.466448] irq: no irq domain found for /soc/pinctrl@fd510000/gp/msm_gpio !
+[    3.471386] device: 'soc:wcd9xxx-irq': device_add
+[    3.478410] bus: 'platform': add device soc:wcd9xxx-irq
+[    3.483270] device: 'f9967000.i2c': device_add
+[    3.488045] bus: 'platform': add device f9967000.i2c
+[    3.492828] device: 'f9928000.i2c': device_add
+[    3.497683] bus: 'platform': add device f9928000.i2c
+[    3.502188] device: 'f9904000.qcom,sps-dma': device_add
+[    3.507060] bus: 'platform': add device f9904000.qcom,sps-dma
+[    3.512246] device: 'f9944000.qcom,sps-dma': device_add
+[    3.517914] bus: 'platform': add device f9944000.qcom,sps-dma
+[    3.523317] device: 'fe12f000.slim': device_add
+[    3.528845] bus: 'platform': add device fe12f000.slim
+[    3.533419] device: 'fe034000.sound': device_add
+[    3.538393] bus: 'platform': add device fe034000.sound
+[    3.543198] device: 'soc:qcom,msm-adsp-loader': device_add
+[    3.548030] bus: 'platform': add device soc:qcom,msm-adsp-loader
+[    3.553614] device: 'soc:qcom,msm-audio-ion': device_add
+[    3.559661] bus: 'platform': add device soc:qcom,msm-audio-ion
+[    3.565069] device: 'soc:qcom,msm-pcm': device_add
+[    3.570597] bus: 'platform': add device soc:qcom,msm-pcm
+[    3.575486] device: 'soc:qcom,msm-pcm-lpa': device_add
+[    3.580841] bus: 'platform': add device soc:qcom,msm-pcm-lpa
+[    3.585904] device: 'soc:qcom,msm-ultra-low-latency': device_add
+[    3.591606] bus: 'platform': add device soc:qcom,msm-ultra-low-latency
+[    3.597714] device: 'soc:qcom,msm-pcm-low-latency': device_add
+[    3.603939] bus: 'platform': add device soc:qcom,msm-pcm-low-latency
+[    3.609869] device: 'soc:qcom,msm-pcm-routing': device_add
+[    3.616258] bus: 'platform': add device soc:qcom,msm-pcm-routing
+[    3.621668] device: 'soc:qcom,msm-compr-dsp': device_add
+[    3.627716] bus: 'platform': add device soc:qcom,msm-compr-dsp
+[    3.633136] device: 'soc:qcom,msm-compress-dsp': device_add
+[    3.638655] bus: 'platform': add device soc:qcom,msm-compress-dsp
+[    3.644235] device: 'soc:qcom,msm-voip-dsp': device_add
+[    3.650373] bus: 'platform': add device soc:qcom,msm-voip-dsp
+[    3.655520] device: 'soc:qcom,msm-pcm-voice': device_add
+[    3.661309] bus: 'platform': add device soc:qcom,msm-pcm-voice
+[    3.666809] device: 'soc:qcom,msm-stub-codec': device_add
+[    3.672335] bus: 'platform': add device soc:qcom,msm-stub-codec
+[    3.677914] device: 'soc:qcom,msm-dai-fe': device_add
+[    3.683532] bus: 'platform': add device soc:qcom,msm-dai-fe
+[    3.688858] device: 'soc:qcom,msm-pcm-afe': device_add
+[    3.694122] bus: 'platform': add device soc:qcom,msm-pcm-afe
+[    3.699450] device: 'soc:qcom,msm-dai-q6-hdmi': device_add
+[    3.705148] bus: 'platform': add device soc:qcom,msm-dai-q6-hdmi
+[    3.710556] device: 'soc:qcom,msm-lsm-client': device_add
+[    3.716605] bus: 'platform': add device soc:qcom,msm-lsm-client
+[    3.722020] device: 'soc:qcom,msm-pcm-loopback': device_add
+[    3.727629] bus: 'platform': add device soc:qcom,msm-pcm-loopback
+[    3.733301] device: 'soc:qcom,msm-voice-svc': device_add
+[    3.739436] bus: 'platform': add device soc:qcom,msm-voice-svc
+[    3.744930] device: 'soc:qcom,msm-cpe-lsm': device_add
+[    3.750464] bus: 'platform': add device soc:qcom,msm-cpe-lsm
+[    3.755695] device: 'soc:qcom,msm-dai-q6': device_add
+[    3.761396] bus: 'platform': add device soc:qcom,msm-dai-q6
+[    3.766463] device: 'soc:qcom,msm-pri-auxpcm': device_add
+[    3.771728] bus: 'platform': add device soc:qcom,msm-pri-auxpcm
+[    3.777410] device: 'soc:qcom,msm-sec-auxpcm': device_add
+[    3.783013] bus: 'platform': add device soc:qcom,msm-sec-auxpcm
+[    3.788685] device: 'soc:qcom,msm-dai-mi2s': device_add
+[    3.794296] bus: 'platform': add device soc:qcom,msm-dai-mi2s
+[    3.799618] device: 'soc:qcom,msm-pcm-hostless': device_add
+[    3.805408] bus: 'platform': add device soc:qcom,msm-pcm-hostless
+[    3.811173] device: 'f9824900.sdhci': device_add
+[    3.817041] bus: 'platform': add device f9824900.sdhci
+[    3.821881] device: '0.qcom,rmtfs_sharedmem': device_add
+[    3.826676] bus: 'platform': add device 0.qcom,rmtfs_sharedmem
+[    3.832296] device: '0.qcom,dsp_sharedmem': device_add
+[    3.837787] bus: 'platform': add device 0.qcom,dsp_sharedmem
+[    3.843053] device: '0.qcom,mdm_sharedmem': device_add
+[    3.848724] bus: 'platform': add device 0.qcom,mdm_sharedmem
+[    3.853819] device: '0.qcom,sensors_sharedmem': device_add
+[    3.859492] bus: 'platform': add device 0.qcom,sensors_sharedmem
+[    3.864939] device: 'fdce0000.qcom,venus': device_add
+[    3.870946] bus: 'platform': add device fdce0000.qcom,venus
+[    3.876249] device: 'fc880000.qcom,mss': device_add
+[    3.881277] bus: 'platform': add device fc880000.qcom,mss
+[    3.886402] device: 'fe200000.qcom,lpass': device_add
+[    3.891699] bus: 'platform': add device fe200000.qcom,lpass
+[    3.896878] device: 'fd484000.qcom,ipc-spinlock': device_add
+[    3.902111] bus: 'platform': add device fd484000.qcom,ipc-spinlock
+[    3.908274] device: 'fdc00000.qcom,vidc': device_add
+[    3.914003] bus: 'platform': add device fdc00000.qcom,vidc
+[    3.919356] device: '6a00000.qcom,smem': device_add
+[    3.924419] bus: 'platform': add device 6a00000.qcom,smem
+[    3.929304] device: 'soc:qcom,smdpkt': device_add
+[    3.934747] bus: 'platform': add device soc:qcom,smdpkt
+[    3.939546] device: 'soc:qcom,smdtty': device_add
+[    3.944468] bus: 'platform': add device soc:qcom,smdtty
+[    3.949448] device: 'soc:qcom,ipc_router': device_add
+[    3.954367] bus: 'platform': add device soc:qcom,ipc_router
+[    3.959698] device: 'soc:qcom,ipc_router_modem_xprt': device_add
+[    3.964959] bus: 'platform': add device soc:qcom,ipc_router_modem_xprt
+[    3.971320] device: 'soc:qcom,ipc_router_q6_xprt': device_add
+[    3.977549] bus: 'platform': add device soc:qcom,ipc_router_q6_xprt
+[    3.983641] device: 'fc4a8000.tsens': device_add
+[    3.989436] bus: 'platform': add device fc4a8000.tsens
+[    3.994709] device: 'fdd00000.qcom,ocmem': device_add
+[    3.999247] bus: 'platform': add device fdd00000.qcom,ocmem
+[    4.004484] device: 'soc:qcom,rpm-smd': device_add
+[    4.009747] bus: 'platform': add device soc:qcom,rpm-smd
+[    4.014759] device: 'f9bff000.qcom,msm-rng': device_add
+[    4.020078] bus: 'platform': add device f9bff000.qcom,msm-rng
+[    4.025176] device: '6500000.qcom,qseecom': device_add
+[    4.030928] bus: 'platform': add device 6500000.qcom,qseecom
+[    4.036113] device: 'fe80f720.tz-log': device_add
+[    4.041779] bus: 'platform': add device fe80f720.tz-log
+[    4.046672] device: 'fd440000.qcrypto': device_add
+[    4.051416] bus: 'platform': add device fd440000.qcrypto
+[    4.056551] device: 'fd440000.qcedev': device_add
+[    4.061750] bus: 'platform': add device fd440000.qcedev
+[    4.066457] device: 'soc:qcom,sensor-information': device_add
+[    4.071382] bus: 'platform': add device soc:qcom,sensor-information
+[    4.077412] device: 'soc:qcom,msm-thermal': device_add
+[    4.083358] bus: 'platform': add device soc:qcom,msm-thermal
+[    4.088687] device: 'soc:qcom,bcl': device_add
+[    4.094380] bus: 'platform': add device soc:qcom,bcl
+[    4.098889] device: 'f9117000.qcom,lmh': device_add
+[    4.103758] bus: 'platform': add device f9117000.qcom,lmh
+[    4.108726] device: 'f9200000.ssusb': device_add
+[    4.113919] bus: 'platform': add device f9200000.ssusb
+[    4.118785] device: 'f92f8800.hsphy': device_add
+[    4.123550] bus: 'platform': add device f92f8800.hsphy
+[    4.128505] device: 'f9b38000.ssphy': device_add
+[    4.133271] bus: 'platform': add device f9b38000.ssphy
+[    4.138197] device: 'f92f8000.dbm': device_add
+[    4.142992] bus: 'platform': add device f92f8000.dbm
+[    4.147675] device: 'f9304000.qcom,usbbam': device_add
+[    4.152549] bus: 'platform': add device f9304000.qcom,usbbam
+[    4.157655] device: 'fe80f0c8.android_usb': device_add
+[    4.163307] bus: 'platform': add device fe80f0c8.android_usb
+[    4.168372] device: 'soc:audio_heap': device_add
+[    4.174069] bus: 'platform': add device soc:audio_heap
+[    4.178787] device: 'soc:adsp_heap': device_add
+[    4.183617] bus: 'platform': add device soc:adsp_heap
+[    4.188162] device: 'soc:qcom,msm-ssc-sensors': device_add
+[    4.193255] bus: 'platform': add device soc:qcom,msm-ssc-sensors
+[    4.198815] device: 'fe09c00c.qcom,avtimer': device_add
+[    4.204799] bus: 'platform': add device fe09c00c.qcom,avtimer
+[    4.209865] device: 'soc:cpuss_dump': device_add
+[    4.215650] bus: 'platform': add device soc:cpuss_dump
+[    4.220491] device: 'fc4b8000.qcom,msm-core': device_add
+[    4.225288] bus: 'platform': add device fc4b8000.qcom,msm-core
+[    4.230869] device: 'soc:qcom,ion': device_add
+[    4.236395] bus: 'platform': add device soc:qcom,ion
+[    4.241182] device: 'f9019000.regulator': device_add
+[    4.245954] bus: 'platform': add device f9019000.regulator
+[    4.251241] device: 'f901a000.regulator': device_add
+[    4.256190] bus: 'platform': add device f901a000.regulator
+[    4.261427] device: 'soc:bt_vreg': device_add
+[    4.266602] bus: 'platform': add device soc:bt_vreg
+[    4.271148] device: 'soc:wlan_vreg': device_add
+[    4.275719] bus: 'platform': add device soc:wlan_vreg
+[    4.280802] device: 'fda64000.qcom,iommu': device_add
+[    4.285443] bus: 'platform': add device fda64000.qcom,iommu
+[    4.291058] device: 'fdc84000.qcom,iommu': device_add
+[    4.295862] bus: 'platform': add device fdc84000.qcom,iommu
+[    4.301613] device: 'fdb10000.qcom,iommu': device_add
+[    4.306450] bus: 'platform': add device fdb10000.qcom,iommu
+[    4.312201] device: 'fda44000.qcom,iommu': device_add
+[    4.317042] bus: 'platform': add device fda44000.qcom,iommu
+[    4.322839] device: 'fda84000.qcom,iommu': device_add
+[    4.327635] bus: 'platform': add device fda84000.qcom,iommu
+[    4.333379] device: 'fd9b4000.qcom,iommu': device_add
+[    4.338223] bus: 'platform': add device fd9b4000.qcom,iommu
+[    4.343540] device: 'soc:qcom,iommu-domains': device_add
+[    4.348812] bus: 'platform': add device soc:qcom,iommu-domains
+[    4.354534] device: 'f9065000.qcom,spm': device_add
+[    4.360007] bus: 'platform': add device f9065000.qcom,spm
+[    4.364957] device: 'f9012000.qcom,spm': device_add
+[    4.370336] bus: 'platform': add device f9012000.qcom,spm
+[    4.375210] device: 'f9013000.qcom,spm': device_add
+[    4.380581] bus: 'platform': add device f9013000.qcom,spm
+[    4.385449] device: 'f9089000.qcom,spm': device_add
+[    4.390824] bus: 'platform': add device f9089000.qcom,spm
+[    4.395686] device: 'f9099000.qcom,spm': device_add
+[    4.401066] bus: 'platform': add device f9099000.qcom,spm
+[    4.405932] device: 'f90a9000.qcom,spm': device_add
+[    4.411310] bus: 'platform': add device f90a9000.qcom,spm
+[    4.416174] device: 'f90b9000.qcom,spm': device_add
+[    4.421552] bus: 'platform': add device f90b9000.qcom,spm
+[    4.426415] device: 'f90c9000.qcom,spm': device_add
+[    4.431796] bus: 'platform': add device f90c9000.qcom,spm
+[    4.436670] device: 'f90d9000.qcom,spm': device_add
+[    4.442039] bus: 'platform': add device f90d9000.qcom,spm
+[    4.446838] device: 'soc:qcom,lpm-levels': device_add
+[    4.452282] bus: 'platform': add device soc:qcom,lpm-levels
+[    4.457608] device: 'fc4281d0.qcom,mpm': device_add
+[    4.462707] bus: 'platform': add device fc4281d0.qcom,mpm
+[    4.467711] device: 'fe80f664.qcom,pm': device_add
+[    4.473115] bus: 'platform': add device fe80f664.qcom,pm
+[    4.477953] device: 'f908b008.qcom,cpu-sleep-status': device_add
+[    4.483275] bus: 'platform': add device f908b008.qcom,cpu-sleep-status
+[    4.489442] device: 'fc000000.qcom,rpm-log': device_add
+[    4.495599] bus: 'platform': add device fc000000.qcom,rpm-log
+[    4.500919] device: 'fc000000.qcom,rpm-stats': device_add
+[    4.506624] bus: 'platform': add device fc000000.qcom,rpm-stats
+[    4.512151] device: 'fc000000.qcom,rpm-rbcpr-stats': device_add
+[    4.517737] bus: 'platform': add device fc000000.qcom,rpm-rbcpr-stats
+[    4.523791] device: 'fc428150.qcom,rpm-master-stats': device_add
+[    4.530235] bus: 'platform': add device fc428150.qcom,rpm-master-stats
+[    4.536601] device: 'fc326000.tmc': device_add
+[    4.542646] bus: 'platform': add device fc326000.tmc
+[    4.547264] device: 'fc320000.tpiu': device_add
+[    4.552194] bus: 'platform': add device fc320000.tpiu
+[    4.556598] device: 'fc324000.replicator': device_add
+[    4.561658] bus: 'platform': add device fc324000.replicator
+[    4.566843] device: 'fc325000.tmc': device_add
+[    4.572073] bus: 'platform': add device fc325000.tmc
+[    4.576740] device: 'fc323000.funnel': device_add
+[    4.581709] bus: 'platform': add device fc323000.funnel
+[    4.586458] device: 'fc321000.funnel': device_add
+[    4.591343] bus: 'platform': add device fc321000.funnel
+[    4.596352] device: 'fc322000.funnel': device_add
+[    4.601245] bus: 'platform': add device fc322000.funnel
+[    4.606250] device: 'fbb70000.funnel': device_add
+[    4.611135] bus: 'platform': add device fbb70000.funnel
+[    4.616150] device: 'fbb60000.funnel': device_add
+[    4.621032] bus: 'platform': add device fbb60000.funnel
+[    4.626054] device: 'fc370000.funnel': device_add
+[    4.630928] bus: 'platform': add device fc370000.funnel
+[    4.635936] device: 'fbb91000.tpda': device_add
+[    4.640821] bus: 'platform': add device fbb91000.tpda
+[    4.645484] device: 'fbb90000.tpdm': device_add
+[    4.650546] bus: 'platform': add device fbb90000.tpdm
+[    4.655065] device: 'fc302000.stm': device_add
+[    4.660093] bus: 'platform': add device fc302000.stm
+[    4.664582] device: 'fb840000.etm': device_add
+[    4.669555] bus: 'platform': add device fb840000.etm
+[    4.673957] device: 'fb940000.etm': device_add
+[    4.678935] bus: 'platform': add device fb940000.etm
+[    4.683333] device: 'fba40000.etm': device_add
+[    4.688304] bus: 'platform': add device fba40000.etm
+[    4.692711] device: 'fbb40000.etm': device_add
+[    4.697682] bus: 'platform': add device fbb40000.etm
+[    4.702094] device: 'fbc40000.etm': device_add
+[    4.707055] bus: 'platform': add device fbc40000.etm
+[    4.711458] device: 'fbd40000.etm': device_add
+[    4.716430] bus: 'platform': add device fbd40000.etm
+[    4.720795] device: 'soc:audio_etm0': device_add
+[    4.725805] bus: 'platform': add device soc:audio_etm0
+[    4.730526] device: 'soc:modem_etm0': device_add
+[    4.735354] bus: 'platform': add device soc:modem_etm0
+[    4.740240] device: 'soc:wcn_etm0': device_add
+[    4.745074] bus: 'platform': add device soc:wcn_etm0
+[    4.749622] device: 'soc:rpm_etm0': device_add
+[    4.754624] bus: 'platform': add device soc:rpm_etm0
+[    4.759024] device: 'fc301000.csr': device_add
+[    4.763998] bus: 'platform': add device fc301000.csr
+[    4.768401] device: 'fc310000.cti': device_add
+[    4.773375] bus: 'platform': add device fc310000.cti
+[    4.777794] device: 'fc311000.cti': device_add
+[    4.782750] bus: 'platform': add device fc311000.cti
+[    4.787150] device: 'fc312000.cti': device_add
+[    4.792125] bus: 'platform': add device fc312000.cti
+[    4.796523] device: 'fc313000.cti': device_add
+[    4.801505] bus: 'platform': add device fc313000.cti
+[    4.805903] device: 'fc314000.cti': device_add
+[    4.810873] bus: 'platform': add device fc314000.cti
+[    4.815274] device: 'fc315000.cti': device_add
+[    4.820249] bus: 'platform': add device fc315000.cti
+[    4.824657] device: 'fc316000.cti': device_add
+[    4.829625] bus: 'platform': add device fc316000.cti
+[    4.834025] device: 'fc317000.cti': device_add
+[    4.839000] bus: 'platform': add device fc317000.cti
+[    4.843401] device: 'fc318000.cti': device_add
+[    4.848374] bus: 'platform': add device fc318000.cti
+[    4.852797] device: 'fb820000.cti': device_add
+[    4.857751] bus: 'platform': add device fb820000.cti
+[    4.862149] device: 'fb920000.cti': device_add
+[    4.867125] bus: 'platform': add device fb920000.cti
+[    4.871532] device: 'fba20000.cti': device_add
+[    4.876500] bus: 'platform': add device fba20000.cti
+[    4.880900] device: 'fbb20000.cti': device_add
+[    4.885875] bus: 'platform': add device fbb20000.cti
+[    4.890276] device: 'fbc20000.cti': device_add
+[    4.895250] bus: 'platform': add device fbc20000.cti
+[    4.899658] device: 'fbd20000.cti': device_add
+[    4.904623] bus: 'platform': add device fbd20000.cti
+[    4.909025] device: 'fc338000.cti': device_add
+[    4.914002] bus: 'platform': add device fc338000.cti
+[    4.918399] device: 'fc33c000.cti': device_add
+[    4.923380] bus: 'platform': add device fc33c000.cti
+[    4.927789] device: 'fc360000.cti': device_add
+[    4.932751] bus: 'platform': add device fc360000.cti
+[    4.937151] device: 'fc364000.cti': device_add
+[    4.942125] bus: 'platform': add device fc364000.cti
+[    4.946850] device: 'fd828018.hwevent': device_add
+[    4.951501] bus: 'platform': add device fd828018.hwevent
+[    4.956247] device: 'fc4be024.fuse': device_add
+[    4.961569] bus: 'platform': add device fc4be024.fuse
+[    4.965967] device: 'fd8c0000.qcom,msm-cam': device_add
+[    4.971034] bus: 'platform': add device fd8c0000.qcom,msm-cam
+[    4.976361] device: 'fda0ac00.qcom,csiphy': device_add
+[    4.981972] bus: 'platform': add device fda0ac00.qcom,csiphy
+[    4.987290] device: 'fda0b000.qcom,csiphy': device_add
+[    4.992821] bus: 'platform': add device fda0b000.qcom,csiphy
+[    4.998056] device: 'fda0b400.qcom,csiphy': device_add
+[    5.003591] bus: 'platform': add device fda0b400.qcom,csiphy
+[    5.008790] device: 'fda08000.qcom,csid': device_add
+[    5.014349] bus: 'platform': add device fda08000.qcom,csid
+[    5.019561] device: 'fda08400.qcom,csid': device_add
+[    5.024592] bus: 'platform': add device fda08400.qcom,csid
+[    5.029974] device: 'fda08800.qcom,csid': device_add
+[    5.035010] bus: 'platform': add device fda08800.qcom,csid
+[    5.040386] device: 'fda08c00.qcom,csid': device_add
+[    5.045426] bus: 'platform': add device fda08c00.qcom,csid
+[    5.050834] device: 'fda0a000.qcom,ispif': device_add
+[    5.055843] bus: 'platform': add device fda0a000.qcom,ispif
+[    5.061258] device: 'fda10000.qcom,vfe': device_add
+[    5.066345] bus: 'platform': add device fda10000.qcom,vfe
+[    5.071491] device: 'fda14000.qcom,vfe': device_add
+[    5.076761] bus: 'platform': add device fda14000.qcom,vfe
+[    5.081739] device: 'fda1c000.qcom,jpeg': device_add
+[    5.087007] bus: 'platform': add device fda1c000.qcom,jpeg
+[    5.092314] device: 'fdaa0000.qcom,jpeg': device_add
+[    5.097335] bus: 'platform': add device fdaa0000.qcom,jpeg
+[    5.102602] device: 'fda00000.qcom,irqrouter': device_add
+[    5.107752] bus: 'platform': add device fda00000.qcom,irqrouter
+[    5.113538] device: 'fda04000.qcom,cpp': device_add
+[    5.118953] bus: 'platform': add device fda04000.qcom,cpp
+[    5.124071] device: 'fda0c000.qcom,cci': device_add
+[    5.129367] bus: 'platform': add device fda0c000.qcom,cci
+[    5.134413] device: 'f9966000.spi_fpc': device_add
+[    5.139614] bus: 'platform': add device f9966000.spi_fpc
+[    5.144661] device: 'f9963000.spi': device_add
+[    5.149765] bus: 'platform': add device f9963000.spi
+[    5.154378] device: 'f9965000.i2c': device_add
+[    5.159139] bus: 'platform': add device f9965000.i2c
+[    5.163523] device: 'soc:ramoops': device_add
+[    5.168514] bus: 'platform': add device soc:ramoops
+[    5.172881] device: 'soc:qcom,camera-flash': device_add
+[    5.177455] bus: 'platform': add device soc:qcom,camera-flash
+[    5.182782] device: 'soc:stmvl6180@0': device_add
+[    5.188566] bus: 'platform': add device soc:stmvl6180@0
+[    5.193370] device: 'soc:bt_qca6174': device_add
+[    5.198289] bus: 'platform': add device soc:bt_qca6174
+[    5.203348] irq: no irq domain found for /soc/pinctrl@fd510000/gp/msm_gpio !
+[    5.208103] device: 'soc:earjack-debugger': device_add
+[    5.215302] bus: 'platform': add device soc:earjack-debugger
+[    5.220376] device: 'soc:gpio_keys': device_add
+[    5.226065] bus: 'platform': add device soc:gpio_keys
+[    5.230827] device: 'cpu0': device_add
+[    5.235538] bus: 'cpu': add device cpu0
+[    5.252832] device: 'writeback': device_add
+[    5.252878] bus: 'workqueue': add device writeback
+[    5.256588] device class 'block': registering
+[    5.260918] device class 'pwm': registering
+[    5.265194] device class 'misc': registering
+[    5.269234] bus: 'usb': registered
+[    5.273631] bus: 'usb': add driver usbfs
+[    5.276872] usbcore: registered new interface driver usbfs
+[    5.280923] bus: 'usb': add driver hub
+[    5.286253] usbcore: registered new interface driver hub
+[    5.289979] bus: 'usb': add driver usb
+[    5.295445] usbcore: registered new device driver usb
+[    5.298981] device class 'udc': registering
+[    5.304167] bus: 'serio': registered
+[    5.308091] device class 'input': registering
+[    5.311952] device class 'rtc': registering
+[    5.316186] device class 'power_supply': registering
+[    5.320227] bus: 'mmc': registered
+[    5.325357] device class 'mmc_host': registering
+[    5.328625] bus: 'sdio': registered
+[    5.333352] device class 'leds': registering
+[    5.336568] device class 'devfreq': registering
+[    5.341284] device class 'net': registering
+[    5.345386] device: 'lo': device_add
+[    5.350179] device class 'watchdog': registering
+[    5.353821] clocksource: Switched to clocksource arch_sys_counter
+[    5.358311] device class 'mem': registering
+[    5.363934] device: 'null': device_add
+[    5.368003] device: 'port': device_add
+[    5.371803] device: 'zero': device_add
+[    5.375547] device: 'full': device_add
+[    5.379267] device: 'random': device_add
+[    5.383000] device: 'urandom': device_add
+[    5.387085] device: 'kmsg': device_add
+[    5.390990] device: 'tty': device_add
+[    5.394647] device: 'console': device_add
+[    5.398393] device class 'thermal': registering
+[    5.403033] NET: Registered protocol family 2
+[    5.407357] TCP established hash table entries: 16384 (order: 5, 131072 bytes)
+[    5.411377] TCP bind hash table entries: 16384 (order: 6, 262144 bytes)
+[    5.418676] TCP: Hash tables configured (established 16384 bind 16384)
+[    5.424837] UDP hash table entries: 1024 (order: 3, 32768 bytes)
+[    5.431415] UDP-Lite hash table entries: 1024 (order: 3, 32768 bytes)
+[    5.437758] NET: Registered protocol family 1
+[    5.443910] PCI: CLS 0 bytes, default 128
+[    5.448470] Trying to unpack rootfs image as initramfs...
+[    5.452832] rootfs image is not initramfs (no cpio magic); looks like an initrd
+[    5.463157] Freeing initrd memory: 2008K (ffffffc002a00000 - ffffffc002bf6000)
+[    5.465322] bus: 'platform': add driver armv8-pmu
+[    5.472537] bus: 'platform': driver_probe_device: matched device soc:cpu-pmu with driver armv8-pmu
+[    5.476792] bus: 'platform': really_probe: probing driver armv8-pmu with device soc:cpu-pmu
+[    5.485635] armv8-pmu soc:cpu-pmu: no default pinctrl state
+[    5.493879] devices_kset: Moving soc:cpu-pmu to end of list
+[    5.499601] hw perfevents: enabled with armv8_pmuv3 PMU driver, 7 counters available
+[    5.504975] driver: 'armv8-pmu': driver_bound: bound to device 'soc:cpu-pmu'
+[    5.512957] bus: 'platform': really_probe: bound device soc:cpu-pmu to driver armv8-pmu
+[    5.523676] bus: 'clocksource': registered
+[    5.527748] device: 'clocksource': device_add
+[    5.531964] device: 'clocksource0': device_add
+[    5.536485] bus: 'clocksource': add device clocksource0
+[    5.540796] bus: 'platform': add driver alarmtimer
+[    5.546278] Registering platform device 'alarmtimer'. Parent at platform
+[    5.550630] device: 'alarmtimer': device_add
+[    5.557496] bus: 'platform': add device alarmtimer
+[    5.561832] bus: 'platform': driver_probe_device: matched device alarmtimer with driver alarmtimer
+[    5.566347] bus: 'platform': really_probe: probing driver alarmtimer with device alarmtimer
+[    5.575290] alarmtimer alarmtimer: no of_node; not parsing pinctrl DT
+[    5.583529] alarmtimer alarmtimer: no default pinctrl state
+[    5.590140] devices_kset: Moving alarmtimer to end of list
+[    5.595506] driver: 'alarmtimer': driver_bound: bound to device 'alarmtimer'
+[    5.601063] bus: 'platform': really_probe: bound device alarmtimer to driver alarmtimer
+[    5.608339] bus: 'clockevents': registered
+[    5.615988] device: 'clockevents': device_add
+[    5.620204] device: 'clockevent0': device_add
+[    5.624594] bus: 'clockevents': add device clockevent0
+[    5.628994] device: 'broadcast': device_add
+[    5.633968] bus: 'clockevents': add device broadcast
+[    5.638139] futex hash table entries: 256 (order: 3, 32768 bytes)
+[    5.643395] bus: 'event_source': registered
+[    5.649237] device: 'armv8_pmuv3': device_add
+[    5.653239] bus: 'event_source': add device armv8_pmuv3
+[    5.657821] device: 'breakpoint': device_add
+[    5.662788] bus: 'event_source': add device breakpoint
+[    5.667360] device: 'software': device_add
+[    5.672248] bus: 'event_source': add device software
+[    5.676750] workingset: timestamp_bits=60 max_order=19 bucket_order=0
+[    5.691786] device: 'autofs': device_add
+[    5.696236] Key type asymmetric registered
+[    5.696273] Asymmetric key parser 'x509' registered
+[    5.699464] device class 'bsg': registering
+[    5.704229] Block layer SCSI generic (bsg) driver version 0.4 loaded (major 251)
+[    5.708228] io scheduler noop registered
+[    5.715870] io scheduler deadline registered
+[    5.719894] io scheduler cfq registered (default)
+[    5.724020] device class 'phy': registering
+[    5.728611] bus: 'platform': add driver qcom-spmi-gpio
+[    5.734122] bus: 'platform': add driver qcom-spmi-mpp
+[    5.739129] bus: 'platform': add driver qcom-ssbi-gpio
+[    5.744146] bus: 'platform': add driver qcom-ssbi-mpp
+[    5.749113] bus: 'platform': add driver basic-mmio-gpio
+[    5.753500] bus: 'pci_express': registered
+[    5.758096] bus: 'pci': add driver pcieport
+[    5.762318] bus: 'pci_express': add driver aer
+[    5.766381] bus: 'pci_express': add driver pcie_pme
+[    5.770898] bus: 'platform': add driver qcom-pcie
+[    5.776580] bus: 'platform': add driver gsbi
+[    5.781213] device: 'ptmx': device_add
+[    5.785003] bus: 'platform': add driver msm_serial
+[    5.788629] bus: 'platform': driver_probe_device: matched device f991e000.serial with driver msm_serial
+[    5.793177] bus: 'platform': really_probe: probing driver msm_serial with device f991e000.serial
+[    5.802629] generic pinconfig core: found bias-disable with value 0
+[    5.811487] generic pinconfig core: found drive-strength with value 16
+[    5.817492] pinctrl core: add 4 pinctrl maps
+[    5.824139] generic pinconfig core: found bias-pull-down with value 1
+[    5.828498] generic pinconfig core: found drive-strength with value 2
+[    5.834846] pinctrl core: add 4 pinctrl maps
+[    5.841275] msm8x74-pinctrl fd510000.pinctrl: found group selector 4 for gpio4
+[    5.845605] msm8x74-pinctrl fd510000.pinctrl: found group selector 5 for gpio5
+[    5.852635] msm8x74-pinctrl fd510000.pinctrl: found group selector 4 for gpio4
+[    5.859834] msm8x74-pinctrl fd510000.pinctrl: found group selector 5 for gpio5
+[    5.867040] msm8x74-pinctrl fd510000.pinctrl: found group selector 4 for gpio4
+[    5.874245] msm8x74-pinctrl fd510000.pinctrl: found group selector 5 for gpio5
+[    5.881448] msm8x74-pinctrl fd510000.pinctrl: found group selector 4 for gpio4
+[    5.888653] msm8x74-pinctrl fd510000.pinctrl: found group selector 5 for gpio5
+[    5.895861] msm_serial f991e000.serial: no init pinctrl state
+[    5.903061] msm8x74-pinctrl fd510000.pinctrl: request pin 4 (GPIO_4) for f991e000.serial
+[    5.908885] msm8x74-pinctrl fd510000.pinctrl: request pin 5 (GPIO_5) for f991e000.serial
+[    5.917052] msm_serial f991e000.serial: no idle pinctrl state
+[    5.925124] devices_kset: Moving f991e000.serial to end of list
+[    5.930767] msm_serial f991e000.serial: msm_serial: detected port #0
+[    5.936690] msm_serial f991e000.serial:  orig uartclk = 235929
+[    5.943074]  Error MEMBase is NULL 
+[    5.948726]  Membase is 0x804a000 
+[    5.952109] f991e000.serial: ttyMSM0 at MMIO 0xf991e000 (irq = 166, base_baud = 1474[    5.964270] console [ttyMSM0] enabled
+[    5.964270] console [ttyMSM0] enabled
+[    5.966906] bootconsole [msm_serial_dm0] disabled
+[    5.966906] bootconsole [msm_serial_dm0] disabled
+[    5.975294] device: 'ttyMSM0': device_add
+[    5.980139] driver: 'msm_serial': driver_bound: bound to device 'f991e000.serial'
+[    5.983946] bus: 'platform': really_probe: bound device f991e000.serial to driver msm_serial
+[    5.992110] msm_serial: driver initialized
+[    5.999930] device: 'ttyprintk': device_add
+[    6.003958] device: 'hw_random': device_add
+[    6.008013] bus: 'platform': add driver msm_rng
+[    6.012986] device: 'cache': device_add
+[    6.016638] device: 'index0': device_add
+[    6.020518] device: 'index1': device_add
+[    6.024665] device: 'index2': device_add
+[    6.030859] device: '1:0': device_add
+[    6.032531] device: 'ram0': device_add
+[    6.036626] device: '1:1': device_add
+[    6.039747] device: 'ram1': device_add
+[    6.043882] device: '1:2': device_add
+[    6.047065] device: 'ram2': device_add
+[    6.051158] device: '1:3': device_add
+[    6.054489] device: 'ram3': device_add
+[    6.058552] device: '1:4': device_add
+[    6.061876] device: 'ram4': device_add
+[    6.065938] device: '1:5': device_add
+[    6.069262] device: 'ram5': device_add
+[    6.073292] device: '1:6': device_add
+[    6.076621] device: 'ram6': device_add
+[    6.080718] device: '1:7': device_add
+[    6.083991] device: 'ram7': device_add
+[    6.088057] device: '1:8': device_add
+[    6.091375] device: 'ram8': device_add
+[    6.095434] device: '1:9': device_add
+[    6.098759] device: 'ram9': device_add
+[    6.102813] device: '1:10': device_add
+[    6.106135] device: 'ram10': device_add
+[    6.110197] device: '1:11': device_add
+[    6.113597] device: 'ram11': device_add
+[    6.117755] device: '1:12': device_add
+[    6.121168] device: 'ram12': device_add
+[    6.125328] device: '1:13': device_add
+[    6.128701] device: 'ram13': device_add
+[    6.132855] device: '1:14': device_add
+[    6.136262] device: 'ram14': device_add
+[    6.140406] device: '1:15': device_add
+[    6.143805] device: 'ram15': device_add
+[    6.147947] brd: module loaded
+[    6.151252] device: 'loop-control': device_add
+[    6.154719] device: '7:0': device_add
+[    6.158916] device: 'loop0': device_add
+[    6.163082] device: '7:1': device_add
+[    6.166281] device: 'loop1': device_add
+[    6.173924] device: '7:2': device_add
+[    6.174069] device: 'loop2': device_add
+[    6.178023] device: '7:3': device_add
+[    6.181210] device: 'loop3': device_add
+[    6.185473] device: '7:4': device_add
+[    6.188697] device: 'loop4': device_add
+[    6.192926] device: '7:5': device_add
+[    6.196136] device: 'loop5': device_add
+[    6.200510] device: '7:6': device_add
+[    6.203578] device: 'loop6': device_add
+[    6.207863] device: '7:7': device_add
+[    6.211065] device: 'loop7': device_add
+[    6.215151] loop: module loaded
+[    6.218412] device class 'zram-control': registering
+[    6.221706] device: '254:0': device_add
+[    6.226867] device: 'zram0': device_add
+[    6.230735] zram: Added device: zram0
+[    6.234116] device class 'mtd': registering
+[    6.237965] device: 'mtd': device_add
+[    6.242091] bus: 'platform': add driver spmi_pmic_arb
+[    6.246140] bus: 'platform': driver_probe_device: matched device fc4cf000.qcom,spmi with driver spmi_pmic_arb
+[    6.250792] bus: 'platform': really_probe: probing driver spmi_pmic_arb with device fc4cf000.qcom,spmi
+[    6.260703] spmi_pmic_arb fc4cf000.qcom,spmi: no default pinctrl state
+[    6.269903] devices_kset: Moving fc4cf000.qcom,spmi to end of list
+[    6.276450] spmi spmi-0: PMIC Arb Version-1 (0x20000002)
+[    6.282612] spmi_pmic_arb: probe of fc4cf000.qcom,spmi rejects match -6
+[    6.288849] bus: 'platform': add driver dwc3
+[    6.295323] bus: 'pci': add driver dwc3-pci
+[    6.298955] bus: 'platform': add driver dwc3-of-simple
+[    6.303610] ehci_hcd: USB 2.0 'Enhanced' Host Controller (EHCI) Driver
+[    6.308010] ehci-pci: EHCI PCI platform driver
+[    6.314494] bus: 'pci': add driver ehci-pci
+[    6.318968] ehci-msm: Qualcomm On-Chip EHCI Host Controller
+[    6.323003] bus: 'platform': add driver msm_hsusb_host
+[    6.329275] bus: 'pci': add driver xhci_hcd
+[    6.333832] bus: 'platform': add driver xhci-hcd
+[    6.339175] bus: 'usb': add driver cdc_acm
+[    6.342753] usbcore: registered new interface driver cdc_acm
+[    6.346609] cdc_acm: USB Abstract Control Model driver for USB modems and ISDN adapters
+[    6.352439] bus: 'usb': add driver cdc_wdm
+[    6.360192] usbcore: registered new interface driver cdc_wdm
+[    6.364408] bus: 'usb-serial': registered
+[    6.370147] bus: 'usb': add driver usbserial
+[    6.374072] usbcore: registered new interface driver usbserial
+[    6.378386] bus: 'usb': add driver usbserial_generic
+[    6.384056] usbcore: registered new interface driver usbserial_generic
+[    6.389152] bus: 'usb-serial': add driver generic
+[    6.395519] usbserial: USB Serial support registered for generic
+[    6.400271] bus: 'usb': add driver usb_debug
+[    6.406363] usbcore: registered new interface driver usb_debug
+[    6.410587] bus: 'usb-serial': add driver debug
+[    6.416263] usbserial: USB Serial support registered for debug
+[    6.420668] bus: 'usb': add driver ftdi_sio
+[    6.426587] usbcore: registered new interface driver ftdi_sio
+[    6.430641] bus: 'usb-serial': add driver ftdi_sio
+[    6.436583] usbserial: USB Serial support registered for FTDI USB Serial Device
+[    6.441243] bus: 'usb': add driver mos7720
+[    6.448463] usbcore: registered new interface driver mos7720
+[    6.452601] bus: 'usb-serial': add driver moschip7720
+[    6.458454] usbserial: USB Serial support registered for Moschip 2 port adapter
+[    6.463379] bus: 'usb': add driver mos7840
+[    6.470527] usbcore: registered new interface driver mos7840
+[    6.474651] bus: 'usb-serial': add driver mos7840
+[    6.480515] usbserial: USB Serial support registered for Moschip 7840/7820 USB Serial Driver
+[    6.485082] bus: 'usb': add driver pl2303
+[    6.493602] usbcore: registered new interface driver pl2303
+[    6.497480] bus: 'usb-serial': add driver pl2303
+[    6.502895] usbserial: USB Serial support registered for pl2303
+[    6.507733] bus: 'usb': add driver qcaux
+[    6.513449] usbcore: registered new interface driver qcaux
+[    6.517536] bus: 'usb-serial': add driver qcaux
+[    6.522867] usbserial: USB Serial support registered for qcaux
+[    6.527265] bus: 'usb': add driver qcserial
+[    6.533184] usbcore: registered new interface driver qcserial
+[    6.537237] bus: 'usb-serial': add driver qcserial
+[    6.543175] usbserial: USB Serial support registered for Qualcomm USB modem
+[    6.547843] bus: 'usb': add driver usb_serial_simple
+[    6.554715] usbcore: registered new interface driver usb_serial_simple
+[    6.559895] bus: 'usb-serial': add driver carelink
+[    6.566264] usbserial: USB Serial support registered for carelink
+[    6.571006] bus: 'usb-serial': add driver zio
+[    6.577201] usbserial: USB Serial support registered for zio
+[    6.581508] bus: 'usb-serial': add driver funsoft
+[    6.587272] usbserial: USB Serial support registered for funsoft
+[    6.591838] bus: 'usb-serial': add driver flashloader
+[    6.597957] usbserial: USB Serial support registered for flashloader
+[    6.602864] bus: 'usb-serial': add driver google
+[    6.609319] usbserial: USB Serial support registered for google
+[    6.613886] bus: 'usb-serial': add driver vivopay
+[    6.619562] usbserial: USB Serial support registered for vivopay
+[    6.624393] bus: 'usb-serial': add driver moto_modem
+[    6.630513] usbserial: USB Serial support registered for moto_modem
+[    6.635416] bus: 'usb-serial': add driver novatel_gps
+[    6.641438] usbserial: USB Serial support registered for novatel_gps
+[    6.646614] bus: 'usb-serial': add driver hp4x
+[    6.653070] usbserial: USB Serial support registered for hp4x
+[    6.657289] bus: 'usb-serial': add driver suunto
+[    6.663139] usbserial: USB Serial support registered for suunto
+[    6.667792] bus: 'usb-serial': add driver siemens_mpi
+[    6.673483] usbserial: USB Serial support registered for siemens_mpi
+[    6.678655] bus: 'usb': add driver emi26 - firmware loader
+[    6.685110] usbcore: registered new interface driver emi26 - firmware loader
+[    6.690372] bus: 'usb': add driver emi62 - firmware loader
+[    6.697611] usbcore: registered new interface driver emi62 - firmware loader
+[    6.702873] bus: 'usb': add driver usb_ehset_test
+[    6.710108] usbcore: registered new interface driver usb_ehset_test
+[    6.714785] bus: 'usb': add driver usb_acecad
+[    6.720786] usbcore: registered new interface driver usb_acecad
+[    6.725266] bus: 'usb': add driver aiptek
+[    6.731025] usbcore: registered new interface driver aiptek
+[    6.735161] bus: 'usb': add driver gtco
+[    6.740578] usbcore: registered new interface driver gtco
+[    6.744361] bus: 'usb': add driver hanwang
+[    6.749947] usbcore: registered new interface driver hanwang
+[    6.753912] bus: 'usb': add driver kbtab
+[    6.759757] usbcore: registered new interface driver kbtab
+[    6.763640] device: 'uinput': device_add
+[    6.769034] bus: 'platform': add driver i2c_qup
+[    6.774060] bus: 'platform': add driver msm-restart
+[    6.777446] bus: 'platform': driver_probe_device: matched device fc4ab000.restart with driver msm-restart
+[    6.782129] bus: 'platform': really_probe: probing driver msm-restart with device fc4ab000.restart
+[    6.791860] msm-restart fc4ab000.restart: no default pinctrl state
+[    6.800714] devices_kset: Moving fc4ab000.restart to end of list
+[    6.806887] driver: 'msm-restart': driver_bound: bound to device 'fc4ab000.restart'
+[    6.813024] bus: 'platform': really_probe: bound device fc4ab000.restart to driver msm-restart
+[    6.821025] bus: 'platform': add driver qcom_wdt
+[    6.829941] device: 'watchdog': device_add
+[    6.833955] device: 'watchdog0': device_add
+[    6.837862] softdog: Software Watchdog Timer: 0.08 initialized. soft_noboot=0 soft_margin=60 sec soft_panic=0 (nowayout=1)
+[    6.841897] bus: 'platform': add driver cpufreq-dt
+[    6.853305] bus: 'mmc': add driver mmcblk
+[    6.857764] bus: 'mmc': add driver mmc_test
+[    6.861837] sdhci: Secure Digital Host Controller Interface driver
+[    6.865792] sdhci: Copyright(c) Pierre Ossman
+[    6.872047] sdhci-pltfm: SDHCI platform and OF driver helper
+[    6.876482] bus: 'platform': add driver sdhci_msm
+[    6.882941] bus: 'platform': add driver fw_cfg
+[    6.887504] bus: 'platform': add driver qcrypto
+[    6.891877] bus: 'hid': registered
+[    6.895568] device class 'hidraw': registering
+[    6.899056] hidraw: raw HID events driver (C) Jiri Kosina
+[    6.903520] device: 'uhid': device_add
+[    6.909042] bus: 'hid': add driver hid-generic
+[    6.912632] bus: 'hid': add driver a4tech
+[    6.917056] bus: 'hid': add driver acrux
+[    6.921134] bus: 'hid': add driver apple
+[    6.925132] bus: 'hid': add driver belkin
+[    6.929039] bus: 'hid': add driver cherry
+[    6.932940] bus: 'hid': add driver chicony
+[    6.936933] bus: 'hid': add driver cypress
+[    6.940927] bus: 'hid': add driver dragonrise
+[    6.945008] bus: 'hid': add driver hkems
+[    6.949434] bus: 'hid': add driver elecom
+[    6.953427] bus: 'hid': add driver ezkey
+[    6.957339] bus: 'hid': add driver gyration
+[    6.961327] bus: 'hid': add driver holtek_kbd
+[    6.965234] bus: 'hid': add driver holtek_mouse
+[    6.969750] bus: 'hid': add driver holtek
+[    6.974087] bus: 'hid': add driver icade
+[    6.978253] bus: 'hid': add driver kensington
+[    6.982248] bus: 'hid': add driver keytouch
+[    6.986505] bus: 'hid': add driver kye
+[    6.990512] bus: 'hid': add driver LC RC1000MCE
+[    6.994315] bus: 'hid': add driver logitech
+[    6.998743] bus: 'hid': add driver logitech-djreceiver
+[    7.002910] bus: 'hid': add driver logitech-hidpp-device
+[    7.008119] bus: 'hid': add driver magicmouse
+[    7.013585] bus: 'hid': add driver microsoft
+[    7.017844] bus: 'hid': add driver monterey
+[    7.022178] bus: 'hid': add driver hid-multitouch
+[    7.026086] bus: 'hid': add driver ntrig
+[    7.030947] bus: 'hid': add driver ortek
+[    7.034938] bus: 'hid': add driver pantherlord
+[    7.038845] bus: 'hid': add driver petalynx
+[    7.043105] bus: 'hid': add driver hid-picolcd
+[    7.047193] bus: 'hid': add driver primax
+[    7.051699] device class 'arvo': registering
+[    7.055745] bus: 'hid': add driver arvo
+[    7.060109] device class 'isku': registering
+[    7.063642] bus: 'hid': add driver isku
+[    7.068185] device class 'kone': registering
+[    7.071714] bus: 'hid': add driver kone
+[    7.076255] device class 'koneplus': registering
+[    7.079790] bus: 'hid': add driver koneplus
+[    7.084681] device class 'konepure': registering
+[    7.088562] bus: 'hid': add driver konepure
+[    7.093445] device class 'kovaplus': registering
+[    7.097323] bus: 'hid': add driver kovaplus
+[    7.102214] bus: 'hid': add driver lua
+[    7.106116] device class 'pyra': registering
+[    7.109910] bus: 'hid': add driver pyra
+[    7.114363] device class 'ryos': registering
+[    7.117896] bus: 'hid': add driver ryos
+[    7.122434] device class 'savu': registering
+[    7.125970] bus: 'hid': add driver savu
+[    7.130532] bus: 'hid': add driver saitek
+[    7.134072] bus: 'hid': add driver samsung
+[    7.138240] bus: 'hid': add driver smartjoyplus
+[    7.142232] bus: 'hid': add driver sony
+[    7.146658] bus: 'hid': add driver speedlink
+[    7.150495] bus: 'hid': add driver steelseries_srws1
+[    7.154994] bus: 'hid': add driver sunplus
+[    7.159946] bus: 'hid': add driver greenasia
+[    7.163867] bus: 'hid': add driver thingm
+[    7.168274] bus: 'hid': add driver thrustmaster
+[    7.172182] bus: 'hid': add driver tivo_slide
+[    7.176521] bus: 'hid': add driver topseed
+[    7.181036] bus: 'hid': add driver twinhan
+[    7.185028] bus: 'hid': add driver uclogic
+[    7.189113] bus: 'hid': add driver zeroplus
+[    7.193188] bus: 'hid': add driver zydacron
+[    7.197268] bus: 'hid': add driver wacom
+[    7.201435] bus: 'hid': add driver waltop
+[    7.205601] bus: 'hid': add driver wiimote
+[    7.209510] bus: 'usb': add driver usbhid
+[    7.213499] usbcore: registered new interface driver usbhid
+[    7.217527] usbhid: USB HID core driver
+[    7.222924] device class 'timed_output': registering
+[    7.226764] bus: 'platform': add driver gpio-clk
+[    7.232811] bus: 'platform': add driver pwm-clock
+[    7.238447] NET: Registered protocol family 10
+[    7.242138] sit: IPv6 over IPv4 tunneling driver
+[    7.245545] device: 'sit0': device_add
+[    7.251518] device: 'cpu_dma_latency': device_add
+[    7.253929] device: 'network_latency': device_add
+[    7.258697] device: 'network_throughput': device_add
+[    7.263388] device: 'memory_bandwidth': device_add
+[    7.269067] Key type encrypted registered
+[    7.273223] bus: 'platform': add driver gpio-keys
+[    7.278151] bus: 'platform': driver_probe_device: matched device soc:gpio_keys with driver gpio-keys
+[    7.281728] bus: 'platform': really_probe: probing driver gpio-keys with device soc:gpio_keys
+[    7.290943] gpio-keys soc:gpio_keys: no default pinctrl state
+[    7.299349] devices_kset: Moving soc:gpio_keys to end of list
+[    7.305248] of_get_named_gpiod_flags: parsed 'gpios' property of node '/soc/gpio_keys/vol_up[0]' - status (-517)
+[    7.310788] platform soc:gpio_keys: Driver gpio-keys requests probe deferral
+[    7.321009] platform soc:gpio_keys: Added to deferred list
+[    7.328087] hctosys: unable to open rtc device (rtc0)
+[    7.345889] RAMDISK: gzip image found at block 0
+[    7.509328] EXT4-fs (ram0): couldn't mount as ext3 due to feature incompatibilities
+[    7.509582] EXT4-fs (ram0): mounting ext2 file system using the ext4 subsystem
+[    7.516567] EXT4-fs warning (device ram0): ext4_update_dynamic_rev:746: updating to rev 1 because of new feature flag, running e2fsck is recommended
+[    7.523708] EXT4-fs (ram0): mounted filesystem without journal. Opts: (null)
+[    7.536658] VFS: Mounted root (ext2 filesystem) on device 1:0.
+[    7.543878] Freeing unused kernel memory: 300K (ffffff80086aa000 - ffffff80086f5000)
+[    7.549246] This architecture does not have kernel memory protection.
+
+Please press Enter to activate this console. 
+# 
+CTRL-A Z for help | 115200 8N1 | NOR | Minicom 2.7 | VT102 | Offline | ttyUSB0                                                                              
+
