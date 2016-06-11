@@ -1587,8 +1587,10 @@ static int msm_serial_probe(struct platform_device *pdev)
 	if (line < 0)
 		line = atomic_inc_return(&msm_uart_next_id) - 1;
 
-	if (unlikely(line < 0 || line >= UART_NR))
+	if (unlikely(line < 0 || line >= UART_NR)) {
+		printk(" %s line %d \n", __func__, line);
 		return -ENXIO;
+	}
 
 	dev_info(&pdev->dev, "msm_serial: detected port #%d\n", line);
 
@@ -1604,26 +1606,57 @@ static int msm_serial_probe(struct platform_device *pdev)
 
 	msm_port->clk = devm_clk_get(&pdev->dev, "core");
 	if (IS_ERR(msm_port->clk))
+	{
+		printk(" %s Error in devm_clk get core \n", __func__);
 		return PTR_ERR(msm_port->clk);
+	}
 
 	if (msm_port->is_uartdm) {
 		msm_port->pclk = devm_clk_get(&pdev->dev, "iface");
 		if (IS_ERR(msm_port->pclk))
+		{
+			printk(" %s: Error in devm get clk iface\n", __func__);
 			return PTR_ERR(msm_port->pclk);
+		}
 	}
 
 	port->uartclk = clk_get_rate(msm_port->clk);
-	dev_info(&pdev->dev, "uartclk = %d\n", port->uartclk);
+	if (!port->uartclk)
+	{
+		WARN_ON(0);
+		dev_err(&pdev->dev, "uartclk is invalid setting to 19200000 \n");
+		port->uartclk = 19200000;
+	}
 
 	resource = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 	if (unlikely(!resource))
+	{
+		printk(" %s: unable to get IOMem resource \n", __func__);
 		return -ENXIO;
+	}
 	port->mapbase = resource->start;
 
 	irq = platform_get_irq(pdev, 0);
 	if (unlikely(irq < 0))
+	{
+		printk(" %s Cant get IRQ \n", __func__);
 		return -ENXIO;
+	}
 	port->irq = irq;
+
+	//JRM from working msm_serial_hs_lite.c port->uartclk = 7372800;
+	dev_info(&pdev->dev, " orig uartclk = %d\n", port->uartclk);
+	if (!port->membase) {
+		printk(" Error MEMBase is NULL \n");
+		if (msm_request_port(port) != 0)
+		{
+			printk(" Error requesting memory address \n");
+		}
+	}
+	printk(" Membase is 0x%x \n", port->membase);
+
+	msm_serial_set_mnd_regs_from_uartclk(port);
+
 
 	platform_set_drvdata(pdev, port);
 
