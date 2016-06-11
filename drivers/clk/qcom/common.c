@@ -188,36 +188,56 @@ int qcom_cc_really_probe(struct platform_device *pdev,
 	size_t num_clks = desc->num_clks;
 	struct clk_regmap **rclks = desc->clks;
 
+printk("   .... %s Enter \n", __func__);
+
 	cc = devm_kzalloc(dev, sizeof(*cc) + sizeof(*clks) * num_clks,
 			  GFP_KERNEL);
 	if (!cc)
+	{
+		printk(" Error !cc \n");
 		return -ENOMEM;
+	}
 
 	clks = cc->clks;
 	data = &cc->data;
 	data->clks = clks;
 	data->clk_num = num_clks;
 
+printk(" num clocks %d \n", num_clks);
+
 	for (i = 0; i < num_clks; i++) {
 		if (!rclks[i]) {
 			clks[i] = ERR_PTR(-ENOENT);
 			continue;
 		}
+printk(" clk num %d devm_clk_regmap \n", i);
 		clk = devm_clk_register_regmap(dev, rclks[i]);
-		if (IS_ERR(clk))
+		if (IS_ERR(clk)) {
+			printk(" err clk devm_clk_reg_regmap \n");
 			return PTR_ERR(clk);
+		}
+		else
+		{
+			printk(" registering clock #%d \n", i);
+		}
 		clks[i] = clk;
 	}
 
 	ret = of_clk_add_provider(dev->of_node, of_clk_src_onecell_get, data);
 	if (ret)
+	{
+		printk(" Error clk_add prov error \n");
 		return ret;
+	}
 
 	ret = devm_add_action_or_reset(dev, qcom_cc_del_clk_provider,
 				       pdev->dev.of_node);
 
 	if (ret)
+	{
+		printk(" error devm add action \n");
 		return ret;
+	}
 
 	reset = &cc->reset;
 	reset->rcdev.of_node = dev->of_node;
@@ -229,30 +249,46 @@ int qcom_cc_really_probe(struct platform_device *pdev,
 
 	ret = reset_controller_register(&reset->rcdev);
 	if (ret)
+	{
+		printk(" Error reset _controller reg\n");
 		return ret;
+	}
 
 	ret = devm_add_action_or_reset(dev, qcom_cc_reset_unregister,
 				       &reset->rcdev);
 
 	if (ret)
+	{
+		printk("Erorr devm_add action or reset \n");
 		return ret;
+	}
 
 	if (desc->gdscs && desc->num_gdscs) {
 		scd = devm_kzalloc(dev, sizeof(*scd), GFP_KERNEL);
 		if (!scd)
+		{
+			printk(" Error devm_kzalloc\n");
 			return -ENOMEM;
+		}
 		scd->dev = dev;
 		scd->scs = desc->gdscs;
 		scd->num = desc->num_gdscs;
 		ret = gdsc_register(scd, &reset->rcdev, regmap);
 		if (ret)
+		{
+			printk(" Error gdsc reg \n");
 			return ret;
+		}
 		ret = devm_add_action_or_reset(dev, qcom_cc_gdsc_unregister,
 					       scd);
 		if (ret)
+		{
+			printk(" Error devm add action\n");
 			return ret;
+		}
 	}
 
+printk("   .... %s Exit \n", __func__);
 	return 0;
 }
 EXPORT_SYMBOL_GPL(qcom_cc_really_probe);
@@ -262,8 +298,12 @@ int qcom_cc_probe(struct platform_device *pdev, const struct qcom_cc_desc *desc)
 	struct regmap *regmap;
 
 	regmap = qcom_cc_map(pdev, desc);
-	if (IS_ERR(regmap))
+printk("  >>>> %s \n", __func__);
+
+	if (IS_ERR(regmap)) {
+		printk(" %s: cc_map error \n", __func__);
 		return PTR_ERR(regmap);
+	}
 
 	return qcom_cc_really_probe(pdev, desc, regmap);
 }
