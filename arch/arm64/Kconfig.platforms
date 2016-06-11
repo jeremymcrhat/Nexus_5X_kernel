@@ -104,6 +104,12 @@ config ARCH_MSM8994
 	help
 	  This enables support for the Qualcomm MSM8994 
 
+config ARCH_MSM8992
+	bool "Qualcomm MSM8992"
+	depends on ARCH_QCOM
+	help
+	  This enables support for the Qualcomm MSM8992
+
 config ARCH_ROCKCHIP
 	bool "Rockchip Platforms"
 	select ARCH_HAS_RESET_CONTROLLER
