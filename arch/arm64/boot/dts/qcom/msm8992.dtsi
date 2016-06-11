@@ -13,6 +13,7 @@
 /memreserve/ 0x00000000 0x00001000;
 
 #include "skeleton64.dtsi"
+#include <dt-bindings/interrupt-controller/arm-gic.h>
 #include <dt-bindings/clock/msm-clocks-8992.h>
 
 / {
@@ -22,6 +23,8 @@
 	qcom,pmic-id = <0x10009 0x1000A 0x0 0x0>;
 	interrupt-parent = <&intc>;
 
+	#address-cells = <2>;
+	#size-cells = <2>;
 	chosen {
 		bootargs = "sched_enable_hmp=1 sched_enable_power_aware=1";
 	};
@@ -2932,7 +2935,7 @@
 	};
 
 	usb_ehci: ehci@f9a55000 {
-		compatible = "qcom,ehci-host";
+		compatible = "_XXX_qcom,ehci-host";
 		status = "disabled";
 		reg = <0xf9a55000 0x400>;
 		interrupts = <0 134 0>, <0 140 0>;
