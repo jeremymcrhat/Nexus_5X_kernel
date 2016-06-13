@@ -73,7 +73,7 @@ static struct clk_fixed_factor xo = {
 };
 
 static struct clk_pll gpll0 = {
-    .status_reg = 0x0000,
+	.status_reg = 0x0000,
     .status_bit = 30,
     .clkr.hw.init = &(struct clk_init_data){
         .name = "gpll0",
@@ -428,22 +428,22 @@ static struct clk_rcg2 blsp1_qup6_spi_apps_clk_src = {
 };
 
 static struct freq_tbl ftbl_blsp_uart_apps_clk_src[] = {
-    F(3686400, P_GPLL0, 1, 96, 15625),
-    F(7372800, P_GPLL0, 1, 192, 15625),
-    F(14745600, P_GPLL0, 1, 384, 15625),
-    F(16000000, P_GPLL0, 5, 2, 15),
-    F(19200000, P_XO, 1, 0, 0),
-    F(24000000, P_GPLL0, 5, 1, 5),
-    F(32000000, P_GPLL0, 1, 4, 75),
-    F(40000000, P_GPLL0, 15, 0, 0),
-    F(46400000, P_GPLL0, 1, 29, 375),
-    F(48000000, P_GPLL0, 12.5, 0, 0),
-    F(51200000, P_GPLL0, 1, 32, 375),
-    F(56000000, P_GPLL0, 1, 7, 75),
-    F(58982400, P_GPLL0, 1, 1536, 15625),
-    F(60000000, P_GPLL0, 10, 0, 0),
-    F(63160000, P_GPLL0, 9.5, 0, 0),
-    { }
+	F(3686400, P_GPLL0, 1, 96, 15625),
+	F(7372800, P_GPLL0, 1, 192, 15625),
+	F(14745600, P_GPLL0, 1, 384, 15625),
+	F(16000000, P_GPLL0, 5, 2, 15),
+	F(19200000, P_XO, 1, 0, 0),
+	F(24000000, P_GPLL0, 5, 1, 5),
+	F(32000000, P_GPLL0, 1, 4, 75),
+	F(40000000, P_GPLL0, 15, 0, 0),
+	F(46400000, P_GPLL0, 1, 29, 375),
+	F(48000000, P_GPLL0, 12.5, 0, 0),
+	F(51200000, P_GPLL0, 1, 32, 375),
+	F(56000000, P_GPLL0, 1, 7, 75),
+	F(58982400, P_GPLL0, 1, 1536, 15625),
+	F(60000000, P_GPLL0, 10, 0, 0),
+	F(63160000, P_GPLL0, 9.5, 0, 0),
+	{ }
 };
 
 static struct clk_rcg2 blsp1_uart1_apps_clk_src = {
@@ -531,16 +531,16 @@ static struct clk_rcg2 blsp1_uart6_apps_clk_src = {
 };
 
 static struct clk_rcg2 blsp2_qup1_i2c_apps_clk_src = {
-    .cmd_rcgr = 0x09A0,
-    .hid_width = 5,
-    .parent_map = gcc_xo_gpll0_map,
-    .freq_tbl = ftbl_blsp_i2c_apps_clk_src,
-    .clkr.hw.init = &(struct clk_init_data){
-        .name = "blsp1_uart6_apps_clk_src",
-        .parent_names = gcc_xo_gpll0,
-        .num_parents = 2,
-        .ops = &clk_rcg2_ops,
-    },
+	.cmd_rcgr = 0x09A0,
+	.hid_width = 5,
+	.parent_map = gcc_xo_gpll0_map,
+	.freq_tbl = ftbl_blsp_i2c_apps_clk_src,
+	.clkr.hw.init = &(struct clk_init_data){
+		.name = "blsp2_qup1_i2c_apps_clk_src",
+		.parent_names = gcc_xo_gpll0,
+		.num_parents = 2,
+		.ops = &clk_rcg2_ops,
+	},
 };
 
 static struct freq_tbl ftbl_blsp2_qup1_spi_apps_clk_src[] = {
