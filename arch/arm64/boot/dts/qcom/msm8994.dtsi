@@ -717,7 +717,7 @@
 	blsp1_uart2: serial@f991e000 {
 		compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
 		reg = <0xf991e000 0x1000>;
-		interrupts = <0 108 0>;
+		interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
 		status = "disabled";
 		clock-names = "core", "iface";
 		clocks = <&clock_gcc GCC_BLSP1_UART2_APPS_CLK>,
@@ -1867,30 +1867,11 @@
 	};
 
 	usb_ehci: ehci@f9a55000 {
-		compatible = "qcomTODO,ehci-host";
-		status = "disabled";
+		compatible = "qcom,ehci-host";
 		reg = <0xf9a55000 0x400>;
-		interrupts = <0 134 0>, <0 140 0>;
-		interrupt-names = "core_irq", "async_irq";
-		hsusb_vdd_dig-supply = <&pm8994_s2_corner>;
-		HSUSB_1p8-supply = <&pm8994_l6>;
-		HSUSB_3p3-supply = <&pm8994_l24>;
-		qcom,vdd-voltage-level = <1 2 3 5 7>;
-		qcom,usb2-power-budget = <500>;
-		usb-phy = <&qusb_phy>;
-		qcom,pm-qos-latency = <30001>;
-
-		qcom,msm-bus,name = "usb-hs";
-		qcom,msm-bus,num-cases = <2>;
-		qcom,msm-bus,num-paths = <1>;
-		qcom,msm-bus,vectors-KBps =
-				<87 512 0 0>,
-				<87 512 40000 60000>;
-
-		clocks = <&clock_gcc clk_gcc_usb_hs_system_clk>,
-			 <&clock_gcc clk_gcc_usb_hs_ahb_clk>,
-			 <&clock_rpm clk_cxo_otg_clk>;
-		clock-names = "core_clk", "iface_clk", "xo";
+		interrupts = <GIC_SPI 134 IRQ_TYPE_NONE>;
+		usb-phy = <&usb_otg>;
+		status = "disabled";
 	};
 
 	qusb_phy: qusb@f9b39000 {
