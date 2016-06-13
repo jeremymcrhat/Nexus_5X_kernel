@@ -1581,7 +1581,7 @@ static int msm_serial_probe(struct platform_device *pdev)
 		clk_set_rate(msm_port->clk, 1843200);
 	}
 
-	port->uartclk = clk_get_rate(msm_port->clk);
+	port->uartclk = 7372800;//clk_get_rate(msm_port->clk);
 	dev_info(&pdev->dev, "uartclk = %d\n", port->uartclk);
 
 	resource = platform_get_resource(pdev, IORESOURCE_MEM, 0);
