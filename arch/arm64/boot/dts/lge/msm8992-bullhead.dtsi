@@ -172,16 +172,6 @@
 	/delete-property/ pinctrl-6;
 };
 
-&cti6 {
-	/delete-property/ pinctrl-names;
-	/delete-property/ pinctrl-0;
-};
-
-&cti8 {
-	/delete-property/ pinctrl-names;
-	/delete-property/ pinctrl-0;
-};
-
 &usb3 {
 	status = "ok";
 	qcom,usbin-vadc = <&pmi8994_vadc>;
@@ -594,11 +584,5 @@
 
 #include "msm8992-lge.dtsi"
 #include "msm8992-bullhead-regulator.dtsi"
-#include "msm8992-bullhead-camera.dtsi"
-#include "msm8992-bullhead-connectivity.dtsi"
 #include "msm8992-bullhead-misc.dtsi"
-#include "msm8992-bullhead-panel.dtsi"
 #include "msm8992-bullhead-pm.dtsi"
-#include "msm8992-bullhead-sound.dtsi"
-#include "msm8992-bullhead-touch.dtsi"
-#include "msm8992-bullhead-sensorhub.dtsi"
