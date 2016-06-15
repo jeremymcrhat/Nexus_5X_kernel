@@ -769,7 +769,7 @@ int clk_enable(struct clk *clk)
 {
 	unsigned long flags;
 	int ret;
-
+printk(" %s -> name: %s \n", __func__, __clk_get_name(clk));
 	if (!clk)
 		return 0;
 
@@ -1040,7 +1040,7 @@ static unsigned long clk_core_get_rate(struct clk_core *core)
 
 	rate = clk_core_get_rate_nolock(core);
 	clk_prepare_unlock();
-
+printk(" .. %s returning rate: 0x%lu \n", __func__, rate);
 	return rate;
 }
 
@@ -1056,7 +1056,7 @@ unsigned long clk_get_rate(struct clk *clk)
 {
 	if (!clk)
 		return 0;
-
+printk(" .. %s \n", __func__);
 	return clk_core_get_rate(clk->core);
 }
 EXPORT_SYMBOL_GPL(clk_get_rate);
@@ -1556,6 +1556,9 @@ int clk_set_rate(struct clk *clk, unsigned long rate)
 
 	if (!clk)
 		return 0;
+
+pr_err("%s: clk %s dev %s con %s: rate: %lu\n",
+        __func__, clk->core->name, clk->dev_id, clk->con_id,rate);
 
 	/* prevent racing with updates to the clock topology */
 	clk_prepare_lock();

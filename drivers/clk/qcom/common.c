@@ -210,7 +210,7 @@ printk(" num clocks %d \n", num_clks);
 			clks[i] = ERR_PTR(-ENOENT);
 			continue;
 		}
-printk(" clk num %d devm_clk_regmap \n", i);
+printk(" clk num %d devm_clk_regmap NAME: %s  \n", i, __clk_get_name(clk));
 		clk = devm_clk_register_regmap(dev, rclks[i]);
 		if (IS_ERR(clk)) {
 			printk(" err clk devm_clk_reg_regmap \n");
@@ -223,12 +223,15 @@ printk(" clk num %d devm_clk_regmap \n", i);
 		clks[i] = clk;
 	}
 
+printk("   num: %d add prov name: %s \n", i, __clk_get_name(clk));
 	ret = of_clk_add_provider(dev->of_node, of_clk_src_onecell_get, data);
 	if (ret)
 	{
 		printk(" Error clk_add prov error \n");
 		return ret;
 	}
+
+printk(" num %d add action or reset name: %s \n", i, __clk_get_name(clk));
 
 	ret = devm_add_action_or_reset(dev, qcom_cc_del_clk_provider,
 				       pdev->dev.of_node);
@@ -247,12 +250,15 @@ printk(" clk num %d devm_clk_regmap \n", i);
 	reset->regmap = regmap;
 	reset->reset_map = desc->resets;
 
+printk(" reset cont reg i=%d name: %s \n", i, __clk_get_name(clk));
 	ret = reset_controller_register(&reset->rcdev);
 	if (ret)
 	{
 		printk(" Error reset _controller reg\n");
 		return ret;
 	}
+
+printk(" add action or reset i = %d name: %s \n", i, __clk_get_name(clk));
 
 	ret = devm_add_action_or_reset(dev, qcom_cc_reset_unregister,
 				       &reset->rcdev);

@@ -1620,6 +1620,8 @@ static int msm_serial_probe(struct platform_device *pdev)
 		}
 	}
 
+	msm_init_clock(port);
+
 	port->uartclk = clk_get_rate(msm_port->clk);
 	if (!port->uartclk)
 	{

@@ -91,6 +91,7 @@ static int update_config(struct clk_rcg2 *rcg)
 	struct clk_hw *hw = &rcg->clkr.hw;
 	const char *name = clk_hw_get_name(hw);
 
+printk(" %s cmd_reg: 0x%x mask: 0x%x val: 0x%x \n", __func__, (rcg->cmd_rcgr + CMD_REG), CMD_UPDATE, CMD_UPDATE);  
 	ret = regmap_update_bits(rcg->clkr.regmap, rcg->cmd_rcgr + CMD_REG,
 				 CMD_UPDATE, CMD_UPDATE);
 	if (ret)

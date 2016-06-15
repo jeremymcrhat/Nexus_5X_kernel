@@ -158,10 +158,15 @@ clk_pll_set_rate(struct clk_hw *hw, unsigned long rate, unsigned long p_rate)
 	bool enabled;
 	u32 mode;
 	u32 enable_mask = PLL_OUTCTRL | PLL_BYPASSNL | PLL_RESET_N;
+	const char *name = clk_hw_get_name(hw);
+
+printk("%s name: %s rate: %lu \n", __func__, name, rate);
 
 	f = find_freq(pll->freq_tbl, rate);
-	if (!f)
+	if (!f) {
+		printk(" %s error couldnt find freq \n", __func__);
 		return -EINVAL;
+	}
 
 	regmap_read(pll->clkr.regmap, pll->mode_reg, &mode);
 	enabled = (mode & enable_mask) == enable_mask;
@@ -214,12 +219,17 @@ static int clk_pll_vote_enable(struct clk_hw *hw)
 {
 	int ret;
 	struct clk_pll *p = to_clk_pll(clk_hw_get_parent(hw));
+        const char *name = clk_hw_get_name(hw);
+
+        printk("%s name: %s \n",__func__, name);
 
 	ret = clk_enable_regmap(hw);
 	if (ret)
 		return ret;
 
-	return wait_for_pll(p);
+	ret = wait_for_pll(p);
+	printk(" %s: wait for pll ret = %d \n",__func__, ret);
+	return ret;
 }
 
 const struct clk_ops clk_pll_vote_ops = {
