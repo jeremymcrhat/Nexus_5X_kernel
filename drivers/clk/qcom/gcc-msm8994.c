@@ -73,14 +73,19 @@ static struct clk_fixed_factor xo = {
 };
 
 static struct clk_pll gpll0 = {
-    .status_reg = 0x0000,
-    .status_bit = 30,
-    .clkr.hw.init = &(struct clk_init_data){
-        .name = "gpll0",
-        .parent_names = (const char *[]){ "xo" },
-        .num_parents = 1,
-        .ops = &clk_pll_ops,
-    },
+	.l_reg = 0x0004,
+	.m_reg = 0x0008,
+	.n_reg = 0x000c,
+	.config_reg = 0x0014,
+	.mode_reg = 0x1480,
+	.status_reg = 0x0000,
+	.status_bit = 30,
+	.clkr.hw.init = &(struct clk_init_data){
+		.name = "gpll0",
+		.parent_names = (const char *[]){ "xo" },
+		.num_parents = 1,
+		.ops = &clk_pll_ops,
+	},
 };
 
 static struct clk_regmap gpll0_vote = {
