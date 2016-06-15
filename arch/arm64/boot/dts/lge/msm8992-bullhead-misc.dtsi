@@ -69,7 +69,7 @@
 
 		qcom,spi-qup-id = <10>;
 
-		clock-names = "iface_clk", "core_clk";
+		clock-names = "iface", "core";
 		clocks = <&clock_gcc clk_gcc_blsp2_ahb_clk>,
 			<&clock_gcc clk_gcc_blsp2_qup4_spi_apps_clk>;
 
