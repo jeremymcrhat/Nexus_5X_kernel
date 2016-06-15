@@ -1867,7 +1867,7 @@
 	};
 
 	usb_ehci: ehci@f9a55000 {
-		compatible = "qcom,ehci-host";
+		compatible = "qcom,disabledehci-host";
 		reg = <0xf9a55000 0x400>;
 		interrupts = <GIC_SPI 134 IRQ_TYPE_NONE>;
 		usb-phy = <&usb_otg>;

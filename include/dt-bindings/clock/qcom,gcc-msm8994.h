@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Linaro Limited
+ * Copyright (c) 2016, The Linux Foundation. All rights reserved.
  *
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and
@@ -11,16 +11,17 @@
  * GNU General Public License for more details.
  */
 
+
 #ifndef _DT_BINDINGS_CLK_MSM_GCC_8994_H
 #define _DT_BINDINGS_CLK_MSM_GCC_8994_H
 
-#define GPLL0                                   0
-#define GPLL0_VOTE                              1
-#define GPLL4                                   2
-#define GPLL4_VOTE                              3
-#define UFS_AXI_CLK_SRC                         4
-#define USB30_MASTER_CLK_SRC                    5
-#define BLSP1_QUP1_I2C_APPS_CLK_SRC             6
+#define GPLL0							0
+#define GPLL0_VOTE						1
+#define GPLL4							2
+#define GPLL4_VOTE						3
+#define UFS_AXI_CLK_SRC					4
+#define USB30_MASTER_CLK_SRC			5
+#define BLSP1_QUP1_I2C_APPS_CLK_SRC		6
 #define BLSP1_QUP1_SPI_APPS_CLK_SRC		7
 #define BLSP1_QUP2_I2C_APPS_CLK_SRC		8
 #define BLSP1_QUP2_SPI_APPS_CLK_SRC		9
@@ -56,9 +57,9 @@
 #define BLSP2_UART4_APPS_CLK_SRC		39
 #define BLSP2_UART5_APPS_CLK_SRC		40
 #define BLSP2_UART6_APPS_CLK_SRC		41
-#define GP1_CLK_SRC                             42
-#define GP2_CLK_SRC                             43
-#define GP3_CLK_SRC                             44
+#define GP1_CLK_SRC						42
+#define GP2_CLK_SRC						43
+#define GP3_CLK_SRC						44
 #define PCIE_0_AUX_CLK_SRC    			45
 #define PCIE_0_PIPE_CLK_SRC   			46
 #define PCIE_1_AUX_CLK_SRC    			47
@@ -79,7 +80,7 @@
 #define GCC_BLSP1_QUP2_SPI_APPS_CLK		62
 #define GCC_BLSP1_QUP3_I2C_APPS_CLK		63
 #define GCC_BLSP1_QUP3_SPI_APPS_CLK		64
-#define GCC_BLSP1_QUP4_I2C_APPS_CLK             65
+#define GCC_BLSP1_QUP4_I2C_APPS_CLK		65
 #define GCC_BLSP1_QUP4_SPI_APPS_CLK		66
 #define GCC_BLSP1_QUP5_I2C_APPS_CLK		67
 #define GCC_BLSP1_QUP5_SPI_APPS_CLK		68
@@ -115,11 +116,11 @@
 #define GCC_GP3_CLK           			98
 #define GCC_PCIE_0_AUX_CLK      		99
 #define GCC_PCIE_0_PIPE_CLK     		100
-#define GCC_PCIE_1_AUX_CLK                      101
-#define GCC_PCIE_1_PIPE_CLK                     102
+#define GCC_PCIE_1_AUX_CLK				101
+#define GCC_PCIE_1_PIPE_CLK				102
 #define GCC_PDM2_CLK          			103
 #define GCC_SDCC1_APPS_CLK      		104
-#define GCC_SDCC2_APPS_CLK                      105
+#define GCC_SDCC2_APPS_CLK				105
 #define GCC_SDCC3_APPS_CLK    			106
 #define GCC_SDCC4_APPS_CLK      		107
 #define GCC_SYS_NOC_UFS_AXI_CLK			108
