@@ -986,37 +986,6 @@
 			};
 		};
 
-		pmx_pri_mi2s {
-			qcom,pins = <&gp 65>, <&gp 66>;
-			qcom,num-grp-pins = <2>;
-			qcom,pin-func = <1>;
-			label = "pri_mi2s";
-			pri_mi2s_sleep: pri_mi2s_sleep {
-				drive-strength = <2>;	/* 2 mA */
-				bias-pull-down;		/* PULL DOWN */
-			};
-			pri_mi2s_active: pri_mi2s_active {
-				drive-strength = <2>;	/* 2 mA */
-				bias-disable;		/* NO PULL */
-				output-high;
-			};
-		};
-
-		pmx_pri_mi2s_sd0 {
-			qcom,pins = <&gp 67>;
-			qcom,num-grp-pins = <1>;
-			qcom,pin-func = <1>;
-			label = "pri_mi2s_sd0";
-			pri_mi2s_sd0_sleep: pri_mi2s_sd0_sleep {
-				drive-strength = <2>;	/* 2 mA */
-				bias-pull-down;		/* PULL DOWN */
-			};
-			pri_mi2s_sd0_active: pri_mi2s_sd0_active {
-				drive-strength = <2>;	/* 2 mA */
-				bias-disable;		/* NO PULL */
-			};
-		};
-
 		/* pin-ctrl for camera sensor */
 		cci0_active {
 			/* CLK, DATA */

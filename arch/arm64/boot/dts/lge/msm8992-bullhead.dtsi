@@ -42,7 +42,7 @@
 		spi-max-frequency = <5000000>;
 
 		qcom,master-id = <84>;
-		clock-names = "iface_clk", "core_clk";
+		clock-names = "iface", "core";
 		clocks = <&clock_gcc clk_gcc_blsp2_ahb_clk>,
 			<&clock_gcc clk_gcc_blsp2_qup4_spi_apps_clk>;
 
@@ -82,7 +82,7 @@
 		pinctrl-1 = <&spi7_sleep &spi7_cs_sleep>;
 		clocks = <&clock_gcc clk_gcc_blsp2_ahb_clk>,
 			<&clock_gcc clk_gcc_blsp2_qup1_spi_apps_clk>;
-		clock-names = "iface_clk", "core_clk";
+		clock-names = "iface", "core";
 
 		qcom,use-pinctrl;
 		qcom,infinite-mode = <0>;
@@ -103,7 +103,7 @@
 		qcom,clk-freq-out = <1000000>;
 		qcom,clk-freq-in  = <19200000>;
 		qcom,disable-dma;
-		clock-names = "iface_clk", "core_clk";
+		clock-names = "iface", "core";
 		clocks = <&clock_gcc clk_gcc_blsp2_ahb_clk>,
 		         <&clock_gcc clk_gcc_blsp2_qup3_i2c_apps_clk>;
 
@@ -115,21 +115,6 @@
 		qcom,bam-pipe-idx-cons = <16>;
 		qcom,bam-pipe-idx-prod = <17>;
 		qcom,master-id = <84>;
-	};
-
-	qcom,cnss {
-		wlan-bootstrap-gpio = <&msm_gpio 1 0>;
-	};
-
-	sound {
-		/delete-property/ pinctrl-0;
-		/delete-property/ pinctrl-1;
-		/delete-property/ pinctrl-2;
-		/delete-property/ pinctrl-3;
-		pinctrl-0 = <&sec_aux_pcm_sleep>, <&sec_aux_pcm_din_sleep>;
-		pinctrl-1 = <&sec_aux_pcm_active>, <&sec_aux_pcm_din_active>;
-		pinctrl-2 = <&sec_aux_pcm_sleep>, <&sec_aux_pcm_din_sleep>;
-		pinctrl-3 = <&sec_aux_pcm_active>, <&sec_aux_pcm_din_active>;
 	};
 };
 
