@@ -182,39 +182,6 @@
 	};
 };
 
-&pmi8994_fg {
-	status = "ok";
-	qcom,ext-sense-type;
-	qcom,battery-data = <&bullhead_batterydata>;
-	qcom,charger = <&pmi8994_charger>;
-	qcom,fg-vbatt-low-threshold = <4200>;
-	qcom,resume-soc = <99>;
-	qcom,resume-soc-raw = <253>;
-	qcom,fg-iterm-ma = <200>;
-	qcom,fg-chg-iterm-ma = <100>;
-	qcom,fg-cutoff-voltage-mv = <3400>;
-	qcom,warm-bat-decidegc = <450>;
-	qcom,hot-bat-decidegc = <550>;
-	qcom,cool-bat-decidegc = <(-50)>;
-	qcom,cold-bat-decidegc = <(-100)>;
-	qcom,vbat-estimate-diff-mv = <200>;
-	qcom,thermal-coefficients = [D2 85 0E 4A A5 35];
-};
-
-&i2c_6 {
-	status = "ok";
-	smb1358-charger {
-		status = "ok";
-		compatible = "qcom,smb1358-charger";
-		reg = <0x1c>;
-		qcom,parallel-charger;
-		qcom,iterm-ma = <100>;
-		qcom,float-voltage-mv = <4460>;
-		qcom,recharge-thresh-mv = <100>;
-		qcom,charging-timeout-mins = <768>;
-	};
-};
-
 &spmi_bus {
 	qcom,pmi8994@3 {
 		qcom,leds@d000 {
