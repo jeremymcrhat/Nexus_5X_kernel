@@ -27,6 +27,7 @@
 #include "common.h"
 #include "clk-regmap.h"
 #include "clk-pll.h"
+#include "clk-alpha-pll.h"
 #include "clk-rcg.h"
 #include "clk-branch.h"
 #include "reset.h"
@@ -44,7 +45,7 @@ static const struct parent_map gcc_xo_gpll0_map[] = {
 
 static const char * const gcc_xo_gpll0[] = {
     "xo",
-    "gpll0_vote",
+    "gpll0",
 };
 
 static const struct parent_map gcc_xo_gpll0_gpll4_map[] = {
@@ -55,7 +56,7 @@ static const struct parent_map gcc_xo_gpll0_gpll4_map[] = {
 
 static const char * const gcc_xo_gpll0_gpll4[] = {
     "xo",
-    "gpll0_vote",
+    "gpll0",
     "gpll4_vote",
 };
 
@@ -72,31 +73,28 @@ static struct clk_fixed_factor xo = {
     },
 };
 
-static struct clk_pll gpll0 = {
-	.l_reg = 0x0004,
-	.m_reg = 0x0008,
-	.n_reg = 0x000c,
-	.config_reg = 0x0014,
-	.mode_reg = 0x1480,
-	.status_reg = 0x0000,
-	.status_bit = 30,
-	.clkr.hw.init = &(struct clk_init_data){
-		.name = "gpll0",
-		.parent_names = (const char *[]){ "xo" },
-		.num_parents = 1,
-		.ops = &clk_pll_ops,
+static struct clk_alpha_pll gpll0_early = {
+	.offset = 0x0000,
+	.clkr = {
+		.enable_reg = 0x1480,
+		.enable_mask = BIT(0),
+		.hw.init = &(struct clk_init_data){
+			.name = "gpll0_early",
+			.parent_names = (const char *[]){ "xo" },
+			.num_parents = 1,
+			.ops = &clk_alpha_pll_ops,
+		},
 	},
 };
 
-static struct clk_regmap gpll0_vote = {
-    .enable_reg = 0x1480,
-    .enable_mask = BIT(0),
-    .hw.init = &(struct clk_init_data){
-        .name = "gpll0_vote",
-        .parent_names = (const char *[]){ "gpll0" },
-        .num_parents = 1,
-        .ops = &clk_pll_vote_ops,
-    },
+static struct clk_alpha_pll_postdiv gpll0 = {
+	.offset = 0x0000,
+	.clkr.hw.init = &(struct clk_init_data){
+		.name = "gpll0",
+		.parent_names = (const char *[]){ "gpll0_early" },
+		.num_parents = 1,
+		.ops = &clk_alpha_pll_postdiv_ops,
+	},
 };
 
 static struct clk_pll gpll4 = {
@@ -2207,10 +2205,10 @@ static struct clk_branch gcc_usb_hs_system_clk = {
 // TODO removed gcc_usb_phy_cfg_ahb2phy_clk
 
 static struct clk_regmap *gcc_msm8994_clocks[] = {
+	[GPLL0_VOTE] = &gpll0_early.clkr,
 	[GPLL0] = &gpll0.clkr,
-    [GPLL0_VOTE] = &gpll0_vote,
 	[GPLL4] = &gpll4.clkr,
-    [GPLL4_VOTE] = &gpll4_vote,
+	[GPLL4_VOTE] = &gpll4_vote,
 	[UFS_AXI_CLK_SRC] = &ufs_axi_clk_src.clkr,
 	[USB30_MASTER_CLK_SRC] = &usb30_master_clk_src.clkr,
 	[BLSP1_QUP1_I2C_APPS_CLK_SRC] = &blsp1_qup1_i2c_apps_clk_src.clkr,
@@ -2348,7 +2346,7 @@ static const struct regmap_config gcc_msm8994_regmap_config = {
 	.reg_bits	= 32,
 	.reg_stride	= 4,
 	.val_bits	= 32,
-	.max_register	= 0x80000,
+	.max_register	= 0x2000,
 	.fast_io	= true,
 };
 
