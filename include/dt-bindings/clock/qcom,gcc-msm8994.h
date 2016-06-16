@@ -15,8 +15,8 @@
 #ifndef _DT_BINDINGS_CLK_MSM_GCC_8994_H
 #define _DT_BINDINGS_CLK_MSM_GCC_8994_H
 
-#define GPLL0							0
-#define GPLL0_VOTE						1
+#define GPLL0							1
+#define GPLL0_VOTE						0
 #define GPLL4							2
 #define GPLL4_VOTE						3
 #define UFS_AXI_CLK_SRC					4
