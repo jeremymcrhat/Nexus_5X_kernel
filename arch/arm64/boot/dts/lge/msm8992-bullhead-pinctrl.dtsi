@@ -100,41 +100,6 @@
 			};
 		};
 
-		pcie0_clkreq {
-			qcom,pins = <&gp 36>;
-			qcom,num-grp-pins = <1>;
-			qcom,pin-func = <2>;
-			label = "pcie0-clkreq";
-			pcie0_clkreq_default: pcie0_clkreq_default {
-				drive-strength = <2>;
-				bias-pull-up;
-			};
-		};
-
-		pcie0_perst {
-			qcom,pins = <&gp 35>;
-			qcom,num-grp-pins = <1>;
-			label = "pcie0-perst";
-			pcie0_perst_default: pcie0_perst_default {
-				drive-strength = <2>;
-				bias-pull-down;
-			};
-		};
-
-		pcie0_wake {
-			qcom,pins = <&gp 37>;
-			qcom,num-grp-pins = <1>;
-			label = "pcie0-wake";
-			pcie0_wake_default: pcie0_wake_default {
-				drive-strength = <2>;
-				bias-pull-down;
-			};
-			pcie0_wake_sleep: pcie0_wake_sleep {
-				drive-strength = <2>;
-				bias-disable;
-			};
-		};
-
 		wcd9xxx_intr {
 			qcom,pins = <&gp 72>;
 			qcom,num-grp-pins = <1>;
