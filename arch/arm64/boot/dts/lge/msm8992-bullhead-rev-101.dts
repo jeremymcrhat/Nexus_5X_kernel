@@ -20,3 +20,22 @@
 	compatible = "qcom,msm8992";
 	qcom,board-id = <0xb64 0>;
 };
+
+/ {
+        aliases {
+                serial0 = &blsp1_uart2;
+        };
+
+        chosen {
+                stdout-path = "serial0";
+        };
+
+        soc {
+                serial@f991e000 {
+                        status = "okay";
+                        pinctrl-names = "default", "sleep";
+                        pinctrl-0 = <&blsp1_uart2_default>;
+                        pinctrl-1 = <&blsp1_uart2_sleep>;
+                };
+        };
+};

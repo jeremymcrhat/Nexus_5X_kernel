@@ -24,15 +24,10 @@
 	qcom,pmic-id = <0x10009 0x1000A 0x0 0x0>;
 	interrupt-parent = <&intc>;
 
-	aliases {
-		serial0 = &blsp1_uart2;
-	};
-
-	chosen {
-	};
+	chosen { };
 
 	cpus {
-		#address-cells = <1>;
+		#address-cells = <2>;
 		#size-cells = <0>;
 		cpu-map {
 			cluster0 {
@@ -45,11 +40,11 @@
 		CPU0: cpu@0 {
 			device_type = "cpu";
 			compatible = "arm,cortex-a53", "arm,armv8";
-			reg = <0x0>;
-			/*enable-method = "qcom,8994-arm-cortex-acc";
-			qcom,acc = <&acc0>;
-			qcom,ldo = <&ldo0>;*/
-			/* next-level-cache = <&L2_0>; */
+			reg = <0x0 0x0>;
+			enable-method = "psci";
+			/*qcom,acc = <&acc0>;
+			qcom,ldo = <&ldo0>; */
+			 next-level-cache = <&L2_0>;
 			// The currents(uA) correspond to the frequencies in the
 			// frequency table.
 			current = < 18250 //384000 kHZ
@@ -61,13 +56,11 @@
 			            55940 //960000 kHZ
 			            81740 //1248000 kHZ
 			            105870>; //1440000 kHZ
-			/** TODO: 
 			L2_0: l2-cache {
-			      compatible = "arm,arch-cache";
+			      compatible = "cache";
 			      cache-level = <2>;
-			      power-domain = <&l2ccc_0>;
-			      qcom,dump-size = <0x0>;
 			};
+			/** TODO
 			L1_I_0: l1-icache {
 				compatible = "arm,arch-cache";
 				qcom,dump-size = <0x9040>;
@@ -399,25 +392,11 @@
                         clock-frequency = <32768>;
                 };
         };
-};
 
-/ {
-        aliases {
-                serial0 = &blsp1_uart2;
-        };
-
-        chosen {
-                stdout-path = "serial0";
-        };
-
-        soc {
-                serial@f991e000 {
-                        status = "okay";
-                        pinctrl-names = "default", "sleep";
-                        pinctrl-0 = <&blsp1_uart2_default>;
-                        pinctrl-1 = <&blsp1_uart2_sleep>;
-                };
-        };
+	psci {
+		compatible = "arm,psci-1.0";
+		method = "smc";
+	};
 };
 
 #include "msm8992-pins.dtsi"
