@@ -97,6 +97,45 @@ static struct clk_alpha_pll_postdiv gpll0 = {
 	},
 };
 
+
+
+static struct clk_rcg2 config_noc_clk_src = {
+        .cmd_rcgr = 0x0150, //TODO 
+        .hid_width = 5,
+        .parent_map = gcc_xo_gpll0_map,
+        .clkr.hw.init = &(struct clk_init_data){
+                .name = "config_noc_clk_src",
+                .parent_names = gcc_xo_gpll0,
+                .num_parents = 2,
+                .ops = &clk_rcg2_ops,
+        },
+};
+
+static struct clk_rcg2 periph_noc_clk_src = {
+        .cmd_rcgr = 0x0190, //TODO
+        .hid_width = 5,
+	.mnd_width = 8,
+        .parent_map = gcc_xo_gpll0_map,
+        .clkr.hw.init = &(struct clk_init_data){
+                .name = "periph_noc_clk_src",
+                .parent_names = gcc_xo_gpll0,
+                .num_parents = 2,
+                .ops = &clk_rcg2_ops,
+        },
+};
+
+static struct clk_rcg2 system_noc_clk_src = {
+        .cmd_rcgr = 0x0120, //TODO
+        .hid_width = 5,
+        .parent_map = gcc_xo_gpll0_map,
+        .clkr.hw.init = &(struct clk_init_data){
+                .name = "system_noc_clk_src",
+                .parent_names = gcc_xo_gpll0,
+                .num_parents = 2,
+                .ops = &clk_rcg2_ops,
+        },
+};
+
 static struct clk_pll gpll4 = {
     .status_reg = 0x1DC0,
     .status_bit = 30,
@@ -1058,8 +1097,8 @@ static struct freq_tbl ftbl_sdcc1_apps_clk_src[] = {
     F(25000000, P_GPLL0, 12, 1, 2),
     F(50000000, P_GPLL0, 12, 0, 0),
     F(100000000, P_GPLL0, 6, 0, 0),
-    F(192000000, P_GPLL4, 2, 0, 0),
-    F(384000000, P_GPLL4, 1, 0, 0),
+    F(172000000, P_GPLL4, 2, 0, 0),
+    F(344000000, P_GPLL4, 1, 0, 0),
     { }
 };
 
@@ -2050,6 +2089,25 @@ static struct clk_branch gcc_sdcc1_apps_clk = {
     },
 };
 
+
+static struct clk_branch gcc_sdcc1_ahb_clk = {
+        .halt_reg = 0x04C8,
+        .clkr = {
+                .enable_reg = 0x04C8,
+                .enable_mask = BIT(0),
+                .hw.init = &(struct clk_init_data)
+		{
+                        .name = "gcc_sdcc1_ahb_clk",
+			.parent_names = (const char *[]){
+				"periph_noc_clk_src",
+			},
+			.num_parents = 1,
+                        .ops = &clk_branch2_ops,
+                },
+        },
+};
+
+
 static struct clk_branch gcc_sdcc2_apps_clk = {
     .halt_reg = 0x0504,
     .clkr = {
@@ -2286,7 +2344,10 @@ static struct clk_branch gcc_usb_hs_system_clk = {
 
 static struct clk_regmap *gcc_msm8994_clocks[] = {
     [GPLL0_VOTE] = &gpll0_early.clkr,
-    [GPLL0] = &gpll0.clkr,    
+    [GPLL0] = &gpll0.clkr,
+    //[CONFIG_NOC_CLK_SRC] = &config_noc_clk_src.clkr,
+    //[PERIPH_NOC_CLK_SRC] = &periph_noc_clk_src.clkr,
+    //[SYSTEM_NOC_CLK_SRC] = &system_noc_clk_src.clkr,    
     [GPLL4] = &gpll4.clkr,
     [GPLL4_VOTE] = &gpll4_vote,
     [UFS_AXI_CLK_SRC] = &ufs_axi_clk_src.clkr,
@@ -2393,6 +2454,7 @@ static struct clk_regmap *gcc_msm8994_clocks[] = {
     [GCC_SDCC2_APPS_CLK] = &gcc_sdcc2_apps_clk.clkr,
     [GCC_SDCC3_APPS_CLK] = &gcc_sdcc3_apps_clk.clkr,
     [GCC_SDCC4_APPS_CLK] = &gcc_sdcc4_apps_clk.clkr,
+    [GCC_SDCC1_AHB_CLK] = &gcc_sdcc1_ahb_clk.clkr,
     [GCC_SYS_NOC_UFS_AXI_CLK] = &gcc_sys_noc_ufs_axi_clk.clkr,
     [GCC_SYS_NOC_USB3_AXI_CLK] = &gcc_sys_noc_usb3_axi_clk.clkr,
     [GCC_TSIF_REF_CLK] = &gcc_tsif_ref_clk.clkr,

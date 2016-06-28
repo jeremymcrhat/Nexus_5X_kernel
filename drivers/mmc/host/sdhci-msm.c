@@ -442,9 +442,15 @@ static int sdhci_msm_probe(struct platform_device *pdev)
 	u32 core_version, caps;
 	u8 core_major;
 
+
+printk(" --> %s <-- \n", __func__);
+
 	host = sdhci_pltfm_init(pdev, &sdhci_msm_pdata, sizeof(*msm_host));
 	if (IS_ERR(host))
+	{
+		printk(" Error sdhci_pltfm_init \n");
 		return PTR_ERR(host);
+	}
 
 	pltfm_host = sdhci_priv(host);
 	msm_host = sdhci_pltfm_priv(pltfm_host);
@@ -452,8 +458,10 @@ static int sdhci_msm_probe(struct platform_device *pdev)
 	msm_host->pdev = pdev;
 
 	ret = mmc_of_parse(host->mmc);
-	if (ret)
+	if (ret) {
+		printk(" Error parsing mmc-of-parse \n");
 		goto pltfm_free;
+	}
 
 	sdhci_get_of_property(pdev);
 
@@ -469,6 +477,8 @@ static int sdhci_msm_probe(struct platform_device *pdev)
 			goto pltfm_free;
 	}
 
+printk(" %s: getting main peripheral bus clk \n", __func__);
+
 	/* Setup main peripheral bus clock */
 	msm_host->pclk = devm_clk_get(&pdev->dev, "iface");
 	if (IS_ERR(msm_host->pclk)) {
@@ -478,8 +488,11 @@ static int sdhci_msm_probe(struct platform_device *pdev)
 	}
 
 	ret = clk_prepare_enable(msm_host->pclk);
-	if (ret)
+	if (ret) {
+		printk(" Error prep en \n");
 		goto bus_clk_disable;
+	}
+printk(" finished prep enable \n");
 
 	/* Setup SDC MMC clock */
 	msm_host->clk = devm_clk_get(&pdev->dev, "core");
@@ -496,7 +509,10 @@ static int sdhci_msm_probe(struct platform_device *pdev)
 
 	ret = clk_prepare_enable(msm_host->clk);
 	if (ret)
+	{
+		dev_warn(&pdev->dev, "clk prep enable failed\n");
 		goto pclk_disable;
+	}
 
 	core_memres = platform_get_resource(pdev, IORESOURCE_MEM, 1);
 	msm_host->core_mem = devm_ioremap_resource(&pdev->dev, core_memres);
@@ -584,7 +600,7 @@ static struct platform_driver sdhci_msm_driver = {
 	.probe = sdhci_msm_probe,
 	.remove = sdhci_msm_remove,
 	.driver = {
-		   .name = "sdhci_msm",
+		   .name = "sdhci_msm_JRM",
 		   .of_match_table = sdhci_msm_dt_match,
 	},
 };

@@ -123,16 +123,22 @@
 #define GCC_SDCC2_APPS_CLK				105
 #define GCC_SDCC3_APPS_CLK    			106
 #define GCC_SDCC4_APPS_CLK      		107
-#define GCC_SYS_NOC_UFS_AXI_CLK			108
-#define GCC_SYS_NOC_USB3_AXI_CLK		109
-#define GCC_TSIF_REF_CLK        		110
-#define GCC_UFS_AXI_CLK         		111
-#define GCC_UFS_RX_CFG_CLK      		112
-#define GCC_UFS_TX_CFG_CLK    			113
-#define GCC_USB30_MASTER_CLK      		114
-#define GCC_USB30_MOCK_UTMI_CLK   		115
-#define GCC_USB3_PHY_AUX_CLK    		116
-#define GCC_USB_HS_SYSTEM_CLK     		117
+#define GCC_SDCC1_AHB_CLK			108
+#define GCC_SDCC2_AHB_CLK			109
+
+#define GCC_SYS_NOC_UFS_AXI_CLK			110
+#define GCC_SYS_NOC_USB3_AXI_CLK		111
+#define GCC_TSIF_REF_CLK        		112
+#define GCC_UFS_AXI_CLK         		113
+#define GCC_UFS_RX_CFG_CLK      		114
+#define GCC_UFS_TX_CFG_CLK    			115
+#define GCC_USB30_MASTER_CLK      		116
+#define GCC_USB30_MOCK_UTMI_CLK   		117
+#define GCC_USB3_PHY_AUX_CLK    		118
+#define GCC_USB_HS_SYSTEM_CLK     		119
+#define SYSTEM_NOC_CLK_SRC			120
+#define PERIPH_NOC_CLK_SRC			121
+#define CONFIG_NOC_CLK_SRC			122
 
 /* Indexes for GDSCs */
 #define BIMC_GDSC				0
