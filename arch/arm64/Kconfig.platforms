@@ -86,6 +86,19 @@ config ARCH_QCOM
 	help
 	  This enables support for the ARMv8 based Qualcomm chipsets.
 
+config ARCH_MSM8992
+	bool "Qualcomm MSM8992"
+	depends on ARCH_QCOM
+	help
+	  This enables support for the Qualcomm MSM8992 SoC.
+
+config ARCH_MSM8994
+	bool "Qualcomm MSM8994"
+	depends on ARCH_QCOM
+	select ARCH_REQUIRE_GPIOLIB
+	help
+	  This enables support for the Qualcomm MSM8994
+
 config ARCH_ROCKCHIP
 	bool "Rockchip Platforms"
 	select ARCH_HAS_RESET_CONTROLLER
