@@ -98,6 +98,19 @@ config MACH_LGE
 	help
 	  This enables support for the LGE Nexus 5X - BullHead MSM8992.
 
+config ARCH_MSM8994
+	bool "Qualcomm MSM8994"
+	depends on ARCH_QCOM
+	select ARCH_REQUIRE_GPIOLIB
+	help
+	  This enables support for the Qualcomm MSM8994
+
+config MACH_HUAWEI
+	bool "Huawei Angler (MSM8994)"
+	depends on ARCH_QCOM
+	help
+	  This enables support for the Huawei Nexus 6P - Angler MSM8994.
+
 config ARCH_ROCKCHIP
 	bool "Rockchip Platforms"
 	select ARCH_HAS_RESET_CONTROLLER
