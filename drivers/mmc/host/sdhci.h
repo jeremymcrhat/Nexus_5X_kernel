@@ -563,6 +563,11 @@ struct sdhci_ops {
 					 struct mmc_card *card,
 					 unsigned int max_dtr, int host_drv,
 					 int card_drv, int *drv_type);
+#define REQ_BUS_OFF	BIT(0)
+#define REQ_BUS_ON	BIT(1)
+#define REQ_IO_LOW	BIT(2)
+#define REQ_IO_HIGH	BIT(3)
+	void    (*check_power_status)(struct sdhci_host *host, u32 req_type);
 };
 
 #ifdef CONFIG_MMC_SDHCI_IO_ACCESSORS
