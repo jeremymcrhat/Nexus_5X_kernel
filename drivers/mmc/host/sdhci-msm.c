@@ -139,6 +139,8 @@ struct sdhci_msm_host {
 	int pwr_irq;
 	u32 curr_pwr_state;
 	u32 curr_io_level;
+	struct completion pwr_irq_completion;
+	spinlock_t pwr_irq_lock;
 };
 
 #define MAX_PROP_SIZE 32
@@ -605,12 +607,60 @@ static irqreturn_t sdhci_msm_pwr_irq(int irq, void *data)
 
 	pr_debug("%s: Handled IRQ(%d), ret=%d, ack=0x%x\n",
 		mmc_hostname(msm_host->mmc), irq, ret, irq_ack);
+	spin_lock_irqsave(&msm_host->pwr_irq_lock, flags);
 	if (pwr_state)
 		msm_host->curr_pwr_state = pwr_state;
 	if (io_level)
 		msm_host->curr_io_level = io_level;
+	complete(&msm_host->pwr_irq_completion);
+	spin_unlock_irqrestore(&msm_host->pwr_irq_lock, flags);
 
 	return IRQ_HANDLED;
+}
+
+static void sdhci_msm_check_power_status(struct sdhci_host *host, u32 req_type)
+{
+	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+	unsigned long flags;
+	bool locked = false;
+	bool done = false;
+
+	pr_debug("%s: %s: power status before waiting 0x%x\n",
+		mmc_hostname(host->mmc), __func__,
+		readb_relaxed(msm_host->core_mem + CORE_PWRCTL_CTL));
+
+	if (spin_is_locked(&host->lock))
+		locked = true;
+
+	spin_lock_irqsave(&msm_host->pwr_irq_lock, flags);
+	pr_debug("%s: %s: request %d curr_pwr_state %x curr_io_level %x\n",
+			mmc_hostname(host->mmc), __func__, req_type,
+			msm_host->curr_pwr_state, msm_host->curr_io_level);
+	if ((req_type & msm_host->curr_pwr_state) ||
+			(req_type & msm_host->curr_io_level))
+		done = true;
+	spin_unlock_irqrestore(&msm_host->pwr_irq_lock, flags);
+
+	if (locked)
+		spin_unlock_irq(&host->lock);
+	/*
+	 * This is needed here to hanlde a case where IRQ gets
+	 * triggered even before this function is called so that
+	 * x->done counter of completion gets reset. Otherwise,
+	 * next call to wait_for_completion returns immediately
+	 * without actually waiting for the IRQ to be handled.
+	 */
+	if (done)
+		init_completion(&msm_host->pwr_irq_completion);
+	else
+		wait_for_completion(&msm_host->pwr_irq_completion);
+
+	if (locked)
+		spin_lock_irq(&host->lock);
+
+	pr_debug("%s: %s: request %d done\n", mmc_hostname(host->mmc),
+			__func__, req_type);
 }
 
 /* Platform specific tuning */
@@ -1224,6 +1274,12 @@ static int sdhci_msm_probe(struct platform_device *pdev)
 				msm_host->pwr_irq, ret);
 		goto vreg_deinit;
 	}
+
+	init_completion(&msm_host->pwr_irq_completion);
+	spin_lock_init(&msm_host->pwr_irq_lock);
+
+	/* Enable pwr irq interrupts */
+	writel_relaxed(INT_MASK, (msm_host->core_mem + CORE_PWRCTL_MASK));
 
 	ret = sdhci_add_host(host);
 	if (ret)
