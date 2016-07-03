@@ -18,7 +18,7 @@
 
 #include "pinctrl-msm.h"
 
-static const struct pinctrl_pin_desc msm8x74_pins[] = {
+static const struct pinctrl_pin_desc msm8992_pins[] = {
 	PINCTRL_PIN(0, "GPIO_0"),
 	PINCTRL_PIN(1, "GPIO_1"),
 	PINCTRL_PIN(2, "GPIO_2"),
@@ -165,13 +165,14 @@ static const struct pinctrl_pin_desc msm8x74_pins[] = {
 	PINCTRL_PIN(143, "GPIO_143"),
 	PINCTRL_PIN(144, "GPIO_144"),
 	PINCTRL_PIN(145, "GPIO_145"),
-
 	PINCTRL_PIN(146, "SDC1_CLK"),
 	PINCTRL_PIN(147, "SDC1_CMD"),
 	PINCTRL_PIN(148, "SDC1_DATA"),
-	PINCTRL_PIN(149, "SDC2_CLK"),
-	PINCTRL_PIN(150, "SDC2_CMD"),
+	PINCTRL_PIN(149, "SDC1_RCLK"),
+	PINCTRL_PIN(150, "SDC2_CMD"),  //TODO - get these verified
 	PINCTRL_PIN(151, "SDC2_DATA"),
+	PINCTRL_PIN(152, "SDC2_CLK"),
+
 };
 
 #define DECLARE_MSM_GPIO_PINS(pin) static const unsigned int gpio##pin##_pins[] = { pin }
@@ -325,9 +326,11 @@ DECLARE_MSM_GPIO_PINS(145);
 static const unsigned int sdc1_clk_pins[] = { 146 };
 static const unsigned int sdc1_cmd_pins[] = { 147 };
 static const unsigned int sdc1_data_pins[] = { 148 };
-static const unsigned int sdc2_clk_pins[] = { 149 };
-static const unsigned int sdc2_cmd_pins[] = { 150 };
-static const unsigned int sdc2_data_pins[] = { 151 };
+static const unsigned int sdc1_rclk_pins[] = { 149 };
+static const unsigned int sdc2_clk_pins[] = { 150 };  //TODO - double check these
+static const unsigned int sdc2_cmd_pins[] = { 151 };
+static const unsigned int sdc2_data_pins[] = { 152 };
+
 
 #define FUNCTION(fname)					\
 	[MSM_MUX_##fname] = {				\
@@ -336,6 +339,7 @@ static const unsigned int sdc2_data_pins[] = { 151 };
 		.ngroups = ARRAY_SIZE(fname##_groups),	\
 	}
 
+//TODO: are these offsets correct for 8992, copied from 8x74
 #define PINGROUP(id, f1, f2, f3, f4, f5, f6, f7)	\
 	{						\
 		.name = "gpio" #id,			\
@@ -403,7 +407,7 @@ static const unsigned int sdc2_data_pins[] = { 151 };
  * TODO: Add the rest of the possible functions and fill out
  * the pingroup table below.
  */
-enum msm8x74_functions {
+enum msm8992_functions {
 	MSM_MUX_gpio,
 	MSM_MUX_cci_i2c0,
 	MSM_MUX_cci_i2c1,
@@ -466,7 +470,6 @@ enum msm8x74_functions {
 	MSM_MUX_blsp_uim12,
 	MSM_MUX_uim1,
 	MSM_MUX_uim2,
-	MSM_MUX_uim_batt_alarm,
 	MSM_MUX_sdc3,
 	MSM_MUX_sdc4,
 	MSM_MUX_gcc_gp_clk1,
@@ -500,10 +503,6 @@ enum msm8x74_functions {
 	MSM_MUX_gp0_clk,
 	MSM_MUX_gp1_clk,
 	MSM_MUX_gp_mn,
-	MSM_MUX_tsif1,
-	MSM_MUX_tsif2,
-	MSM_MUX_hsic,
-	MSM_MUX_grfc,
 	MSM_MUX_audio_ref_clk,
 	MSM_MUX_bt,
 	MSM_MUX_fm,
@@ -534,13 +533,13 @@ static const char * const gpio_groups[] = {
 	"gpio123", "gpio124", "gpio125", "gpio126", "gpio127", "gpio128",
 	"gpio129", "gpio130", "gpio131", "gpio132", "gpio133", "gpio134",
 	"gpio135", "gpio136", "gpio137", "gpio138", "gpio139", "gpio140",
-	"gpio141", "gpio142", "gpio143", "gpio144", "gpio145"
+	"gpio141", "gpio142", "gpio143", "gpio144", "gpio145", "gpio146",
+	"gpio147", "gpio148", "gpio149"
 };
 
 static const char * const blsp_uart1_groups[] = {
-	"gpio0", "gpio1", "gpio2", "gpio3"
+	"gpio4", "gpio5"
 };
-static const char * const blsp_uim1_groups[] = { "gpio0", "gpio1" };
 static const char * const blsp_i2c1_groups[] = { "gpio2", "gpio3" };
 static const char * const blsp_spi1_groups[] = {
 	"gpio0", "gpio1", "gpio2", "gpio3"
@@ -552,7 +551,6 @@ static const char * const blsp_spi1_cs3_groups[] = { "gpio10" };
 static const char * const blsp_uart2_groups[] = {
 	"gpio4", "gpio5", "gpio6", "gpio7"
 };
-static const char * const blsp_uim2_groups[] = { "gpio4", "gpio5" };
 static const char * const blsp_i2c2_groups[] = { "gpio6", "gpio7" };
 static const char * const blsp_spi2_groups[] = {
 	"gpio4", "gpio5", "gpio6", "gpio7"
@@ -665,8 +663,6 @@ static const char * const uim2_groups[] = {
 	"gpio49", "gpio50", "gpio51", "gpio52"
 };
 
-static const char * const uim_batt_alarm_groups[] = { "gpio101" };
-
 static const char * const sdc3_groups[] = {
 	"gpio35", "gpio36", "gpio37", "gpio38", "gpio39", "gpio40"
 };
@@ -726,44 +722,12 @@ static const char * const gp_pdm0_groups[] = { "gpio54", "gpio68" };
 static const char * const gp_pdm1_groups[] = { "gpio74", "gpio86" };
 static const char * const gp_pdm2_groups[] = { "gpio63", "gpio79" };
 
-static const char * const tsif1_groups[] = {
-	"gpio89", "gpio90", "gpio91", "gpio92"
-};
-
-static const char * const tsif2_groups[] = {
-	"gpio93", "gpio94", "gpio95", "gpio96"
-};
-
-static const char * const hsic_groups[] = { "gpio144", "gpio145" };
-static const char * const grfc_groups[] = {
-	"gpio104", "gpio105", "gpio106", "gpio107", "gpio108", "gpio109",
-	"gpio110", "gpio111", "gpio112", "gpio113", "gpio114", "gpio115",
-	"gpio116", "gpio117", "gpio118", "gpio119", "gpio120", "gpio121",
-	"gpio122", "gpio123", "gpio124", "gpio125", "gpio126", "gpio127",
-	"gpio128", "gpio136", "gpio137", "gpio141", "gpio143"
-};
-
-static const char * const audio_ref_clk_groups[] = { "gpio69" };
-
-static const char * const bt_groups[] = { "gpio35", "gpio43", "gpio44" };
-
-static const char * const fm_groups[] = { "gpio41", "gpio42" };
-
-static const char * const wlan_groups[] = {
-	"gpio36", "gpio37", "gpio38", "gpio39", "gpio40"
-};
-
-static const char * const slimbus_groups[] = { "gpio70", "gpio71" };
-
-static const struct msm_function msm8x74_functions[] = {
+static const struct msm_function msm8992_functions[] = {
 	FUNCTION(gpio),
 	FUNCTION(cci_i2c0),
 	FUNCTION(cci_i2c1),
 	FUNCTION(uim1),
 	FUNCTION(uim2),
-	FUNCTION(uim_batt_alarm),
-	FUNCTION(blsp_uim1),
-	FUNCTION(blsp_uim2),
 	FUNCTION(blsp_uim3),
 	FUNCTION(blsp_uim4),
 	FUNCTION(blsp_uim5),
@@ -852,18 +816,9 @@ static const struct msm_function msm8x74_functions[] = {
 	FUNCTION(gp0_clk),
 	FUNCTION(gp1_clk),
 	FUNCTION(gp_mn),
-	FUNCTION(tsif1),
-	FUNCTION(tsif2),
-	FUNCTION(hsic),
-	FUNCTION(grfc),
-	FUNCTION(audio_ref_clk),
-	FUNCTION(bt),
-	FUNCTION(fm),
-	FUNCTION(wlan),
-	FUNCTION(slimbus),
 };
 
-static const struct msm_pingroup msm8x74_groups[] = {
+static const struct msm_pingroup msm8992_groups[] = {
 	PINGROUP(0,   blsp_spi1, blsp_uart1, blsp_uim1, NA, NA, NA, NA),
 	PINGROUP(1,   blsp_spi1, blsp_uart1, blsp_uim1, NA, NA, NA, NA),
 	PINGROUP(2,   blsp_spi1, blsp_uart1, blsp_i2c1, NA, NA, NA, NA),
@@ -934,9 +889,9 @@ static const struct msm_pingroup msm8x74_groups[] = {
 	PINGROUP(67,  pri_mi2s, blsp_spi10_cs1, NA, NA, NA, NA, NA),
 	PINGROUP(68,  pri_mi2s, blsp_spi10_cs2, gp_pdm0, NA, NA, NA, NA),
 	PINGROUP(69,  spkr_mi2s, audio_ref_clk, NA, NA, NA, NA, NA),
-	PINGROUP(70,  slimbus, spkr_mi2s, NA, NA, NA, NA, NA),
-	PINGROUP(71,  slimbus, spkr_mi2s, NA, NA, NA, NA, NA),
-	PINGROUP(72,  spkr_mi2s, NA, NA, NA, NA, NA, NA),
+	PINGROUP(70,  NA, NA, NA, NA, NA, NA, NA),
+	PINGROUP(71,  NA, NA, NA, NA, NA, NA, NA),
+	PINGROUP(72,  NA, NA, NA, NA, NA, NA, NA),
 	PINGROUP(73,  ter_mi2s, NA, NA, NA, NA, NA, NA),
 	PINGROUP(74,  ter_mi2s, gp_pdm1, NA, NA, NA, NA, NA),
 	PINGROUP(75,  ter_mi2s, NA, NA, NA, NA, NA, NA),
@@ -953,46 +908,46 @@ static const struct msm_pingroup msm8x74_groups[] = {
 	PINGROUP(86,  blsp_spi12, blsp_uart12, blsp_uim12, gp_pdm1, NA, NA, NA),
 	PINGROUP(87,  blsp_spi12, blsp_uart12, blsp_i2c12, NA, NA, NA, NA),
 	PINGROUP(88,  blsp_spi12, blsp_uart12, blsp_i2c12, NA, NA, NA, NA),
-	PINGROUP(89,  tsif1, NA, NA, NA, NA, NA, NA),
-	PINGROUP(90,  tsif1, blsp_spi10_cs3, NA, NA, NA, NA, NA),
-	PINGROUP(91,  tsif1, sdc4, NA, NA, NA, NA, NA),
-	PINGROUP(92,  tsif1, sdc4, NA, NA, NA, NA, NA),
-	PINGROUP(93,  tsif2, sdc4, NA, NA, NA, NA, NA),
-	PINGROUP(94,  tsif2, sdc4, NA, NA, NA, NA, NA),
-	PINGROUP(95,  tsif2, sdc4, NA, NA, NA, NA, NA),
-	PINGROUP(96,  tsif2, sdc4, NA, NA, NA, NA, NA),
+	PINGROUP(89,  NA, NA, NA, NA, NA, NA, NA),
+	PINGROUP(90,  NA, NA, NA, NA, NA, NA, NA),
+	PINGROUP(91,  NA, NA, NA, NA, NA, NA, NA),
+	PINGROUP(92,  NA, NA, NA, NA, NA, NA, NA),
+	PINGROUP(93,  NA, NA, NA, NA, NA, NA, NA),
+	PINGROUP(94,  NA, NA, NA, NA, NA, NA, NA),
+	PINGROUP(95,  NA, NA, NA, NA, NA, NA, NA),
+	PINGROUP(96,  NA, NA, NA, NA, NA, NA, NA),
 	PINGROUP(97,  uim1, NA, NA, NA, NA, NA, NA),
 	PINGROUP(98,  uim1, NA, NA, NA, NA, NA, NA),
 	PINGROUP(99,  uim1, NA, NA, NA, NA, NA, NA),
 	PINGROUP(100, uim1, NA, NA, NA, NA, NA, NA),
-	PINGROUP(101, uim_batt_alarm, NA, NA, NA, NA, NA, NA),
+	PINGROUP(101, NA, NA, NA, NA, NA, NA, NA),
 	PINGROUP(102, edp_hpd, NA, NA, NA, NA, NA, NA),
 	PINGROUP(103, NA, NA, NA, NA, NA, NA, NA),
-	PINGROUP(104, grfc, NA, NA, NA, NA, NA, NA),
-	PINGROUP(105, grfc, NA, NA, NA, NA, NA, NA),
-	PINGROUP(106, grfc, NA, NA, NA, NA, NA, NA),
-	PINGROUP(107, grfc, NA, NA, NA, NA, NA, NA),
-	PINGROUP(108, grfc, NA, NA, NA, NA, NA, NA),
-	PINGROUP(109, grfc, NA, NA, NA, NA, NA, NA),
-	PINGROUP(110, grfc, NA, NA, NA, NA, NA, NA),
-	PINGROUP(111, grfc, NA, NA, NA, NA, NA, NA),
-	PINGROUP(112, grfc, NA, NA, NA, NA, NA, NA),
-	PINGROUP(113, grfc, NA, NA, NA, NA, NA, NA),
-	PINGROUP(114, grfc, NA, NA, NA, NA, NA, NA),
-	PINGROUP(115, grfc, NA, NA, NA, NA, NA, NA),
-	PINGROUP(116, grfc, NA, NA, NA, NA, NA, NA),
-	PINGROUP(117, grfc, NA, NA, NA, NA, NA, NA),
-	PINGROUP(118, grfc, NA, NA, NA, NA, NA, NA),
-	PINGROUP(119, grfc, NA, NA, NA, NA, NA, NA),
-	PINGROUP(120, grfc, NA, NA, NA, NA, NA, NA),
-	PINGROUP(121, grfc, NA, NA, NA, NA, NA, NA),
-	PINGROUP(122, grfc, NA, NA, NA, NA, NA, NA),
-	PINGROUP(123, grfc, NA, NA, NA, NA, NA, NA),
-	PINGROUP(124, grfc, NA, NA, NA, NA, NA, NA),
-	PINGROUP(125, grfc, NA, NA, NA, NA, NA, NA),
-	PINGROUP(126, grfc, NA, NA, NA, NA, NA, NA),
-	PINGROUP(127, grfc, NA, NA, NA, NA, NA, NA),
-	PINGROUP(128, NA, grfc, NA, NA, NA, NA, NA),
+	PINGROUP(104, NA, NA, NA, NA, NA, NA, NA),
+	PINGROUP(105, NA, NA, NA, NA, NA, NA, NA),
+	PINGROUP(106, NA, NA, NA, NA, NA, NA, NA),
+	PINGROUP(107, NA, NA, NA, NA, NA, NA, NA),
+	PINGROUP(108, NA, NA, NA, NA, NA, NA, NA),
+	PINGROUP(109, NA, NA, NA, NA, NA, NA, NA),
+	PINGROUP(110, NA, NA, NA, NA, NA, NA, NA),
+	PINGROUP(111, NA, NA, NA, NA, NA, NA, NA),
+	PINGROUP(112, NA, NA, NA, NA, NA, NA, NA),
+	PINGROUP(113, NA, NA, NA, NA, NA, NA, NA),
+	PINGROUP(114, NA, NA, NA, NA, NA, NA, NA),
+	PINGROUP(115, NA, NA, NA, NA, NA, NA, NA),
+	PINGROUP(116, NA, NA, NA, NA, NA, NA, NA),
+	PINGROUP(117, NA, NA, NA, NA, NA, NA, NA),
+	PINGROUP(118, NA, NA, NA, NA, NA, NA, NA),
+	PINGROUP(119, NA, NA, NA, NA, NA, NA, NA),
+	PINGROUP(120, NA, NA, NA, NA, NA, NA, NA),
+	PINGROUP(121, NA, NA, NA, NA, NA, NA, NA),
+	PINGROUP(122, NA, NA, NA, NA, NA, NA, NA),
+	PINGROUP(123, NA, NA, NA, NA, NA, NA, NA),
+	PINGROUP(124, NA, NA, NA, NA, NA, NA, NA),
+	PINGROUP(125, NA, NA, NA, NA, NA, NA, NA),
+	PINGROUP(126, NA, NA, NA, NA, NA, NA, NA),
+	PINGROUP(127, NA, NA, NA, NA, NA, NA, NA),
+	PINGROUP(128, NA, NA, NA, NA, NA, NA, NA),
 	PINGROUP(129, NA, NA, NA, NA, NA, NA, NA),
 	PINGROUP(130, NA, NA, NA, NA, NA, NA, NA),
 	PINGROUP(131, NA, NA, NA, NA, NA, NA, NA),
@@ -1000,69 +955,73 @@ static const struct msm_pingroup msm8x74_groups[] = {
 	PINGROUP(133, NA, NA, NA, NA, NA, NA, NA),
 	PINGROUP(134, NA, NA, NA, NA, NA, NA, NA),
 	PINGROUP(135, NA, NA, NA, NA, NA, NA, NA),
-	PINGROUP(136, NA, grfc, NA, NA, NA, NA, NA),
-	PINGROUP(137, NA, grfc, NA, NA, NA, NA, NA),
+	PINGROUP(136, NA, NA, NA, NA, NA, NA, NA),
+	PINGROUP(137, NA, NA, NA, NA, NA, NA, NA),
 	PINGROUP(138, NA, NA, NA, NA, NA, NA, NA),
 	PINGROUP(139, NA, NA, NA, NA, NA, NA, NA),
 	PINGROUP(140, NA, NA, NA, NA, NA, NA, NA),
-	PINGROUP(141, NA, grfc, NA, NA, NA, NA, NA),
+	PINGROUP(141, NA, NA, NA, NA, NA, NA, NA),
 	PINGROUP(142, NA, NA, NA, NA, NA, NA, NA),
-	PINGROUP(143, NA, grfc, NA, NA, NA, NA, NA),
-	PINGROUP(144, hsic, NA, NA, NA, NA, NA, NA),
-	PINGROUP(145, hsic, NA, NA, NA, NA, NA, NA),
-	SDC_PINGROUP(sdc1_clk, 0x2044, 13, 6),
-	SDC_PINGROUP(sdc1_cmd, 0x2044, 11, 3),
-	SDC_PINGROUP(sdc1_data, 0x2044, 9, 0),
-	SDC_PINGROUP(sdc2_clk, 0x2048, 14, 6),
-	SDC_PINGROUP(sdc2_cmd, 0x2048, 11, 3),
-	SDC_PINGROUP(sdc2_data, 0x2048, 9, 0),
+	PINGROUP(143, NA, NA, NA, NA, NA, NA, NA),
+	PINGROUP(144, NA, NA, NA, NA, NA, NA, NA),
+	PINGROUP(145, NA, NA, NA, NA, NA, NA, NA),
+	SDC_PINGROUP(sdc1_clk, 0x2044, 13, 6),  //TLMM_SDC1_CLK_PULL_SHFT,TLMM_SDC1_CLK_DRV_SHFT
+	SDC_PINGROUP(sdc1_cmd, 0x2044, 11, 3), //TLMM_SDC1_CMD_PULL_SHFT, TLMM_SDC1_CMD_DRV_SHFT
+	SDC_PINGROUP(sdc1_data, 0x2044, 9, 0), //TLMM_SDC1_DATA_PULL_SHFT, TLMM_SDC1_DATA_DRV_SHFT
+	SDC_PINGROUP(sdc1_rclk, 0x2044, 15, 7), //TLMM_SDC1_RCLK_PULL_SHFT, NA
+	SDC_PINGROUP(sdc2_clk, 0x2048, 14, 6), //TLMM_SDC2_CLK_PULL_SHFT, TLMM_SDC2_CLK_DRV_SHFT
+	SDC_PINGROUP(sdc2_cmd, 0x2048, 11, 3), //TLMM_SDC2_CMD_PULL_SHFT, TLMM_SDC2_CMD_DRV_SHFT
+	SDC_PINGROUP(sdc2_data, 0x2048, 9, 0), //TLMM_SDC2_DATA_PULL_SHFT, TLMM_SDC2_DATA_DRV_SHFT
 };
 
 #define NUM_GPIO_PINGROUPS 146
 
-static const struct msm_pinctrl_soc_data msm8x74_pinctrl = {
-	.pins = msm8x74_pins,
-	.npins = ARRAY_SIZE(msm8x74_pins),
-	.functions = msm8x74_functions,
-	.nfunctions = ARRAY_SIZE(msm8x74_functions),
-	.groups = msm8x74_groups,
-	.ngroups = ARRAY_SIZE(msm8x74_groups),
+static const struct msm_pinctrl_soc_data msm8992_pinctrl = {
+	.pins = msm8992_pins,
+	.npins = ARRAY_SIZE(msm8992_pins),
+	.functions = msm8992_functions,
+	.nfunctions = ARRAY_SIZE(msm8992_functions),
+	.groups = msm8992_groups,
+	.ngroups = ARRAY_SIZE(msm8992_groups),
 	.ngpios = NUM_GPIO_PINGROUPS,
 };
 
-static int msm8x74_pinctrl_probe(struct platform_device *pdev)
+static int msm8992_pinctrl_probe(struct platform_device *pdev)
 {
-	return msm_pinctrl_probe(pdev, &msm8x74_pinctrl);
+	int ret = 0;
+	printk(" --> %s <-- \n", __func__);
+	ret =  msm_pinctrl_probe(pdev, &msm8992_pinctrl);
+	return ret;
 }
 
-static const struct of_device_id msm8x74_pinctrl_of_match[] = {
-	{ .compatible = "qcom,msm8974-pinctrl", },
+static const struct of_device_id msm8992_pinctrl_of_match[] = {
+	{ .compatible = "qcom,msm8992-pinctrl", },
 	{ },
 };
 
-static struct platform_driver msm8x74_pinctrl_driver = {
+static struct platform_driver msm8992_pinctrl_driver = {
 	.driver = {
-		.name = "msm8x74-pinctrl",
-		.of_match_table = msm8x74_pinctrl_of_match,
+		.name = "msm8992-pinctrl",
+		.of_match_table = msm8992_pinctrl_of_match,
 	},
-	.probe = msm8x74_pinctrl_probe,
+	.probe = msm8992_pinctrl_probe,
 	.remove = msm_pinctrl_remove,
 };
 
-static int __init msm8x74_pinctrl_init(void)
+static int __init msm8992_pinctrl_init(void)
 {
-	return platform_driver_register(&msm8x74_pinctrl_driver);
+	printk(" --> %s <-- \n", __func__);
+	return platform_driver_register(&msm8992_pinctrl_driver);
 }
-arch_initcall(msm8x74_pinctrl_init);
+arch_initcall(msm8992_pinctrl_init);
 
-static void __exit msm8x74_pinctrl_exit(void)
+static void __exit msm8992_pinctrl_exit(void)
 {
-	platform_driver_unregister(&msm8x74_pinctrl_driver);
+	platform_driver_unregister(&msm8992_pinctrl_driver);
 }
-module_exit(msm8x74_pinctrl_exit);
+module_exit(msm8992_pinctrl_exit);
 
-MODULE_AUTHOR("Bjorn Andersson <bjorn.andersson@sonymobile.com>");
-MODULE_DESCRIPTION("Qualcomm MSM8x74 pinctrl driver");
+MODULE_DESCRIPTION("Qualcomm MSM8992 pinctrl driver");
 MODULE_LICENSE("GPL v2");
-MODULE_DEVICE_TABLE(of, msm8x74_pinctrl_of_match);
+MODULE_DEVICE_TABLE(of, msm8992_pinctrl_of_match);
 

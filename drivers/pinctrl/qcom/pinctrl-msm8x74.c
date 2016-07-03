@@ -325,9 +325,10 @@ DECLARE_MSM_GPIO_PINS(145);
 static const unsigned int sdc1_clk_pins[] = { 146 };
 static const unsigned int sdc1_cmd_pins[] = { 147 };
 static const unsigned int sdc1_data_pins[] = { 148 };
-static const unsigned int sdc2_clk_pins[] = { 149 };
-static const unsigned int sdc2_cmd_pins[] = { 150 };
-static const unsigned int sdc2_data_pins[] = { 151 };
+static const unsigned int sdc1_rclk_pins[] = { 149 };
+static const unsigned int sdc2_clk_pins[] = { 150 };
+static const unsigned int sdc2_cmd_pins[] = { 151 };
+static const unsigned int sdc2_data_pins[] = { 152 };
 
 #define FUNCTION(fname)					\
 	[MSM_MUX_##fname] = {				\
@@ -1013,6 +1014,7 @@ static const struct msm_pingroup msm8x74_groups[] = {
 	SDC_PINGROUP(sdc1_clk, 0x2044, 13, 6),
 	SDC_PINGROUP(sdc1_cmd, 0x2044, 11, 3),
 	SDC_PINGROUP(sdc1_data, 0x2044, 9, 0),
+	SDC_PINGROUP(sdc1_rclk, 0x2044, 15, 7),
 	SDC_PINGROUP(sdc2_clk, 0x2048, 14, 6),
 	SDC_PINGROUP(sdc2_cmd, 0x2048, 11, 3),
 	SDC_PINGROUP(sdc2_data, 0x2048, 9, 0),
