@@ -1570,6 +1570,7 @@ int clk_set_rate(struct clk *clk, unsigned long rate)
 
 	clk_prepare_unlock();
 
+	printk(" %s: clk_name: %s rate: %lu \n", __func__, clk->core->name, rate);
 	return ret;
 }
 EXPORT_SYMBOL_GPL(clk_set_rate);

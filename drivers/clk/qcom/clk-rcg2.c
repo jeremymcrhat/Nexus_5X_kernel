@@ -314,7 +314,7 @@ static int __clk_rcg2_set_rate(struct clk_hw *hw, unsigned long rate)
 	f = qcom_find_freq(rcg->freq_tbl, rate);
 	if (!f)
 	{
-		printk(" %s: unable to find freq rate %ul \n", __func__, rate);
+		printk(" %s: unable to find freq rate %lu \n", __func__, rate);
 		return -EINVAL;
 	}
 

@@ -464,7 +464,7 @@ printk(" --> %s <-- \n", __func__);
 	}
 
 	sdhci_get_of_property(pdev);
-
+printk(" --->>> getting bus clock \n");
 	/* Setup SDCC bus voter clock. */
 	msm_host->bus_clk = devm_clk_get(&pdev->dev, "bus");
 	if (!IS_ERR(msm_host->bus_clk)) {
@@ -477,8 +477,7 @@ printk(" --> %s <-- \n", __func__);
 			goto pltfm_free;
 	}
 
-printk(" %s: getting main peripheral bus clk \n", __func__);
-
+printk(" ----->>>>>> getting iface clk \n");
 	/* Setup main peripheral bus clock */
 	msm_host->pclk = devm_clk_get(&pdev->dev, "iface");
 	if (IS_ERR(msm_host->pclk)) {
@@ -492,8 +491,7 @@ printk(" %s: getting main peripheral bus clk \n", __func__);
 		printk(" Error prep en \n");
 		goto bus_clk_disable;
 	}
-printk(" finished prep enable \n");
-
+printk(" ------->>>>. getting core clk \n");
 	/* Setup SDC MMC clock */
 	msm_host->clk = devm_clk_get(&pdev->dev, "core");
 	if (IS_ERR(msm_host->clk)) {
