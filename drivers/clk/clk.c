@@ -783,6 +783,7 @@ int clk_enable(struct clk *clk)
 	ret = clk_core_enable(clk->core);
 	clk_enable_unlock(flags);
 
+	printk(" %s Name: %s rate: %lu new_rate: %lu  req_rate: %lu \n", __func__, clk->core->name, clk->core->rate, clk->core->new_rate, clk->core->req_rate);
 	return ret;
 }
 EXPORT_SYMBOL_GPL(clk_enable);

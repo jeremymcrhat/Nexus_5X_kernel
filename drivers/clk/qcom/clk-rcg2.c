@@ -93,6 +93,7 @@ static int update_config(struct clk_rcg2 *rcg)
 
 printk(" %s ->> CMD_RCGR CMD 0x%x \n", __func__, rcg->cmd_rcgr + CMD_REG);
 
+
 	if (!clk_rcg2_is_enabled(hw))
 	{
 		WARN(1, "%s: rcg hw clock is not enabled\n", __func__);
@@ -120,7 +121,7 @@ printk(" %s ->> CMD_RCGR CMD 0x%x \n", __func__, rcg->cmd_rcgr + CMD_REG);
 		return ret;
 
 	/* Wait for update to take effect */
-	for (count = 500; count > 0; count--) {
+	for (count = 5000; count > 0; count--) {
 		ret = regmap_read(rcg->clkr.regmap, rcg->cmd_rcgr + CMD_REG, &cmd);
 		if (ret)
 			return ret;
@@ -263,9 +264,11 @@ static int clk_rcg2_configure(struct clk_rcg2 *rcg, const struct freq_tbl *f)
 	}
 
 	if (rcg->mnd_width && f->n) {
+
 		mask = BIT(rcg->mnd_width) - 1;
 		ret = regmap_update_bits(rcg->clkr.regmap,
 				rcg->cmd_rcgr + M_REG, mask, f->m);
+		printk(" %s mask 0x%x RCGR: 0x%x \n", __func__, mask, rcg->cmd_rcgr);
 		if (ret)
 		{
 			printk(" %s : update_bits1 ret=%d \n", __func__, ret);
@@ -290,9 +293,22 @@ static int clk_rcg2_configure(struct clk_rcg2 *rcg, const struct freq_tbl *f)
 	}
 
 	mask = BIT(rcg->hid_width) - 1;
+	printk(" %s mask1 0x%x rcg->hid_width 0x%x \n", __func__, mask, rcg->hid_width);
 	mask |= CFG_SRC_SEL_MASK | CFG_MODE_MASK;
+	printk(" %s mask2: 0x%x \n", __func__, mask);
+
 	cfg = f->pre_div << CFG_SRC_DIV_SHIFT;
+	printk(" %s cfg1: 0x%x \n",__func__, cfg);
+
 	cfg |= rcg->parent_map[index].cfg << CFG_SRC_SEL_SHIFT;
+	printk(" %s cfg2: 0x%x \n", __func__,cfg);
+	printk(" %s   PreShifted 0x%x \n", __func__, rcg->parent_map[index].cfg);
+
+	if (cfg == 0x201)
+	{
+		printk("   FOrcing cfg to 0x2017\n");
+		cfg = 0x2017;
+	}
 	if (rcg->mnd_width && f->n && (f->m != f->n))
 		cfg |= CFG_MODE_DUAL_EDGE;
 	ret = regmap_update_bits(rcg->clkr.regmap,

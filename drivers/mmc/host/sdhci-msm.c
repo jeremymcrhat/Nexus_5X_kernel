@@ -476,6 +476,7 @@ printk(" --->>> getting bus clock \n");
 		if (ret)
 			goto pltfm_free;
 	}
+//printk("   +++ CLK_CORE -> rate %lu \n", msm_host->bus_clk->core->rate);
 
 printk(" ----->>>>>> getting iface clk \n");
 	/* Setup main peripheral bus clock */
