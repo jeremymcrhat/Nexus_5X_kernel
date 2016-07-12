@@ -50,7 +50,7 @@ static const char * const gcc_xo_gpll0[] = {
 static const struct parent_map gcc_xo_gpll0_gpll4_map[] = {
     { P_XO, 0 },
     { P_GPLL0, 1 },
-    { P_GPLL4, 2 },
+    { P_GPLL4, 5 },
 };
 
 static const char * const gcc_xo_gpll0_gpll4[] = {
@@ -2097,10 +2097,10 @@ static struct clk_branch gcc_sdcc1_apps_clk = {
 
 
 static struct clk_branch gcc_sdcc1_ahb_clk = {
-        .halt_reg = 0x04C4,
+        .halt_reg = 0x04C8,
 	.halt_check = BRANCH_HALT_VOTED,
         .clkr = {
-                .enable_reg = 0x04C4,
+                .enable_reg = 0x04C8,
                 .enable_mask = BIT(0),
                 .hw.init = &(struct clk_init_data)
 		{
