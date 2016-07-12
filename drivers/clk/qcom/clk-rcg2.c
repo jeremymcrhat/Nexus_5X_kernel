@@ -304,11 +304,6 @@ static int clk_rcg2_configure(struct clk_rcg2 *rcg, const struct freq_tbl *f)
 	printk(" %s cfg2: 0x%x \n", __func__,cfg);
 	printk(" %s   PreShifted 0x%x \n", __func__, rcg->parent_map[index].cfg);
 
-	if (cfg == 0x201)
-	{
-		printk("   FOrcing cfg to 0x2017\n");
-		cfg = 0x2017;
-	}
 	if (rcg->mnd_width && f->n && (f->m != f->n))
 		cfg |= CFG_MODE_DUAL_EDGE;
 	ret = regmap_update_bits(rcg->clkr.regmap,
