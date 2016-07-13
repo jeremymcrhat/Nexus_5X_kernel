@@ -2487,6 +2487,16 @@ static irqreturn_t sdhci_irq(int irq, void *dev_id)
 		goto out;
 	}
 
+	/* As clocks are disabled, controller registers might not be
+	 * accessible hence return from here.
+	 */
+	if (!host->clock) {
+		pr_err_ratelimited("%s: %s: clocks are disabled !!!\n",
+				mmc_hostname(host->mmc), __func__);
+		spin_unlock(&host->lock);
+		return IRQ_HANDLED;
+	}
+
 	do {
 		/* Clear selected interrupts. */
 		mask = intmask & (SDHCI_INT_CMD_MASK | SDHCI_INT_DATA_MASK |
