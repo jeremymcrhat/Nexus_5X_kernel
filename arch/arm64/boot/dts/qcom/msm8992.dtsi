@@ -237,7 +237,50 @@
 		pinctrl-0 = <&sdc1_clk_on &sdc1_cmd_on &sdc1_data_on &sdc1_rclk_on>;
 		pinctrl-1 = <&sdc1_clk_off &sdc1_cmd_off &sdc1_data_off &sdc1_rclk_off>;
 	};
+
+
+        blsp_i2c2: i2c@f9924000 {
+               status = "okay";
+               compatible = "qcom,i2c-qup-v2.1.1";
+               reg = <0xf9924000 0x1000>;
+               interrupts = <0 96 IRQ_TYPE_NONE>;
+               clocks = <&clock_gcc GCC_BLSP1_QUP2_I2C_APPS_CLK>, <&clock_gcc GCC_BLSP1_AHB_CLK>;
+               clock-names = "core", "iface";
+               #address-cells = <1>;
+               #size-cells = <0>;
+	       pinctrl-names = "default", "sleep";
+               pinctrl-0 = <&i2c2_default>;
+               pinctrl-1 = <&i2c2_sleep>;
+		/****
+	       dmas = <&dma_blsp1 14 64 0x20000020 0x20>,
+                        <&dma_blsp1 15 32 0x20000020 0x20>;
+		***/
+		dmas = <&blsp_dma1 0>, <&blsp_dma1 1>;
+		dma-names = "rx", "tx";
+        };
+
+	//TODO: Ask QC people how to figure out the BAM address. 
+	// There used to be a 'qcom,disable-dma' in 8992 3.10 what gives?
+
+	blsp_dma1: dma@f9904000 { /* BLSP1 */
+                compatible = "qcom,bam-v1.4.0";
+                reg = <0xf9904000 0x19000>;
+                interrupts = <0 238 0>;
+		clocks = <&clock_gcc GCC_BLSP1_AHB_CLK>;
+		clock-names = "bam_clk";
+                #dma-cells = <4>; /* JRM this may be 1 not sure*/
+		qcom,ee = <0>;
+		status = "okay";
+        };
+
 /****
+        blsp_dma2: dma@f9944000 {
+                #dma-cells = <4>;
+                compatible = "qcom,bam-v1.4.0";
+                reg = <0xf9944000 0x19000>;
+                interrupts = <0 239 0>;
+        };
+
 	sdhci2: qcom,sdhci@f98a4900 {
 		compatible = "qcom,sdhci-msm-v4";
 		reg = <0xf98a4900 0x11c>, <0xf98a4000 0x800>;
