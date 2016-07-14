@@ -53,6 +53,11 @@
 #define CMUX_SHIFT_PHASE_SHIFT	24
 #define CMUX_SHIFT_PHASE_MASK	(7 << CMUX_SHIFT_PHASE_SHIFT)
 
+
+#define CORE_DLL_RST  BIT(30)
+
+#define CORE_DLL_PDN            (1 << 29)
+
 struct sdhci_msm_host {
 	struct platform_device *pdev;
 	void __iomem *core_mem;	/* MSM SDCC mapped address */
@@ -60,6 +65,9 @@ struct sdhci_msm_host {
 	struct clk *pclk;	/* SDHC peripheral bus clock */
 	struct clk *bus_clk;	/* SDHC bus voter clock */
 	struct mmc_host *mmc;
+	u32 curr_pwr_state;
+	u32 curr_io_level;
+	struct completion pwr_irq_completion;
 };
 
 /* Platform specific tuning */
@@ -342,6 +350,152 @@ static int msm_init_cm_dll(struct sdhci_host *host)
 	return 0;
 }
 
+
+#define MAX_TEST_BUS 20
+#define CORE_MCI_DATA_CNT 0x30
+#define CORE_MCI_FIFO_CNT 0x44
+#define CORE_MCI_STATUS 0x34
+#define CORE_VENDOR_SPEC_ADMA_ERR_ADDR0        0x114
+#define CORE_VENDOR_SPEC_ADMA_ERR_ADDR1        0x118
+#define CORE_TESTBUS_SEL2_BIT  4
+#define CORE_TESTBUS_SEL2      (1 << CORE_TESTBUS_SEL2_BIT)
+
+#define CORE_TESTBUS_ENA       (1 << 3)
+
+#define CORE_TESTBUS_CONFIG    0x0CC
+
+#define CORE_SDCC_DEBUG_REG    0x124
+
+
+
+void sdhci_msm_dump_vendor_regs(struct sdhci_host *host)
+{
+
+        int tbsel, tbsel2;
+        int i, index = 0;
+        u32 test_bus_val = 0;
+        u32 debug_reg[MAX_TEST_BUS] = {0};
+	struct sdhci_pltfm_host *pltfm_host;
+        struct sdhci_msm_host *msm_host;
+
+	pltfm_host = sdhci_priv(host);
+	msm_host = sdhci_pltfm_priv(pltfm_host);
+
+        pr_info("----------- VENDOR REGISTER DUMP -----------\n");
+        pr_info("Data cnt: 0x%08x | Fifo cnt: 0x%08x | Int sts: 0x%08x\n",
+                readl_relaxed(msm_host->core_mem + CORE_MCI_DATA_CNT),
+                readl_relaxed(msm_host->core_mem + CORE_MCI_FIFO_CNT),
+                readl_relaxed(msm_host->core_mem + CORE_MCI_STATUS));
+        pr_info("DLL cfg:  0x%08x | DLL sts:  0x%08x | SDCC ver: 0x%08x\n",
+                readl_relaxed(host->ioaddr + CORE_DLL_CONFIG),
+                readl_relaxed(host->ioaddr + CORE_DLL_STATUS),
+                readl_relaxed(msm_host->core_mem + CORE_MCI_VERSION));
+        pr_info("Vndr func: 0x%08x | Vndr adma err : addr0: 0x%08x addr1: 0x%08x\n",
+                readl_relaxed(host->ioaddr + CORE_VENDOR_SPEC),
+                readl_relaxed(host->ioaddr + CORE_VENDOR_SPEC_ADMA_ERR_ADDR0),
+                readl_relaxed(host->ioaddr + CORE_VENDOR_SPEC_ADMA_ERR_ADDR1));
+
+        /*
+         * tbsel indicates [2:0] bits and tbsel2 indicates [7:4] bits
+         * of CORE_TESTBUS_CONFIG register.
+         *
+         * To select test bus 0 to 7 use tbsel and to select any test bus
+         * above 7 use (tbsel2 | tbsel) to get the test bus number. For eg,
+         * to select test bus 14, write 0x1E to CORE_TESTBUS_CONFIG register
+         * i.e., tbsel2[7:4] = 0001, tbsel[2:0] = 110.
+         */
+        for (tbsel2 = 0; tbsel2 < 3; tbsel2++) {
+                for (tbsel = 0; tbsel < 8; tbsel++) {
+                        if (index >= MAX_TEST_BUS)
+                                break;
+                        test_bus_val = (tbsel2 << CORE_TESTBUS_SEL2_BIT) |
+                                        tbsel | CORE_TESTBUS_ENA;
+                        writel_relaxed(test_bus_val,
+                                msm_host->core_mem + CORE_TESTBUS_CONFIG);
+                        debug_reg[index++] = readl_relaxed(msm_host->core_mem +
+                                                        CORE_SDCC_DEBUG_REG);
+                }
+        }
+        for (i = 0; i < MAX_TEST_BUS; i = i + 4)
+                pr_info(" Test bus[%d to %d]: 0x%08x 0x%08x 0x%08x 0x%08x\n",
+                                i, i + 3, debug_reg[i], debug_reg[i+1],
+                                debug_reg[i+2], debug_reg[i+3]);
+        /* Disable test bus */
+        writel_relaxed(~CORE_TESTBUS_ENA, msm_host->core_mem +
+                        CORE_TESTBUS_CONFIG);
+}
+
+#define CORE_GENERICS           0x70
+#define REQ_IO_LOW (1 << 2)
+#define REQ_IO_HIGH        (1 << 3)
+#define SWITCHABLE_SIGNALLING_VOL (1 << 29)
+
+#define MSM_PWR_IRQ_TIMEOUT_MS 5000
+
+ void sdhci_msm_check_power_status(struct sdhci_host *host, u32 req_type)
+{
+        unsigned long flags;
+        bool done = false;
+        u32 io_sig_sts;
+        struct sdhci_pltfm_host *pltfm_host;
+        struct sdhci_msm_host *msm_host;
+
+        pltfm_host = sdhci_priv(host);
+        msm_host = sdhci_pltfm_priv(pltfm_host);
+
+        spin_lock_irqsave(&host->lock, flags);
+        pr_debug("%s: %s: request %d curr_pwr_state %x curr_io_level %x\n",
+                        mmc_hostname(host->mmc), __func__, req_type,
+                        msm_host->curr_pwr_state, msm_host->curr_io_level);
+        io_sig_sts = readl_relaxed(msm_host->core_mem + CORE_GENERICS);
+        /*
+         * The IRQ for request type IO High/Low will be generated when -
+         * 1. SWITCHABLE_SIGNALLING_VOL is enabled in HW.
+         * 2. If 1 is true and when there is a state change in 1.8V enable
+         * bit (bit 3) of SDHCI_HOST_CONTROL2 register. The reset state of
+         * that bit is 0 which indicates 3.3V IO voltage. So, when MMC core
+         * layer tries to set it to 3.3V before card detection happens, the
+         * IRQ doesn't get triggered as there is no state change in this bit.
+         * The driver already handles this case by changing the IO voltage
+         * level to high as part of controller power up sequence. Hence, check
+         * for host->pwr to handle a case where IO voltage high request is
+         * issued even before controller power up.
+         */
+
+        if (req_type & (REQ_IO_HIGH | REQ_IO_LOW)) {
+                if (!(io_sig_sts & SWITCHABLE_SIGNALLING_VOL) ||
+                                ((req_type & REQ_IO_HIGH) && !host->pwr)) {
+                        pr_debug("%s: do not wait for power IRQ that never comes\n",
+                                        mmc_hostname(host->mmc));
+                        spin_unlock_irqrestore(&host->lock, flags);
+                        return;
+                }
+        }
+
+        if ((req_type & msm_host->curr_pwr_state) ||
+                        (req_type & msm_host->curr_io_level))
+                done = true;
+        spin_unlock_irqrestore(&host->lock, flags);
+
+        /*
+         * This is needed here to hanlde a case where IRQ gets
+         * triggered even before this function is called so that
+         * x->done counter of completion gets reset. Otherwise,
+         * next call to wait_for_completion returns immediately
+         * without actually waiting for the IRQ to be handled.
+         */
+        if (done)
+                init_completion(&msm_host->pwr_irq_completion);
+        else if (!wait_for_completion_timeout(&msm_host->pwr_irq_completion,
+                                msecs_to_jiffies(MSM_PWR_IRQ_TIMEOUT_MS)))
+                __WARN_printf("%s: request(%d) timed out waiting for pwr_irq\n",
+                                        mmc_hostname(host->mmc), req_type);
+
+        pr_debug("%s: %s: request %d done\n", mmc_hostname(host->mmc),
+                        __func__, req_type);
+}
+
+
 static int sdhci_msm_execute_tuning(struct sdhci_host *host, u32 opcode)
 {
 	int tuning_seq_cnt = 3;
@@ -423,6 +577,8 @@ static const struct sdhci_ops sdhci_msm_ops = {
 	.set_clock = sdhci_set_clock,
 	.set_bus_width = sdhci_set_bus_width,
 	.set_uhs_signaling = sdhci_set_uhs_signaling,
+	.check_power_status = sdhci_msm_check_power_status,
+	.dump_vendor_regs = sdhci_msm_dump_vendor_regs,
 };
 
 static const struct sdhci_pltfm_data sdhci_msm_pdata = {
@@ -527,7 +683,7 @@ printk(" ------->>>>. getting core clk \n");
 		       CORE_SW_RST, msm_host->core_mem + CORE_POWER);
 
 	/* SW reset can take upto 10HCLK + 15MCLK cycles. (min 40us) */
-	usleep_range(1000, 5000);
+	usleep_range(10000, 50000);
 	if (readl(msm_host->core_mem + CORE_POWER) & CORE_SW_RST) {
 		dev_err(&pdev->dev, "Stuck in reset\n");
 		ret = -ETIMEDOUT;
