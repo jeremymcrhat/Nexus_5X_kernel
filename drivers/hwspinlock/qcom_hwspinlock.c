@@ -99,7 +99,10 @@ static int qcom_hwspinlock_probe(struct platform_device *pdev)
 
 	regmap = syscon_node_to_regmap(syscon);
 	if (IS_ERR(regmap))
+	{
+		dev_err(&pdev->dev, "unable to map syscon node\n");
 		return PTR_ERR(regmap);
+	}
 
 	ret = of_property_read_u32_index(pdev->dev.of_node, "syscon", 1, &base);
 	if (ret < 0) {
@@ -116,7 +119,10 @@ static int qcom_hwspinlock_probe(struct platform_device *pdev)
 	array_size = QCOM_MUTEX_NUM_LOCKS * sizeof(struct hwspinlock);
 	bank = devm_kzalloc(&pdev->dev, sizeof(*bank) + array_size, GFP_KERNEL);
 	if (!bank)
+	{
+		dev_err(&pdev->dev, "error allocating memory\n");
 		return -ENOMEM;
+	}
 
 	platform_set_drvdata(pdev, bank);
 

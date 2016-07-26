@@ -1242,7 +1242,7 @@ static int spmi_regulator_match(struct spmi_regulator *vreg, u16 force_type)
 	ret = spmi_vreg_read(vreg, SPMI_COMMON_REG_DIG_MAJOR_REV, version,
 		ARRAY_SIZE(version));
 	if (ret) {
-		dev_dbg(vreg->dev, "could not read version registers\n");
+		dev_err(vreg->dev, "could not read version registers\n");
 		return ret;
 	}
 	dig_major_rev	= version[SPMI_COMMON_REG_DIG_MAJOR_REV
@@ -1617,16 +1617,17 @@ static const struct spmi_regulator_data pm8994_regulators[] = {
 };
 
 static const struct of_device_id qcom_spmi_regulator_match[] = {
+	{ .compatible = "qcom,pm8994-regulators", .data = &pm8994_regulators },
 	{ .compatible = "qcom,pm8841-regulators", .data = &pm8841_regulators },
 	{ .compatible = "qcom,pm8916-regulators", .data = &pm8916_regulators },
 	{ .compatible = "qcom,pm8941-regulators", .data = &pm8941_regulators },
-	{ .compatible = "qcom,pm8994-regulators", .data = &pm8994_regulators },
 	{ }
 };
 MODULE_DEVICE_TABLE(of, qcom_spmi_regulator_match);
 
 static int qcom_spmi_regulator_probe(struct platform_device *pdev)
 {
+
 	const struct spmi_regulator_data *reg;
 	const struct of_device_id *match;
 	struct regulator_config config = { };
@@ -1638,24 +1639,37 @@ static int qcom_spmi_regulator_probe(struct platform_device *pdev)
 	int ret;
 	struct list_head *vreg_list;
 
+
+printk(" :: %s :: \n", __func__);
+
 	vreg_list = devm_kzalloc(dev, sizeof(*vreg_list), GFP_KERNEL);
 	if (!vreg_list)
+	{
+		printk(" %s: Error no mem \n", __func__);
 		return -ENOMEM;
+	}
+
 	INIT_LIST_HEAD(vreg_list);
 	platform_set_drvdata(pdev, vreg_list);
 
 	regmap = dev_get_regmap(dev->parent, NULL);
-	if (!regmap)
+	if (!regmap) {
+		printk(" %s: Cant get regmap of parent \n", __func__);
 		return -ENODEV;
+	}
 
 	match = of_match_device(qcom_spmi_regulator_match, &pdev->dev);
-	if (!match)
+	if (!match) {
+		printk(" %s spmi reg match error ! \n", __func__);
 		return -ENODEV;
+	}
 
 	for (reg = match->data; reg->name; reg++) {
 		vreg = devm_kzalloc(dev, sizeof(*vreg), GFP_KERNEL);
-		if (!vreg)
+		if (!vreg) {
+			printk(" %s error kzalloc error \n", __func__);
 			return -ENOMEM;
+		}
 
 		vreg->dev = dev;
 		vreg->base = reg->base;
@@ -1665,6 +1679,7 @@ static int qcom_spmi_regulator_probe(struct platform_device *pdev)
 			vreg->ocp_irq = platform_get_irq_byname(pdev, reg->ocp);
 			if (vreg->ocp_irq < 0) {
 				ret = vreg->ocp_irq;
+				printk(" %s Error getting IRQ by name !\n", __func__);
 				goto err;
 			}
 		}
@@ -1679,8 +1694,10 @@ static int qcom_spmi_regulator_probe(struct platform_device *pdev)
 		vreg->desc.of_map_mode = spmi_regulator_of_map_mode;
 
 		ret = spmi_regulator_match(vreg, reg->force_type);
-		if (ret)
+		if (ret) {
+			printk(" %s spmi reg match err: %d \n", __func__, ret);
 			continue;
+		}
 
 		config.dev = dev;
 		config.driver_data = vreg;
@@ -1694,7 +1711,7 @@ static int qcom_spmi_regulator_probe(struct platform_device *pdev)
 		INIT_LIST_HEAD(&vreg->node);
 		list_add(&vreg->node, vreg_list);
 	}
-
+	printk(" Leaving : %s : OK!\n", __func__);
 	return 0;
 
 err:
@@ -1720,10 +1737,25 @@ static struct platform_driver qcom_spmi_regulator_driver = {
 	.driver		= {
 		.name	= "qcom-spmi-regulator",
 		.of_match_table = qcom_spmi_regulator_match,
+		.owner = THIS_MODULE,
 	},
 	.probe		= qcom_spmi_regulator_probe,
 	.remove		= qcom_spmi_regulator_remove,
 };
+
+static int __init qcom_spmi_regulator_init(void)
+{
+	printk(" ***** Calling qcom_spmi_regulator_init **** \n");
+	return platform_driver_register(&qcom_spmi_regulator_driver);
+}
+subsys_initcall(qcom_spmi_regulator_init);
+
+static void __exit qcom_spmi_regulator_exit(void)
+{
+	platform_driver_unregister(&qcom_spmi_regulator_driver);
+}
+module_exit(qcom_spmi_regulator_exit);
+
 module_platform_driver(qcom_spmi_regulator_driver);
 
 MODULE_DESCRIPTION("Qualcomm SPMI PMIC regulator driver");

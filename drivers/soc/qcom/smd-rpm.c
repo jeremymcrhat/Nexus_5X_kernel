@@ -199,7 +199,9 @@ static int qcom_smd_rpm_callback(struct qcom_smd_channel *channel,
 static int qcom_smd_rpm_probe(struct qcom_smd_device *sdev)
 {
 	struct qcom_smd_rpm *rpm;
+	int ret = 0;
 
+printk(" !!!!! %s !!!!!! \n", __func__);
 	rpm = devm_kzalloc(&sdev->dev, sizeof(*rpm), GFP_KERNEL);
 	if (!rpm)
 		return -ENOMEM;
@@ -213,7 +215,9 @@ static int qcom_smd_rpm_probe(struct qcom_smd_device *sdev)
 
 	dev_set_drvdata(&sdev->dev, rpm);
 
-	return of_platform_populate(sdev->dev.of_node, NULL, NULL, &sdev->dev);
+	ret = of_platform_populate(sdev->dev.of_node, NULL, NULL, &sdev->dev);
+	printk(" ::: %s ::: ret = %d \n", __func__, ret);
+	return ret;
 }
 
 static void qcom_smd_rpm_remove(struct qcom_smd_device *sdev)
@@ -222,6 +226,7 @@ static void qcom_smd_rpm_remove(struct qcom_smd_device *sdev)
 }
 
 static const struct of_device_id qcom_smd_rpm_of_match[] = {
+	{ .compatible = "qcom,rpm-msm8994" },
 	{ .compatible = "qcom,rpm-apq8084" },
 	{ .compatible = "qcom,rpm-msm8916" },
 	{ .compatible = "qcom,rpm-msm8974" },
@@ -242,6 +247,7 @@ static struct qcom_smd_driver qcom_smd_rpm_driver = {
 
 static int __init qcom_smd_rpm_init(void)
 {
+	printk("JRM calling qcom_smd_rpm_probe \n");
 	return qcom_smd_driver_register(&qcom_smd_rpm_driver);
 }
 arch_initcall(qcom_smd_rpm_init);

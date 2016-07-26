@@ -749,7 +749,7 @@ static int qcom_smem_probe(struct platform_device *pdev)
 		return -ENXIO;
 
 	__smem = smem;
-
+printk(" SMEM completed as expected \n");
 	return 0;
 }
 

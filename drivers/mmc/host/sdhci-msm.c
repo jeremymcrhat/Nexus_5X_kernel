@@ -135,9 +135,6 @@ struct sdhci_msm_host {
 	struct clk *pclk;	/* SDHC peripheral bus clock */
 	struct clk *bus_clk;	/* SDHC bus voter clock */
 	struct mmc_host *mmc;
-	u32 curr_pwr_state;
-	u32 curr_io_level;
-	struct completion pwr_irq_completion;
 	struct sdhci_msm_pltfm_data *pdata;
 	int pwr_irq;
 	u32 curr_pwr_state;
@@ -156,6 +153,8 @@ static int sdhci_msm_dt_parse_vreg_info(struct device *dev,
 	char prop_name[MAX_PROP_SIZE];
 	struct sdhci_msm_reg_data *vreg;
 	struct device_node *np = dev->of_node;
+
+printk("   Parsing DT vreg info \n");
 
 	snprintf(prop_name, MAX_PROP_SIZE, "%s-supply", vreg_name);
 	if (!of_parse_phandle(np, prop_name, 0)) {
@@ -1063,6 +1062,7 @@ void sdhci_msm_dump_vendor_regs(struct sdhci_host *host)
                         CORE_TESTBUS_CONFIG);
 }
 
+#if 0
 #define CORE_GENERICS           0x70
 #define REQ_IO_LOW (1 << 2)
 #define REQ_IO_HIGH        (1 << 3)
@@ -1132,6 +1132,7 @@ void sdhci_msm_dump_vendor_regs(struct sdhci_host *host)
         pr_debug("%s: %s: request %d done\n", mmc_hostname(host->mmc),
                         __func__, req_type);
 }
+#endif
 
 
 static int sdhci_msm_execute_tuning(struct sdhci_host *host, u32 opcode)
@@ -1260,7 +1261,6 @@ printk(" --> %s <-- \n", __func__);
 
 	sdhci_get_of_property(pdev);
 
-	/* Extract platform data */
 	if (pdev->dev.of_node) {
 		msm_host->pdata = sdhci_msm_populate_pdata(&pdev->dev);
 		if (!msm_host->pdata) {
@@ -1274,11 +1274,15 @@ printk(" --> %s <-- \n", __func__);
 	if (!IS_ERR(msm_host->bus_clk)) {
 		/* Vote for max. clk rate for max. performance */
 		ret = clk_set_rate(msm_host->bus_clk, INT_MAX);
-		if (ret)
+		if (ret) {
+			printk(" Error setting bus_clk rate \n");
 			goto pltfm_free;
+		}
 		ret = clk_prepare_enable(msm_host->bus_clk);
-		if (ret)
+		if (ret) {
+			printk(" Error preparing clock enable \n");
 			goto pltfm_free;
+		}
 	}
 //printk("   +++ CLK_CORE -> rate %lu \n", msm_host->bus_clk->core->rate);
 

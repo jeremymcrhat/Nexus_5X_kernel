@@ -1414,17 +1414,27 @@ static int qcom_smd_probe(struct platform_device *pdev)
 	int i = 0;
 	void *p;
 
+
+printk(" ^^^^^^ %s ^^^^^^^^ \n", __func__);
 	/* Wait for smem */
 	p = qcom_smem_get(QCOM_SMEM_HOST_ANY, smem_items[0].alloc_tbl_id, NULL);
 	if (PTR_ERR(p) == -EPROBE_DEFER)
+	{
+		printk(" Error on smem_get HOST_ANY\n");
 		return PTR_ERR(p);
+	}
 
 	num_edges = of_get_available_child_count(pdev->dev.of_node);
 	array_size = sizeof(*smd) + num_edges * sizeof(struct qcom_smd_edge);
 	smd = devm_kzalloc(&pdev->dev, array_size, GFP_KERNEL);
 	if (!smd)
+	{
+		printk(" Error allocating device memory \n");
 		return -ENOMEM;
+	}
 	smd->dev = &pdev->dev;
+
+printk(" %s : NumEdges =  %d \n", __func__, num_edges);
 
 	smd->num_edges = num_edges;
 	for_each_available_child_of_node(pdev->dev.of_node, node) {
