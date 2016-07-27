@@ -1,0 +1,520 @@
+[13290] booting linux @ 0x80000, ramdisk @ 0x2a00000 (2058814), tags/device tree @ 0x2800000
+[13300] Jumping to kernel via monitor
+[    0.000000] Booting Linux on physical CPU 0x0
+[    0.000000] Linux version 4.7.0-rc2-00028-gb2042f0-dirty (jmcnicol@mini-rhel) (gcc version 4.9.3 20141031 (prerelease) (Linaro GCC 20146
+[    0.000000] Boot CPU: AArch64 Processor [410fd033]
+[    0.000000] earlycon: msm_serial_dm0 at MMIO 0x00000000f991e000 (options '')
+[    0.000000] bootconsole [msm_serial_dm0] enabled
+[    0.000000] efi: Getting EFI parameters from FDT:
+[    0.000000] efi: UEFI not found.
+[    0.000000] On node 0 totalpages: 523776
+[    0.000000]   DMA zone: 8192 pages used for memmap
+[    0.000000]   DMA zone: 0 pages reserved
+[    0.000000]   DMA zone: 523776 pages, LIFO batch:31
+[    0.000000] psci: probing for conduit method from DT.
+[    0.000000] psci: PSCIv65535.65535 detected in firmware.
+[    0.000000] psci: Using standard PSCI v0.2 function IDs
+[    0.000000] psci: MIGRATE_INFO_TYPE not supported.
+[    0.000000] percpu: Embedded 18 pages/cpu @ffffffc07ffa8000 s41984 r0 d31744 u73728
+[    0.000000] pcpu-alloc: s41984 r0 d31744 u73728 alloc=18*4096
+[    0.000000] pcpu-alloc: [0] 0 
+[    0.000000] Detected VIPT I-cache on CPU0
+[    0.000000] CPU features: enabling workaround for ARM erratum 845719
+[    0.000000] Built 1 zonelists in Zone order, mobility grouping on.  Total pages: 515584
+[    0.000000] Kernel command line: console=ttyMSM0,115200,n8 androidboot.hardware=bullhead boot_cpus=0-5 lpm_levels.sleep_disabled=1 msm_e
+[    0.000000] PID hash table entries: 4096 (order: 3, 32768 bytes)
+[    0.000000] Dentry cache hash table entries: 262144 (order: 9, 2097152 bytes)
+[    0.000000] Inode-cache hash table entries: 131072 (order: 8, 1048576 bytes)
+[    0.000000] software IO TLB [mem 0x79a00000-0x7da00000] (64MB) mapped at [ffffffc079a00000-ffffffc07d9fffff]
+[    0.000000] Memory: 1982616K/2095104K available (4784K kernel code, 414K rwdata, 1420K rodata, 384K init, 1240K bss, 112488K reserved, )
+[    0.000000] Virtual kernel memory layout:
+[    0.000000]     modules : 0xffffff8000000000 - 0xffffff8008000000   (   128 MB)
+[    0.000000]     vmalloc : 0xffffff8008000000 - 0xffffffbebfff0000   (   250 GB)
+[    0.000000]       .text : 0xffffff8008080000 - 0xffffff8008520000   (  4736 KB)
+[    0.000000]     .rodata : 0xffffff8008520000 - 0xffffff8008690000   (  1472 KB)
+[    0.000000]       .init : 0xffffff8008690000 - 0xffffff80086f0000   (   384 KB)
+[    0.000000]       .data : 0xffffff80086f0000 - 0xffffff8008757a00   (   415 KB)
+[    0.000000]        .bss : 0xffffff8008757a00 - 0xffffff800888dd30   (  1241 KB)
+[    0.000000]     fixed   : 0xffffffbefe7fd000 - 0xffffffbefec00000   (  4108 KB)
+[    0.000000]     PCI I/O : 0xffffffbefee00000 - 0xffffffbeffe00000   (    16 MB)
+[    0.000000]     vmemmap : 0xffffffbf00000000 - 0xffffffc000000000   (     4 GB maximum)
+[    0.000000]               0xffffffbf00000000 - 0xffffffbf02000000   (    32 MB actual)
+[    0.000000]     memory  : 0xffffffc000000000 - 0xffffffc080000000   (  2048 MB)
+[    0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=1, Nodes=1
+[    0.000000] Preemptible hierarchical RCU implementation.
+[    0.000000]  Build-time adjustment of leaf fanout to 64.
+[    0.000000]  RCU restricting CPUs from NR_CPUS=64 to nr_cpu_ids=1.
+[    0.000000] RCU: Adjusting geometry for rcu_fanout_leaf=64, nr_cpu_ids=1
+[    0.000000] NR_IRQS:64 nr_irqs:64 0
+[    0.000000] Architected cp15 and mmio timer(s) running at 19.20MHz (virt/virt).
+[    0.000000] clocksource: arch_sys_counter: mask: 0xffffffffffffff max_cycles: 0x46d987e47, max_idle_ns: 440795202767 ns
+[    0.000005] sched_clock: 56 bits at 19MHz, resolution 52ns, wraps every 4398046511078ns
+[    0.011061] Calibrating delay loop (skipped), value calculated using timer frequency.. 38.00 BogoMIPS (lpj=64000)
+[    0.026731] pid_max: default: 32768 minimum: 301
+[    0.029068] Mount-cache hash table entries: 4096 (order: 3, 32768 bytes)
+[    0.033862] Mountpoint-cache hash table entries: 4096 (order: 3, 32768 bytes)
+[    0.041519] ASID allocator initialised with 65536 entries
+[    0.065605] EFI services will not be available.
+[    0.067698] Brought up 1 CPUs
+[    0.068931] SMP: Total of 1 processors activated.
+[    0.072093] CPU features: detected feature: 32-bit EL0 Support
+[    0.076771] CPU: All CPU(s) started at EL1
+[    0.082501] alternatives: patching kernel code
+[    0.100447] DMI not present or invalid.
+[    0.100778] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 6370867519511994 ns
+[    0.103193] pinctrl core: initialized pinctrl subsystem
+[    0.113201] reg-dummy reg-dummy: no of_node; not parsing pinctrl DT
+[    0.118067]  regulator_register -> Name: regulator-dummy 
+[    0.124305] regulator-dummy: no parameters
+[    0.130587] NET: Registered protocol family 16
+[    0.143888] cpuidle: using governor menu
+[    0.144335] vdso: 2 pages (1 code @ ffffff8008526000, 1 data @ ffffff80086f4000)
+[    0.146887] hw-breakpoint: found 6 breakpoint and 4 watchpoint registers.
+[    0.154414] DMA: preallocated 256 KiB pool for atomic allocations
+[    0.161044] JRM calling qcom_smd_rpm_probe 
+[    0.168802] msm8x74-pinctrl fd510000.pinctrl: try to register 152 pins ...
+[    0.171027] pinctrl core: registered pin 0 (GPIO_0) on fd510000.pinctrl
+[    0.177970] pinctrl core: registered pin 1 (GPIO_1) on fd510000.pinctrl
+[    0.184476] pinctrl core: registered pin 2 (GPIO_2) on fd510000.pinctrl
+[    0.191073] pinctrl core: registered pin 3 (GPIO_3) on fd510000.pinctrl
+[    0.197669] pinctrl core: registered pin 4 (GPIO_4) on fd510000.pinctrl
+[    0.204266] pinctrl core: registered pin 5 (GPIO_5) on fd510000.pinctrl
+[    0.210865] pinctrl core: registered pin 6 (GPIO_6) on fd510000.pinctrl
+[    0.217462] pinctrl core: registered pin 7 (GPIO_7) on fd510000.pinctrl
+[    0.224060] pinctrl core: registered pin 8 (GPIO_8) on fd510000.pinctrl
+[    0.230656] pinctrl core: registered pin 9 (GPIO_9) on fd510000.pinctrl
+[    0.237253] pinctrl core: registered pin 10 (GPIO_10) on fd510000.pinctrl
+[    0.243852] pinctrl core: registered pin 11 (GPIO_11) on fd510000.pinctrl
+[    0.250795] pinctrl core: registered pin 12 (GPIO_12) on fd510000.pinctrl
+[    0.257571] pinctrl core: registered pin 13 (GPIO_13) on fd510000.pinctrl
+[    0.264338] pinctrl core: registered pin 14 (GPIO_14) on fd510000.pinctrl
+[    0.271109] pinctrl core: registered pin 15 (GPIO_15) on fd510000.pinctrl
+[    0.277880] pinctrl core: registered pin 16 (GPIO_16) on fd510000.pinctrl
+[    0.284649] pinctrl core: registered pin 17 (GPIO_17) on fd510000.pinctrl
+[    0.291420] pinctrl core: registered pin 18 (GPIO_18) on fd510000.pinctrl
+[    0.298192] pinctrl core: registered pin 19 (GPIO_19) on fd510000.pinctrl
+[    0.304962] pinctrl core: registered pin 20 (GPIO_20) on fd510000.pinctrl
+[    0.311732] pinctrl core: registered pin 21 (GPIO_21) on fd510000.pinctrl
+[    0.318505] pinctrl core: registered pin 22 (GPIO_22) on fd510000.pinctrl
+[    0.325275] pinctrl core: registered pin 23 (GPIO_23) on fd510000.pinctrl
+[    0.332045] pinctrl core: registered pin 24 (GPIO_24) on fd510000.pinctrl
+[    0.338817] pinctrl core: registered pin 25 (GPIO_25) on fd510000.pinctrl
+[    0.345587] pinctrl core: registered pin 26 (GPIO_26) on fd510000.pinctrl
+[    0.352359] pinctrl core: registered pin 27 (GPIO_27) on fd510000.pinctrl
+[    0.359128] pinctrl core: registered pin 28 (GPIO_28) on fd510000.pinctrl
+[    0.365899] pinctrl core: registered pin 29 (GPIO_29) on fd510000.pinctrl
+[    0.372670] pinctrl core: registered pin 30 (GPIO_30) on fd510000.pinctrl
+[    0.379441] pinctrl core: registered pin 31 (GPIO_31) on fd510000.pinctrl
+[    0.386213] pinctrl core: registered pin 32 (GPIO_32) on fd510000.pinctrl
+[    0.392984] pinctrl core: registered pin 33 (GPIO_33) on fd510000.pinctrl
+[    0.399753] pinctrl core: registered pin 34 (GPIO_34) on fd510000.pinctrl
+[    0.406525] pinctrl core: registered pin 35 (GPIO_35) on fd510000.pinctrl
+[    0.413295] pinctrl core: registered pin 36 (GPIO_36) on fd510000.pinctrl
+[    0.420066] pinctrl core: registered pin 37 (GPIO_37) on fd510000.pinctrl
+[    0.426838] pinctrl core: registered pin 38 (GPIO_38) on fd510000.pinctrl
+[    0.433609] pinctrl core: registered pin 39 (GPIO_39) on fd510000.pinctrl
+[    0.440379] pinctrl core: registered pin 40 (GPIO_40) on fd510000.pinctrl
+[    0.447150] pinctrl core: registered pin 41 (GPIO_41) on fd510000.pinctrl
+[    0.453921] pinctrl core: registered pin 42 (GPIO_42) on fd510000.pinctrl
+[    0.460692] pinctrl core: registered pin 43 (GPIO_43) on fd510000.pinctrl
+[    0.467461] pinctrl core: registered pin 44 (GPIO_44) on fd510000.pinctrl
+[    0.474238] pinctrl core: registered pin 45 (GPIO_45) on fd510000.pinctrl
+[    0.481004] pinctrl core: registered pin 46 (GPIO_46) on fd510000.pinctrl
+[    0.487775] pinctrl core: registered pin 47 (GPIO_47) on fd510000.pinctrl
+[    0.494546] pinctrl core: registered pin 48 (GPIO_48) on fd510000.pinctrl
+[    0.501316] pinctrl core: registered pin 49 (GPIO_49) on fd510000.pinctrl
+[    0.508087] pinctrl core: registered pin 50 (GPIO_50) on fd510000.pinctrl
+[    0.514859] pinctrl core: registered pin 51 (GPIO_51) on fd510000.pinctrl
+[    0.521629] pinctrl core: registered pin 52 (GPIO_52) on fd510000.pinctrl
+[    0.528400] pinctrl core: registered pin 53 (GPIO_53) on fd510000.pinctrl
+[    0.535171] pinctrl core: registered pin 54 (GPIO_54) on fd510000.pinctrl
+[    0.541940] pinctrl core: registered pin 55 (GPIO_55) on fd510000.pinctrl
+[    0.548713] pinctrl core: registered pin 56 (GPIO_56) on fd510000.pinctrl
+[    0.555483] pinctrl core: registered pin 57 (GPIO_57) on fd510000.pinctrl
+[    0.562252] pinctrl core: registered pin 58 (GPIO_58) on fd510000.pinctrl
+[    0.569026] pinctrl core: registered pin 59 (GPIO_59) on fd510000.pinctrl
+[    0.575795] pinctrl core: registered pin 60 (GPIO_60) on fd510000.pinctrl
+[    0.582566] pinctrl core: registered pin 61 (GPIO_61) on fd510000.pinctrl
+[    0.589338] pinctrl core: registered pin 62 (GPIO_62) on fd510000.pinctrl
+[    0.596108] pinctrl core: registered pin 63 (GPIO_63) on fd510000.pinctrl
+[    0.602880] pinctrl core: registered pin 64 (GPIO_64) on fd510000.pinctrl
+[    0.609650] pinctrl core: registered pin 65 (GPIO_65) on fd510000.pinctrl
+[    0.616419] pinctrl core: registered pin 66 (GPIO_66) on fd510000.pinctrl
+[    0.623191] pinctrl core: registered pin 67 (GPIO_67) on fd510000.pinctrl
+[    0.629962] pinctrl core: registered pin 68 (GPIO_68) on fd510000.pinctrl
+[    0.636732] pinctrl core: registered pin 69 (GPIO_69) on fd510000.pinctrl
+[    0.643505] pinctrl core: registered pin 70 (GPIO_70) on fd510000.pinctrl
+[    0.650274] pinctrl core: registered pin 71 (GPIO_71) on fd510000.pinctrl
+[    0.657046] pinctrl core: registered pin 72 (GPIO_72) on fd510000.pinctrl
+[    0.663816] pinctrl core: registered pin 73 (GPIO_73) on fd510000.pinctrl
+[    0.670587] pinctrl core: registered pin 74 (GPIO_74) on fd510000.pinctrl
+[    0.677357] pinctrl core: registered pin 75 (GPIO_75) on fd510000.pinctrl
+[    0.684128] pinctrl core: registered pin 76 (GPIO_76) on fd510000.pinctrl
+[    0.690903] pinctrl core: registered pin 77 (GPIO_77) on fd510000.pinctrl
+[    0.697671] pinctrl core: registered pin 78 (GPIO_78) on fd510000.pinctrl
+[    0.704441] pinctrl core: registered pin 79 (GPIO_79) on fd510000.pinctrl
+[    0.711212] pinctrl core: registered pin 80 (GPIO_80) on fd510000.pinctrl
+[    0.717983] pinctrl core: registered pin 81 (GPIO_81) on fd510000.pinctrl
+[    0.724753] pinctrl core: registered pin 82 (GPIO_82) on fd510000.pinctrl
+[    0.731525] pinctrl core: registered pin 83 (GPIO_83) on fd510000.pinctrl
+[    0.738296] pinctrl core: registered pin 84 (GPIO_84) on fd510000.pinctrl
+[    0.745066] pinctrl core: registered pin 85 (GPIO_85) on fd510000.pinctrl
+[    0.751837] pinctrl core: registered pin 86 (GPIO_86) on fd510000.pinctrl
+[    0.758608] pinctrl core: registered pin 87 (GPIO_87) on fd510000.pinctrl
+[    0.765379] pinctrl core: registered pin 88 (GPIO_88) on fd510000.pinctrl
+[    0.772150] pinctrl core: registered pin 89 (GPIO_89) on fd510000.pinctrl
+[    0.778920] pinctrl core: registered pin 90 (GPIO_90) on fd510000.pinctrl
+[    0.785692] pinctrl core: registered pin 91 (GPIO_91) on fd510000.pinctrl
+[    0.792462] pinctrl core: registered pin 92 (GPIO_92) on fd510000.pinctrl
+[    0.799233] pinctrl core: registered pin 93 (GPIO_93) on fd510000.pinctrl
+[    0.806003] pinctrl core: registered pin 94 (GPIO_94) on fd510000.pinctrl
+[    0.812774] pinctrl core: registered pin 95 (GPIO_95) on fd510000.pinctrl
+[    0.819546] pinctrl core: registered pin 96 (GPIO_96) on fd510000.pinctrl
+[    0.826316] pinctrl core: registered pin 97 (GPIO_97) on fd510000.pinctrl
+[    0.833086] pinctrl core: registered pin 98 (GPIO_98) on fd510000.pinctrl
+[    0.839858] pinctrl core: registered pin 99 (GPIO_99) on fd510000.pinctrl
+[    0.846628] pinctrl core: registered pin 100 (GPIO_100) on fd510000.pinctrl
+[    0.853398] pinctrl core: registered pin 101 (GPIO_101) on fd510000.pinctrl
+[    0.860170] pinctrl core: registered pin 102 (GPIO_102) on fd510000.pinctrl
+[    0.867114] pinctrl core: registered pin 103 (GPIO_103) on fd510000.pinctrl
+[    0.874061] pinctrl core: registered pin 104 (GPIO_104) on fd510000.pinctrl
+[    0.881004] pinctrl core: registered pin 105 (GPIO_105) on fd510000.pinctrl
+[    0.887947] pinctrl core: registered pin 106 (GPIO_106) on fd510000.pinctrl
+[    0.894894] pinctrl core: registered pin 107 (GPIO_107) on fd510000.pinctrl
+[    0.901837] pinctrl core: registered pin 108 (GPIO_108) on fd510000.pinctrl
+[    0.908785] pinctrl core: registered pin 109 (GPIO_109) on fd510000.pinctrl
+[    0.915726] pinctrl core: registered pin 110 (GPIO_110) on fd510000.pinctrl
+[    0.922671] pinctrl core: registered pin 111 (GPIO_111) on fd510000.pinctrl
+[    0.929616] pinctrl core: registered pin 112 (GPIO_112) on fd510000.pinctrl
+[    0.936558] pinctrl core: registered pin 113 (GPIO_113) on fd510000.pinctrl
+[    0.943503] pinctrl core: registered pin 114 (GPIO_114) on fd510000.pinctrl
+[    0.950449] pinctrl core: registered pin 115 (GPIO_115) on fd510000.pinctrl
+[    0.957393] pinctrl core: registered pin 116 (GPIO_116) on fd510000.pinctrl
+[    0.964336] pinctrl core: registered pin 117 (GPIO_117) on fd510000.pinctrl
+[    0.971283] pinctrl core: registered pin 118 (GPIO_118) on fd510000.pinctrl
+[    0.978225] pinctrl core: registered pin 119 (GPIO_119) on fd510000.pinctrl
+[    0.985171] pinctrl core: registered pin 120 (GPIO_120) on fd510000.pinctrl
+[    0.992114] pinctrl core: registered pin 121 (GPIO_121) on fd510000.pinctrl
+[    0.999058] pinctrl core: registered pin 122 (GPIO_122) on fd510000.pinctrl
+[    1.006004] pinctrl core: registered pin 123 (GPIO_123) on fd510000.pinctrl
+[    1.012947] pinctrl core: registered pin 124 (GPIO_124) on fd510000.pinctrl
+[    1.019893] pinctrl core: registered pin 125 (GPIO_125) on fd510000.pinctrl
+[    1.026837] pinctrl core: registered pin 126 (GPIO_126) on fd510000.pinctrl
+[    1.033782] pinctrl core: registered pin 127 (GPIO_127) on fd510000.pinctrl
+[    1.040726] pinctrl core: registered pin 128 (GPIO_128) on fd510000.pinctrl
+[    1.047671] pinctrl core: registered pin 129 (GPIO_129) on fd510000.pinctrl
+[    1.054615] pinctrl core: registered pin 130 (GPIO_130) on fd510000.pinctrl
+[    1.061561] pinctrl core: registered pin 131 (GPIO_131) on fd510000.pinctrl
+[    1.068503] pinctrl core: registered pin 132 (GPIO_132) on fd510000.pinctrl
+[    1.075448] pinctrl core: registered pin 133 (GPIO_133) on fd510000.pinctrl
+[    1.082392] pinctrl core: registered pin 134 (GPIO_134) on fd510000.pinctrl
+[    1.089337] pinctrl core: registered pin 135 (GPIO_135) on fd510000.pinctrl
+[    1.096281] pinctrl core: registered pin 136 (GPIO_136) on fd510000.pinctrl
+[    1.103225] pinctrl core: registered pin 137 (GPIO_137) on fd510000.pinctrl
+[    1.110170] pinctrl core: registered pin 138 (GPIO_138) on fd510000.pinctrl
+[    1.117115] pinctrl core: registered pin 139 (GPIO_139) on fd510000.pinctrl
+[    1.124059] pinctrl core: registered pin 140 (GPIO_140) on fd510000.pinctrl
+[    1.131007] pinctrl core: registered pin 141 (GPIO_141) on fd510000.pinctrl
+[    1.137948] pinctrl core: registered pin 142 (GPIO_142) on fd510000.pinctrl
+[    1.144894] pinctrl core: registered pin 143 (GPIO_143) on fd510000.pinctrl
+[    1.151838] pinctrl core: registered pin 144 (GPIO_144) on fd510000.pinctrl
+[    1.158782] pinctrl core: registered pin 145 (GPIO_145) on fd510000.pinctrl
+[    1.165725] pinctrl core: registered pin 146 (SDC1_CLK) on fd510000.pinctrl
+[    1.172672] pinctrl core: registered pin 147 (SDC1_CMD) on fd510000.pinctrl
+[    1.179614] pinctrl core: registered pin 148 (SDC1_DATA) on fd510000.pinctrl
+[    1.186559] pinctrl core: registered pin 149 (SDC2_CLK) on fd510000.pinctrl
+[    1.193852] pinctrl core: registered pin 150 (SDC2_CMD) on fd510000.pinctrl
+[    1.200535] pinctrl core: registered pin 151 (SDC2_DATA) on fd510000.pinctrl
+[    1.207487] msm8x74-pinctrl fd510000.pinctrl: failed to lookup the default state
+[    1.214775] msm8x74-pinctrl fd510000.pinctrl: failed to lookup the sleep state
+[    1.224086] msm8x74-pinctrl fd510000.pinctrl: Probed Qualcomm pinctrl driver
+[    1.236566]  SMEM completed as expected 
+[    1.236972]  ^^^^^^ qcom_smd_probe ^^^^^^^^ 
+[    1.240300]  regmap_update_bits_base: reg 0x300 mask 0xffffffff val 0x1 
+[    1.244536]  regmap_update_bits_base: reg 0x300 mask 0xffffffff val 0x0 
+[    1.251232]  qcom_smd_probe : NumEdges =  1 
+[    1.264650]  regmap_update_bits_base: reg 0x300 mask 0xffffffff val 0x1 
+[    1.264682]  regmap_update_bits_base: reg 0x300 mask 0xffffffff val 0x0 
+[    1.270467]  regmap_update_bits_base: reg 0x300 mask 0xffffffff val 0x1 
+[    1.277100]  regmap_update_bits_base: reg 0x300 mask 0xffffffff val 0x0 
+[    1.283824]  regmap_update_bits_base: reg 0x300 mask 0xffffffff val 0x1 
+[    1.290468]  regmap_update_bits_base: reg 0x300 mask 0xffffffff val 0x0 
+[    1.297279]  regmap_update_bits_base: reg 0x300 mask 0xffffffff val 0x1 
+[    1.303835]  regmap_update_bits_base: reg 0x300 mask 0xffffffff val 0x0 
+[    1.324170]  regulator_register -> Name: dummy_vreg 
+[    1.324221] dummy_vreg: no parameters
+[    1.328452] reg-fixed-voltage soc:dummy_vreg: dummy_vreg supplying 0uV
+[    1.331937]  --> JRM Calling rpm_reg_init 
+[    1.338330]  ***** Calling qcom_spmi_regulator_init **** 
+[    1.342754] SCSI subsystem initialized
+[    1.347998] dmi: Firmware registration failed.
+[    1.352093] Bluetooth: Core ver 2.21
+[    1.355851] NET: Registered protocol family 31
+[    1.359546] Bluetooth: HCI device and connection manager initialized
+[    1.363812] Bluetooth: HCI socket layer initialized
+[    1.370317] Bluetooth: L2CAP socket layer initialized
+[    1.374952] Bluetooth: SCO socket layer initialized
+[    1.380720] clocksource: Switched to clocksource arch_sys_counter
+[    1.386119] NET: Registered protocol family 2
+[    1.391709] TCP established hash table entries: 16384 (order: 5, 131072 bytes)
+[    1.395609] TCP bind hash table entries: 16384 (order: 6, 262144 bytes)
+[    1.402892] TCP: Hash tables configured (established 16384 bind 16384)
+[    1.409111] UDP hash table entries: 1024 (order: 3, 32768 bytes)
+[    1.415687] UDP-Lite hash table entries: 1024 (order: 3, 32768 bytes)
+[    1.422007] NET: Registered protocol family 1
+[    1.428418] Trying to unpack rootfs image as initramfs...
+[    1.433102] rootfs image is not initramfs (no cpio magic); looks like an initrd
+[    1.443226] Freeing initrd memory: 2008K (ffffffc002a00000 - ffffffc002bf6000)
+[    1.445853] hw perfevents: enabled with armv8_pmuv3 PMU driver, 7 counters available
+[    1.455578] alarmtimer alarmtimer: no of_node; not parsing pinctrl DT
+[    1.460618] futex hash table entries: 256 (order: 3, 32768 bytes)
+[    1.466682] audit: initializing netlink subsys (disabled)
+[    1.472673] audit: type=2000 audit(0.803:1): initialized
+[    1.482245] workingset: timestamp_bits=60 max_order=19 bucket_order=0
+[    1.493553] fuse init (API version 7.24)
+[    1.498073] Block layer SCSI generic (bsg) driver version 0.4 loaded (major 252)
+[    1.498108] io scheduler noop registered
+[    1.504603] io scheduler deadline registered
+[    1.508780] io scheduler cfq registered (default)
+[    1.513097]  regmap_update_bits_base: reg 0x1480 mask 0x1 val 0x1 
+[    1.517295]  regmap_update_bits_base: reg 0x1484 mask 0x20000 val 0x20000 
+[    1.523456]  clk_enable Name: gcc_blsp1_ahb_clk rate: 100000000 new_rate: 0  req_rate: 0 
+[    1.533940] Error: Driver 'qcom_rpm_smd_regulator' is already registered, aborting...
+[    1.538498] Error: Driver 'qcom-spmi-regulator' is already registered, aborting...
+[    1.546615] generic pinconfig core: found bias-disable with value 0
+[    1.553778] generic pinconfig core: found drive-strength with value 16
+[    1.559950] pinctrl core: add 4 pinctrl maps
+[    1.566577] generic pinconfig core: found bias-pull-down with value 1
+[    1.570959] generic pinconfig core: found drive-strength with value 2
+[    1.577308] pinctrl core: add 4 pinctrl maps
+[    1.583765] msm8x74-pinctrl fd510000.pinctrl: found group selector 4 for gpio4
+[    1.588067] msm8x74-pinctrl fd510000.pinctrl: found group selector 5 for gpio5
+[    1.595093] msm8x74-pinctrl fd510000.pinctrl: found group selector 4 for gpio4
+[    1.602301] msm8x74-pinctrl fd510000.pinctrl: found group selector 5 for gpio5
+[    1.609505] msm8x74-pinctrl fd510000.pinctrl: found group selector 4 for gpio4
+??f[    1.804831] console [ttyMSM0] enabled
+[    1.804831] console [ttyMSM0] enabled
+[    1.807482] bootconsole [msm_serial_dm0] disabled
+[    1.807482] bootconsole [msm_serial_dm0] disabled
+[    1.816188] msm_serial: driver initialized
+[    1.887646] brd: module loaded
+[    1.920945] loop: module loaded
+[    1.925182] zram: Added device: zram0
+[    1.925456] SCSI Media Changer driver v0.25 
+[    1.928463] spmi spmi-0: PMIC Arb Version-1 (0x20000002)
+[    1.933039] tun: Universal TUN/TAP device driver, 1.6
+[    1.937509] tun: (C) 1999-2004 Max Krasnyansky <maxk@qualcomm.com>
+[    1.942578] PPP generic driver version 2.4.2
+[    1.948681] PPP BSD Compression module registered
+[    1.952927] PPP Deflate Compression module registered
+[    1.957545] PPP MPPE Compression module registered
+[    1.962559] NET: Registered protocol family 24
+[    1.967854] device-mapper: ioctl: 4.34.0-ioctl (2015-10-28) initialised: dm-devel@redhat.com
+[    1.975407] sdhci: Secure Digital Host Controller Interface driver
+[    1.980287] sdhci: Copyright(c) Pierre Ossman
+[    1.986256] sdhci-pltfm: SDHCI platform and OF driver helper
+[    1.990820] generic pinconfig core: found bias-disable with value 0
+[    1.996425] generic pinconfig core: found drive-strength with value 16
+[    2.002426] pinctrl core: add 1 pinctrl maps
+[    2.009047] generic pinconfig core: found bias-pull-up with value 1
+[    2.013435] generic pinconfig core: found drive-strength with value 8
+[    2.019435] pinctrl core: add 1 pinctrl maps
+[    2.026058] generic pinconfig core: found bias-pull-up with value 1
+[    2.030361] generic pinconfig core: found drive-strength with value 8
+[    2.036361] pinctrl core: add 1 pinctrl maps
+[    2.042949] pinctrl core: add 0 pinctrl maps
+[    2.047323] generic pinconfig core: found bias-disable with value 0
+[    2.051545] generic pinconfig core: found drive-strength with value 2
+[    2.057541] pinctrl core: add 1 pinctrl maps
+[    2.064161] generic pinconfig core: found bias-pull-up with value 3
+[    2.068470] generic pinconfig core: found drive-strength with value 2
+[    2.074469] pinctrl core: add 1 pinctrl maps
+[    2.081091] generic pinconfig core: found bias-pull-up with value 1
+[    2.085397] generic pinconfig core: found drive-strength with value 2
+[    2.091397] pinctrl core: add 1 pinctrl maps
+[    2.097985] pinctrl core: add 0 pinctrl maps
+[    2.102359] msm8x74-pinctrl fd510000.pinctrl: found group selector 146 for sdc1_clk
+[    2.106591] msm8x74-pinctrl fd510000.pinctrl: found group selector 147 for sdc1_cmd
+[    2.113967] msm8x74-pinctrl fd510000.pinctrl: found group selector 148 for sdc1_data
+[    2.121606] msm8x74-pinctrl fd510000.pinctrl: found group selector 146 for sdc1_clk
+[    2.129591] msm8x74-pinctrl fd510000.pinctrl: found group selector 147 for sdc1_cmd
+[    2.136971] msm8x74-pinctrl fd510000.pinctrl: found group selector 148 for sdc1_data
+[    2.144635]  --> sdhci_msm_probe <-- 
+[    2.152572]  >>> sdhci_pltfm_init 
+[    2.156296]    Parsing DT vreg info 
+[    2.159531] sdhci_msm_JRM f9824900.qcom,sdhci: vdd:   vol=[2950000 2950000]uV, curr=[200 570000]uA
+[    2.163172]    Parsing DT vreg info 
+[    2.171968] sdhci_msm_JRM f9824900.qcom,sdhci: vdd-io: always_on,  vol=[1800000 1800000]uV, curr=[200 325000]uA
+[    2.175683]  ----->>>>>> getting iface clk 
+[    2.185511]  regmap_update_bits_base: reg 0x4c8 mask 0x1 val 0x1 
+[    2.189648]  clk_enable Name: gcc_sdcc1_ahb_clk rate: 100000000 new_rate: 0  req_rate: 0 
+[    2.195896]  ------->>>>. getting core clk 
+[    2.204121]  clk_rcg2_configure mask1 0x1f rcg->hid_width 0x5 
+[    2.208045]  clk_rcg2_configure mask2: 0x371f 
+[    2.213944]  clk_rcg2_configure cfg1: 0x1 
+[    2.218368]  clk_rcg2_configure cfg2: 0x501 
+[    2.222451]  clk_rcg2_configure   PreShifted 0x5 
+[    2.226883]  regmap_update_bits_base: reg 0x4d4 mask 0x371f val 0x501 
+[    2.231483]  update_config ->> CMD_RCGR CMD 0x4d0 
+[    2.237909]  regmap_update_bits_base: reg 0x4d0 mask 0x1 val 0x1 
+[    2.242689]  clk_set_rate: clk_name: gcc_sdcc1_apps_clk rate: 2147483647 
+[    2.248854]  regmap_update_bits_base: reg 0x1480 mask 0x10 val 0x10 
+[    2.255602]  regmap_update_bits_base: reg 0x4c4 mask 0x1 val 0x1 
+[    2.262041]  clk_enable Name: gcc_sdcc1_apps_clk rate: 19200000 new_rate: 344000000  req_rate: 2147483647 
+[    2.268033]  ==== sdhci_msm_probe ==== setting up regulators 
+[    2.277576]  sdhci_msm_vreg_init getting vreg init reg 
+[    2.283391]  sdhci_msm_vreg_init_reg getting VREG for vdd devName: (null) 
+[    2.288437] sdhci_msm_JRM f9824900.qcom,sdhci: JRM Looking up vdd-supply from device tree
+[    2.295400] sdhci_msm_JRM f9824900.qcom,sdhci:  Successfully read vdd-supply property in node /soc/qcom,sdhci@f9824900 !!!
+[    2.303635] f9824900.qcom,sdhci supply vdd not found, using dummy regulator
+[    2.314556]  _regulator_get:: checking reg resolve supply 
+[    2.321411]  _regulator_get:: Trying to create regulator 
+[    2.327043]  sdhci_msm_vreg_init getting sdhci vreg init reg 
+[    2.332438]  sdhci_msm_vreg_init_reg getting VREG for vdd-io devName: (null) 
+[    2.338173] sdhci_msm_JRM f9824900.qcom,sdhci: JRM Looking up vdd-io-supply from device tree
+[    2.345310] sdhci_msm_JRM f9824900.qcom,sdhci:  Successfully read vdd-io-supply property in node /soc/qcom,sdhci@f9824900 !!!
+[    2.353806] f9824900.qcom,sdhci supply vdd-io not found, using dummy regulator
+[    2.364991]  _regulator_get:: checking reg resolve supply 
+[    2.372105]  _regulator_get:: Trying to create regulator 
+[    2.377656]  sdhci_msm_vreg_init vreg reset 
+[    2.383051] sdhci_msm_vreg_set_voltage: regulator_set_voltage(vdd)failed. min_uV=2950000,max_uV=2950000,ret=-22
+[    2.387398] sdhci_msm_JRM f9824900.qcom,sdhci: vreg reset failed (-22)
+[    2.397198] sdhci_msm_JRM f9824900.qcom,sdhci: Regulator setup failed (-22)
+[    2.403798]  regmap_update_bits_base: reg 0x4c4 mask 0x1 val 0x0 
+[    2.410646]  regmap_update_bits_base: reg 0x1480 mask 0x10 val 0x0 
+[    2.416905]  regmap_update_bits_base: reg 0x4c8 mask 0x1 val 0x0 
+[    2.423222] sdhci_msm_JRM: probe of f9824900.qcom,sdhci failed with error -22
+[    2.433290] u32 classifier
+[    2.436397]     Actions configured
+[    2.438951] Netfilter messages via NETLINK v0.30.
+[    2.442663] nf_conntrack version 0.5.0 (16384 buckets, 65536 max)
+[    2.447512] ctnetlink v0.93: registering with nfnetlink.
+[    2.453499] xt_time: kernel timezone is -0000
+[    2.458925] ip_tables: (C) 2000-2006 Netfilter Core Team
+[    2.462911] arp_tables: arp_tables: (C) 2002 David S. Miller
+[    2.468232] Initializing XFRM netlink socket
+[    2.474711] NET: Registered protocol family 10
+[    2.482683] mip6: Mobile IPv6
+[    2.482737] ip6_tables: (C) 2000-2006 Netfilter Core Team
+[    2.485552] sit: IPv6 over IPv4 tunneling driver
+[    2.491594] NET: Registered protocol family 17
+[    2.495486] NET: Registered protocol family 15
+[    2.499753] bridge: automatic filtering via arp/ip/ip6tables has been deprecated. Update your scripts to load br_netfilter if you need .
+[    2.504182] Bridge firewalling registered
+[    2.516931] Ebtables v2.0 registered
+[    2.520900] l2tp_core: L2TP core driver, V2.0
+[    2.524490] l2tp_ppp: PPPoL2TP kernel driver, V2.0
+[    2.528728] l2tp_ip: L2TP IP encapsulation support (L2TPv3)
+[    2.533431] l2tp_netlink: L2TP netlink interface
+[    2.538909] l2tp_eth: L2TP ethernet pseudowire support (L2TPv3)
+[    2.543779] l2tp_debugfs: L2TP debugfs support
+[    2.549388] l2tp_ip6: L2TP IP encapsulation support for IPv6 (L2TPv3)
+[    2.562089] hctosys: unable to open rtc device (rtc0)
+[    2.572484]  regmap_update_bits_base: reg 0x1484 mask 0x8000 val 0x0 
+[    2.572546]  regmap_update_bits_base: reg 0x1408 mask 0x1 val 0x0 
+[    2.578033]  regmap_update_bits_base: reg 0xb88 mask 0x1 val 0x0 
+[    2.584160]  regmap_update_bits_base: reg 0x3d0 mask 0x1 val 0x0 
+[    2.590172]  regmap_update_bits_base: reg 0x3c8 mask 0x1 val 0x0 
+[    2.596242]  regmap_update_bits_base: reg 0x3fc mask 0x1 val 0x0 
+[    2.602559]  clk_enable Name: gcc_blsp1_uart2_apps_clk rate: 3686400 new_rate: 3686400  req_rate: 3686400 
+[    2.608404]  clk_enable Name: gcc_blsp1_ahb_clk rate: 100000000 new_rate: 0  re?[    2.626373] RAMDISK: gzip image found at block 0
+[    2.785650] EXT4-fs (ram0): couldn't mount as ext3 due to feature incompatibilities
+[    2.785910] EXT4-fs (ram0): mounting ext2 file system using the ext4 subsystem
+[    2.796205] EXT4-fs warning (device ram0): ext4_update_dynamic_rev:746: updating to rev 1 because of new feature flag, running e2fsck id
+[    2.800052] EXT4-fs (ram0): mounted filesystem without journal. Opts: (null)
+[    2.812940] VFS: Mounted root (ext2 filesystem) on device 1:0.
+[    2.820225] Freeing unused kernel memory: 384K (ffffffc000690000 - ffffffc0006f0000)
+can't open /dev/tty4: No such device or address
+can't open /dev/tty3: No such device or address
+can't open /dev/tty2: No such device or address
+
+can't open /dev/tty4: No such device or address
+can't open /dev/tty3: No such device or address
+can't open /dev/tty2: No such device or address
+can't open /dev/tty4: No such device or address
+can't open /dev/tty3: No such device or address
+can't open /dev/tty2: No such device or address
+can't open /dev/tty4: No such device or address
+can't open /dev/tty3: No such device or address
+can't open /dev/tty2: No such device or address
+can't open /dev/tty4: No such device or address
+can't open /dev/tty3: No such device or address
+can't open /dev/tty2: No such device or address
+can't open /dev/tty4: No such device or address
+can't open /dev/tty3: No such device or address
+can't open /dev/tty2: No such device or address
+can't open /dev/tty4: No such device or address
+can't open /dev/tty3: No such device or address
+can't open /dev/tty2: No such device or address
+can't open /dev/tty4: No such device or address
+can't open /dev/tty3: No such device or address
+can't open /dev/tty2: No such device or address
+can't open /dev/tty4: No such device or address
+can't open /dev/tty3: No such device or address
+can't open /dev/tty2: No such device or address
+can't open /dev/tty4: No such device or address
+can't open /dev/tty3: No such device or address
+can't open /dev/tty2: No such device or address
+can't open /dev/tty4: No such device or address
+can't open /dev/tty3: No such device or address
+can't open /dev/tty2: No such device or address
+can't open /dev/tty4: No such device or address
+can't open /dev/tty3: No such device or address
+can't open /dev/tty2: No such device or address
+can't open /dev/tty4: No such device or address
+can't open /dev/tty3: No such device or address
+can't open /dev/tty2: No such device or address
+can't open /dev/tty4: No such device or address
+can't open /dev/tty3: No such device or address
+can't open /dev/tty2: No such device or address
+can't open /dev/tty4: No such device or address
+can't open /dev/tty3: No such device or address
+can't open /dev/tty2: No such device or address
+can't open /dev/tty4: No such device or address
+can't open /dev/tty3: No such device or address
+can't open /dev/tty2: No such device or address
+can't open /dev/tty4: No such device or address
+can't open /dev/tty3: No such device or address
+can't open /dev/tty2: No such device or address
+can't open /dev/tty4: No such device or address
+can't open /dev/tty3: No such device or address
+can't open /dev/tty2: No such device or address
+can't open /dev/tty3: No such device or address
+can't open /dev/tty4: No such device or address
+can't open /dev/tty2: No such device or address
+can't open /dev/tty4: No such device or address
+can't open /dev/tty3: No such device or address
+can't open /dev/tty2: No such device or address
+can't open /dev/tty4: No such device or address
+can't open /dev/tty3: No such device or address
+can't open /dev/tty2: No such device or address
+can't open /dev/tty4: No such device or address
+can't open /dev/tty3: No such device or address
+can't open /dev/tty2: No such device or address
+can't open /dev/tty4: No such device or address
+can't open /dev/tty3: No such device or address
+can't open /dev/tty2: No such device or address
+can't open /dev/tty4: No such device or address
+can't open /dev/tty3: No such device or address
+can't open /dev/tty2: No such device or address
+can't open /dev/tty4: No such device or address
+can't open /dev/tty3: No such device or address
+can't open /dev/tty2: No such device or address
+can't open /dev/tty4: No such device or address
+can't open /dev/tty3: No such device or address
+can't open /dev/tty2: No such device or address
+can't open /dev/tty4: No such device or address
+can't open /dev/tty3: No such device or address
+can't open /dev/tty4: No such device or address
+can't open /dev/tty3: No such device or address
+can't open /dev/tty2: No such device or address
+can't open /dev/tty4: No such device or address
+can't open /dev/tty3: No such device or address
+can't open /dev/tty2: No such device or address
+can't open /dev/tty4: No such device or address
+can't open /dev/tty3: No such device or address
+can't open /dev/tty2: No such device or address
+can't open /dev/tty4: No such device or address
+can't open /dev/tty3: No such device or address
+can't open /dev/tty2: No such device or address
+can't open /dev/tty4: No such device or
