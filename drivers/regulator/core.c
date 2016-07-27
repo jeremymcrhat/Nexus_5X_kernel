@@ -198,7 +198,7 @@ static struct device_node *of_get_regulator(struct device *dev, const char *supp
 	struct device_node *regnode = NULL;
 	char prop_name[32]; /* 32 is max size of property name */
 
-	dev_dbg(dev, "Looking up %s-supply from device tree\n", supply);
+	dev_dbg(dev, "JRM Looking up %s-supply from device tree\n", supply);
 
 	snprintf(prop_name, 32, "%s-supply", supply);
 	regnode = of_parse_phandle(dev->of_node, prop_name, 0);
@@ -207,6 +207,10 @@ static struct device_node *of_get_regulator(struct device *dev, const char *supp
 		dev_dbg(dev, "Looking up %s property in node %s failed",
 				prop_name, dev->of_node->full_name);
 		return NULL;
+	}
+	else {
+		dev_dbg(dev, " Successfully read %s property in node %s !!!\n",
+				prop_name, dev->of_node->full_name);
 	}
 	return regnode;
 }
@@ -1601,8 +1605,10 @@ static struct regulator *_regulator_get(struct device *dev, const char *id,
 		ret = -EPROBE_DEFER;
 
 	rdev = regulator_dev_lookup(dev, id, &ret);
-	if (rdev)
+	if (rdev) {
+		printk(" %s : found rdev for regulator \n", __func__);
 		goto found;
+	}
 
 	regulator = ERR_PTR(ret);
 
@@ -1610,8 +1616,10 @@ static struct regulator *_regulator_get(struct device *dev, const char *id,
 	 * If we have return value from dev_lookup fail, we do not expect to
 	 * succeed, so, quit with appropriate error value
 	 */
-	if (ret && ret != -ENODEV)
-		return regulator;
+	//if (ret && ret != -ENODEV)
+//		return regulator;
+
+
 
 	if (!devname)
 		devname = "deviceless";
@@ -1646,9 +1654,11 @@ found:
 		put_device(&rdev->dev);
 		return regulator;
 	}
+printk(" %s:: checking reg resolve supply \n", __func__);
 
 	ret = regulator_resolve_supply(rdev);
 	if (ret < 0) {
+		printk(" %s error resolving supply !! \n", __func__);
 		regulator = ERR_PTR(ret);
 		put_device(&rdev->dev);
 		return regulator;
@@ -1656,11 +1666,14 @@ found:
 
 	if (!try_module_get(rdev->owner)) {
 		put_device(&rdev->dev);
+		printk(" %s try mod get error \n", __func__);
 		return regulator;
 	}
 
+printk(" %s:: Trying to create regulator \n", __func__);
 	regulator = create_regulator(rdev, dev, id);
 	if (regulator == NULL) {
+		printk(" Error reg creation \n");
 		regulator = ERR_PTR(-ENOMEM);
 		put_device(&rdev->dev);
 		module_put(rdev->owner);
@@ -3923,6 +3936,8 @@ regulator_register(const struct regulator_desc *regulator_desc,
 
 	dev = cfg->dev;
 	WARN_ON(!dev);
+
+printk(" %s -> Name: %s \n", __func__, regulator_desc->name);
 
 	if (regulator_desc->name == NULL || regulator_desc->ops == NULL)
 		return ERR_PTR(-EINVAL);

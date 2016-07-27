@@ -37,7 +37,10 @@ static struct regulator *_devm_regulator_get(struct device *dev, const char *id,
 
 	ptr = devres_alloc(devm_regulator_release, sizeof(*ptr), GFP_KERNEL);
 	if (!ptr)
+	{
+		printk(" %s error allocating mem for regulator \n", __func__);
 		return ERR_PTR(-ENOMEM);
+	}
 
 	switch (get_type) {
 	case NORMAL_GET:

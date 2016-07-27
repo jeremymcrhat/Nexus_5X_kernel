@@ -544,11 +544,13 @@ static struct platform_driver rpm_reg_driver = {
 	.driver = {
 		.name  = "qcom_rpm_smd_regulator",
 		.of_match_table = rpm_of_match,
+		.owner	= THIS_MODULE,
 	},
 };
 
 static int __init rpm_reg_init(void)
 {
+	printk(" --> JRM Calling rpm_reg_init \n");
 	return platform_driver_register(&rpm_reg_driver);
 }
 subsys_initcall(rpm_reg_init);
@@ -557,7 +559,9 @@ static void __exit rpm_reg_exit(void)
 {
 	platform_driver_unregister(&rpm_reg_driver);
 }
-module_exit(rpm_reg_exit)
+module_exit(rpm_reg_exit);
+
+module_platform_driver(rpm_reg_driver);
 
 MODULE_DESCRIPTION("Qualcomm RPM regulator driver");
 MODULE_LICENSE("GPL v2");

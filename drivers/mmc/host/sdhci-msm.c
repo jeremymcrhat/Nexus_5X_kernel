@@ -256,9 +256,11 @@ static int sdhci_msm_vreg_init_reg(struct device *dev,
 		goto out;
 
 	/* Get the regulator handle */
+printk(" %s getting VREG for %s devName: %s \n", __func__, vreg->name, dev->init_name);
 	vreg->reg = devm_regulator_get(dev, vreg->name);
 	if (IS_ERR(vreg->reg)) {
 		ret = PTR_ERR(vreg->reg);
+		WARN_ON(1);
 		pr_err("%s: devm_regulator_get(%s) failed. ret=%d\n",
 			__func__, vreg->name, ret);
 		goto out;
@@ -436,29 +438,43 @@ static int sdhci_msm_vreg_init(struct device *dev,
 
 	curr_slot = pdata->vreg_data;
 	if (!curr_slot)
+	{
+		printk(" %s, curr slot failed \n", __func__);
 		goto out;
+	}
 
 	curr_vdd_reg = curr_slot->vdd_data;
 	curr_vdd_io_reg = curr_slot->vdd_io_data;
 
 	if (!is_init)
-		/* Deregister all regulators from regulator framework */
+	{
+		printk(" %s: error not init mode \n", __func__);
+		/* Deregister all regulators from regulator fram ework */
 		goto vdd_io_reg_deinit;
+	}
 
 	/*
 	 * Get the regulator handle from voltage regulator framework
 	 * and then try to set the voltage level for the regulator
 	 */
 	if (curr_vdd_reg) {
+		printk(" %s getting vreg init reg \n", __func__);
 		ret = sdhci_msm_vreg_init_reg(dev, curr_vdd_reg);
 		if (ret)
+		{
+			printk(" %s error init vreg init reg\n", __func__);
 			goto out;
+		}
 	}
 	if (curr_vdd_io_reg) {
+		printk(" %s getting sdhci vreg init reg \n", __func__);
 		ret = sdhci_msm_vreg_init_reg(dev, curr_vdd_io_reg);
-		if (ret)
+		if (ret) {
+			printk(" %s Error vreg init reg %d \n", __func__, ret);
 			goto vdd_reg_deinit;
+		}
 	}
+	printk(" %s vreg reset \n", __func__);
 	ret = sdhci_msm_vreg_reset(pdata);
 	if (ret)
 		dev_err(dev, "vreg reset failed (%d)\n", ret);
@@ -1321,12 +1337,15 @@ printk(" ------->>>>. getting core clk \n");
 		goto pclk_disable;
 	}
 
+printk(" ==== %s ==== setting up regulators \n", __func__);
 	/* Setup regulators */
 	ret = sdhci_msm_vreg_init(&pdev->dev, msm_host->pdata, true);
 	if (ret) {
 		dev_err(&pdev->dev, "Regulator setup failed (%d)\n", ret);
 		goto clk_disable;
 	}
+
+printk(" %s :: get resource IOMEM \n", __func__);
 
 	core_memres = platform_get_resource(pdev, IORESOURCE_MEM, 1);
 	msm_host->core_mem = devm_ioremap_resource(&pdev->dev, core_memres);
