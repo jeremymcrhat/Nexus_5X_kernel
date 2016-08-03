@@ -320,6 +320,10 @@ struct qpnp_regulator {
  * increasing and unique.  The set_voltage callback functions expect these
  * properties to hold.
  */
+
+
+//JRM - use these ranges. 
+//
 static struct qpnp_voltage_range pldo_ranges[] = {
 	VOLTAGE_RANGE(2,  750000,  750000, 1537500, 1537500, 12500),
 	VOLTAGE_RANGE(3, 1500000, 1550000, 3075000, 3075000, 25000),
@@ -1815,6 +1819,8 @@ static int qpnp_regulator_probe(struct spmi_device *spmi)
 	char *reg_name;
 	int rc;
 	bool is_dt;
+
+printk(" ---> %s <--- \n", __func__);
 
 	vreg = kzalloc(sizeof(struct qpnp_regulator), GFP_KERNEL);
 	if (!vreg) {

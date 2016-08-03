@@ -536,6 +536,7 @@ static int spm_regulator_probe(struct spmi_device *spmi)
 			__func__);
 		return -EINVAL;
 	}
+	printk(" %s: res_start: 0x%x \n", __func__, (unsigned int)res->start);
 	vreg->spmi_base_addr = res->start;
 
 	rc = qpnp_smps_check_type(vreg);
@@ -665,6 +666,7 @@ int __init spm_regulator_init(void)
 {
 	static bool has_registered;
 
+	//JRM - do this for qcom_rpm_smd_regulator and qcom-spmi-regulator
 	if (has_registered)
 		return 0;
 	else

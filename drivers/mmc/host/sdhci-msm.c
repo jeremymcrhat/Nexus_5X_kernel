@@ -674,6 +674,7 @@ static int msm_find_most_appropriate_phase(struct sdhci_host *host,
 static inline void msm_cm_dll_set_freq(struct sdhci_host *host)
 {
 	u32 mclk_freq = 0;
+printk(" %s setting freq to %ul \n", __func__, host->clock);
 
 	/* Program the MCLK value to MCLK_FREQ bit field */
 	if (host->clock <= 112000000)
@@ -1247,6 +1248,7 @@ static int sdhci_msm_setup_gpio(struct sdhci_msm_pltfm_data *pdata, bool enable)
 
 	curr = pdata->pin_data->gpio_data;
 	for (i = 0; i < curr->size; i++) {
+printk("%s: gpio_request(%d, %s) failed %d\n", __func__, curr->gpio[i].no, curr->gpio[i].name, ret);
 		if (!gpio_is_valid(curr->gpio[i].no)) {
 			ret = -EINVAL;
 			pr_err("%s: Invalid gpio = %d\n", __func__,
@@ -1256,6 +1258,10 @@ static int sdhci_msm_setup_gpio(struct sdhci_msm_pltfm_data *pdata, bool enable)
 		if (enable) {
 			ret = gpio_request(curr->gpio[i].no,
 						curr->gpio[i].name);
+
+
+printk(" %s gpio_request num: %d  name: %s \n", __func__, curr->gpio[i].no, curr->gpio[i].name);
+
 			if (ret) {
 				pr_err("%s: gpio_request(%d, %s) failed %d\n",
 					__func__, curr->gpio[i].no,
@@ -1283,6 +1289,7 @@ static int sdhci_msm_setup_pinctrl(struct sdhci_msm_pltfm_data *pdata,
 {
 	int ret = 0;
 
+printk("%s \n", __func__);
 	if (enable)
 		ret = pinctrl_select_state(pdata->pctrl_data->pctrl,
 			pdata->pctrl_data->pins_active);
@@ -1300,7 +1307,7 @@ static int sdhci_msm_setup_pinctrl(struct sdhci_msm_pltfm_data *pdata,
 static int sdhci_msm_setup_pins(struct sdhci_msm_pltfm_data *pdata, bool enable)
 {
 	int ret = 0;
-
+printk("%s \n", __func__);
 	if  (pdata->pin_cfg_sts == enable) {
 		return 0;
 	} else if (pdata->pctrl_data) {
@@ -1366,6 +1373,7 @@ static int sdhci_msm_dt_parse_vreg_info(struct device *dev,
 	struct sdhci_msm_reg_data *vreg;
 	struct device_node *np = dev->of_node;
 
+printk("%s \n", __func__);
 	snprintf(prop_name, MAX_PROP_SIZE, "%s-supply", vreg_name);
 	if (!of_parse_phandle(np, prop_name, 0)) {
 		dev_info(dev, "No vreg data found for %s\n", vreg_name);
@@ -1414,7 +1422,7 @@ static int sdhci_msm_dt_parse_vreg_info(struct device *dev,
 	}
 
 	*vreg_data = vreg;
-	dev_dbg(dev, "%s: %s %s vol=[%d %d]uV, curr=[%d %d]uA\n",
+	dev_err(dev, "%s: %s %s vol=[%d %d]uV, curr=[%d %d]uA\n",
 		vreg->name, vreg->is_always_on ? "always_on," : "",
 		vreg->lpm_sup ? "lpm_sup," : "", vreg->low_vol_level,
 		vreg->high_vol_level, vreg->lpm_uA, vreg->hpm_uA);
@@ -1430,6 +1438,7 @@ static int sdhci_msm_parse_pinctrl_info(struct device *dev,
 	struct pinctrl *pctrl;
 	int ret = 0;
 
+printk("%s \n", __func__);
 	/* Try to obtain pinctrl handle */
 	pctrl = devm_pinctrl_get(dev);
 	if (IS_ERR(pctrl)) {
@@ -1471,8 +1480,10 @@ static int sdhci_msm_dt_parse_gpio_info(struct device *dev,
 	struct sdhci_msm_pin_data *pin_data;
 	struct device_node *np = dev->of_node;
 
+printk("%s \n", __func__);
 	ret = sdhci_msm_parse_pinctrl_info(dev, pdata);
 	if (!ret) {
+		dev_err(dev, " Pinctrl parse pinctrl info error, ret: %d \n", ret);
 		goto out;
 	} else if (ret == -EPROBE_DEFER) {
 		dev_err(dev, "Pinctrl framework not registered, err:%d\n", ret);
@@ -1490,6 +1501,7 @@ static int sdhci_msm_dt_parse_gpio_info(struct device *dev,
 	}
 
 	cnt = of_gpio_count(np);
+	printk(" %s: gpio_count = %d \n",__func__, cnt);
 	if (cnt > 0) {
 		pin_data->is_gpio = true;
 		pin_data->gpio_data = devm_kzalloc(dev,
@@ -1518,7 +1530,7 @@ static int sdhci_msm_dt_parse_gpio_info(struct device *dev,
 			snprintf(result, GPIO_NAME_MAX_LEN, "%s-%s",
 					dev_name(dev), name ? name : "?");
 			pin_data->gpio_data->gpio[i].name = result;
-			dev_dbg(dev, "%s: gpio[%s] = %d\n", __func__,
+			dev_err(dev,"%s: gpio[%s] = %d\n", __func__,
 				pin_data->gpio_data->gpio[i].name,
 				pin_data->gpio_data->gpio[i].no);
 		}
@@ -1597,6 +1609,7 @@ struct sdhci_msm_pltfm_data *sdhci_msm_populate_pdata(struct device *dev,
 		dev_err(dev, "failed to allocate memory for platform data\n");
 		goto out;
 	}
+printk("%s <<< Enter \n", __func__);
 
 	pdata->status_gpio = of_get_named_gpio_flags(np, "cd-gpios", 0, &flags);
 	if (gpio_is_valid(pdata->status_gpio) & !(flags & OF_GPIO_ACTIVE_LOW))
@@ -1611,6 +1624,8 @@ struct sdhci_msm_pltfm_data *sdhci_msm_populate_pdata(struct device *dev,
 		dev_notice(dev, "invalid bus-width, default to 1-bit mode\n");
 		pdata->mmc_bus_width = 0;
 	}
+
+printk(" %s buswidth= %lu \n", __func__, pdata->mmc_bus_width);
 
 	if (of_get_property(np, "qcom,cpu-dma-latency-us",
 				&prop_val)) {
@@ -1667,6 +1682,10 @@ struct sdhci_msm_pltfm_data *sdhci_msm_populate_pdata(struct device *dev,
 		dev_err(dev, "Invalid clock table\n");
 		goto out;
 	}
+for(i=0; i<clk_table_len; i++)
+{
+	printk(" SDHCI clk#%d: value: %u \n",i, clk_table[i]);
+}
 	pdata->sup_clk_table = clk_table;
 	pdata->sup_clk_cnt = clk_table_len;
 
@@ -1984,6 +2003,8 @@ static int sdhci_msm_vreg_init_reg(struct device *dev,
 		goto out;
 
 	/* Get the regulator handle */
+
+printk(" %s getting VREG for %s devName: %s \n", __func__, vreg->name, dev->init_name);
 	vreg->reg = devm_regulator_get(dev, vreg->name);
 	if (IS_ERR(vreg->reg)) {
 		ret = PTR_ERR(vreg->reg);
@@ -1991,6 +2012,7 @@ static int sdhci_msm_vreg_init_reg(struct device *dev,
 			__func__, vreg->name, ret);
 		goto out;
 	}
+
 
 	if (regulator_count_voltages(vreg->reg) > 0) {
 		vreg->set_voltage_sup = true;
@@ -3125,16 +3147,16 @@ void sdhci_msm_reset_workaround(struct sdhci_host *host, u32 enable)
 }
 
 static struct sdhci_ops sdhci_msm_ops = {
-	.set_uhs_signaling = sdhci_msm_set_uhs_signaling,
+	.set_uhs_signaling = sdhci_msm_set_uhs_signaling, //JRM
 	.check_power_status = sdhci_msm_check_power_status,
 	.execute_tuning = sdhci_msm_execute_tuning,
 	.toggle_cdr = sdhci_msm_toggle_cdr,
 	.get_max_segments = sdhci_msm_max_segs,
 	.set_clock = sdhci_msm_set_clock,
-	.get_min_clock = sdhci_msm_get_min_clock,
-	.get_max_clock = sdhci_msm_get_max_clock,
+	.get_min_clock = sdhci_msm_get_min_clock, //JRM -- add this
+	.get_max_clock = sdhci_msm_get_max_clock,  //JRM -- add this too
 	.disable_data_xfer = sdhci_msm_disable_data_xfer,
-	.dump_vendor_regs = sdhci_msm_dump_vendor_regs,
+	.dump_vendor_regs = sdhci_msm_dump_vendor_regs,  //JRM - not in structure
 	.config_auto_tuning_cmd = sdhci_msm_config_auto_tuning_cmd,
 	.enable_controller_clock = sdhci_msm_enable_controller_clock,
 	.reset_workaround = sdhci_msm_reset_workaround,
@@ -3305,6 +3327,7 @@ static int sdhci_msm_probe(struct platform_device *pdev)
 	/* Setup Clocks */
 
 	/* Setup SDCC bus voter clock. */
+printk(" bus_clk start ------ \n");
 	msm_host->bus_clk = devm_clk_get(&pdev->dev, "bus_clk");
 	if (!IS_ERR_OR_NULL(msm_host->bus_clk)) {
 		/* Vote for max. clk rate for max. performance */
@@ -3316,7 +3339,9 @@ static int sdhci_msm_probe(struct platform_device *pdev)
 			goto pltfm_free;
 	}
 
+printk(" bus_clk end ------ \n");
 	/* Setup main peripheral bus clock */
+printk(" iface_clk start ------- \n");
 	msm_host->pclk = devm_clk_get(&pdev->dev, "iface_clk");
 	if (!IS_ERR(msm_host->pclk)) {
 		ret = clk_prepare_enable(msm_host->pclk);
@@ -3324,8 +3349,9 @@ static int sdhci_msm_probe(struct platform_device *pdev)
 			goto bus_clk_disable;
 	}
 	atomic_set(&msm_host->controller_clock, 1);
-
+printk(" iface_clk end ------- \n");
 	/* Setup SDC MMC clock */
+printk(" core clk start ----- \n");
 	msm_host->clk = devm_clk_get(&pdev->dev, "core_clk");
 	if (IS_ERR(msm_host->clk)) {
 		ret = PTR_ERR(msm_host->clk);
@@ -3344,7 +3370,7 @@ static int sdhci_msm_probe(struct platform_device *pdev)
 
 	msm_host->clk_rate = sdhci_msm_get_min_clock(host);
 	atomic_set(&msm_host->clks_on, 1);
-
+printk(" core_clk stop ------ \n");
 	/* Setup CDC calibration fixed feedback clock */
 	msm_host->ff_clk = devm_clk_get(&pdev->dev, "cal_clk");
 	if (!IS_ERR(msm_host->ff_clk)) {

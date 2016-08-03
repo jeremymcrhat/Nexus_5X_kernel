@@ -374,10 +374,10 @@ static int gen_modem_panic(const char *val, struct kernel_param *kp)
 	pr_err("gen_modem_panic param to %d\n", gen_modem_panic_type);
 	switch (gen_modem_panic_type) {
 	case 2:
-		subsys_modem_restart();
+		//subsys_modem_restart();
 		break;
 	default:
-		subsystem_restart("modem");
+		//subsystem_restart("modem");
 		break;
 	}
 	return 0;
@@ -402,6 +402,7 @@ extern void __iomem *wdt_timer_get_timer0_base(void);
 
 static int gen_wdt_bark(const char *val, struct kernel_param *kp)
 {
+#ifdef CONFIG_WATCHDOG
 	void __iomem *msm_tmr0_base;
 	msm_tmr0_base = wdt_timer_get_timer0_base();
 
@@ -417,12 +418,16 @@ static int gen_wdt_bark(const char *val, struct kernel_param *kp)
 	pr_err("%s failed\n", __func__);
 
 	return -EIO;
+#else
+	return 0;
+#endif
 }
 module_param_call(gen_wdt_bark, gen_wdt_bark, param_get_bool,
 		&dummy_arg, S_IWUSR | S_IRUGO);
 
 static int gen_wdt_bite(const char *val, struct kernel_param *kp)
 {
+#ifdef CONFIG_WATCHDOG
 	void __iomem *msm_tmr0_base;
 	msm_tmr0_base = wdt_timer_get_timer0_base();
 
@@ -438,6 +443,9 @@ static int gen_wdt_bite(const char *val, struct kernel_param *kp)
 	pr_err("%s failed\n", __func__);
 
 	return -EIO;
+#else
+	return 0;
+#endif
 }
 module_param_call(gen_wdt_bite, gen_wdt_bite, param_get_bool,
 		&dummy_arg, S_IWUSR | S_IRUGO);
@@ -583,6 +591,7 @@ module_param_call(gen_unknown_reset, gen_unknown_reset, param_get_bool,
 
 void lge_disable_watchdog(void)
 {
+#ifdef CONFIG_WATCHDOG
 	static int once = 1;
 	void __iomem *msm_tmr0_base;
 
@@ -598,6 +607,7 @@ void lge_disable_watchdog(void)
 	once++;
 
 	pr_info("%s\n", __func__);
+#endif
 }
 
 void lge_panic_handler_fb_free_page(unsigned long mem_addr, unsigned long size)

@@ -3994,6 +3994,8 @@ regulator_register(const struct regulator_desc *regulator_desc,
 	rdev->reg_data = config->driver_data;
 	rdev->owner = regulator_desc->owner;
 	rdev->desc = regulator_desc;
+
+//JRM -> need this kind of check
 	if (config->regmap)
 		rdev->regmap = config->regmap;
 	else if (dev_get_regmap(dev, NULL))

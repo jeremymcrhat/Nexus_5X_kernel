@@ -1650,6 +1650,8 @@ static int rpm_vreg_resource_probe(struct platform_device *pdev)
 	u32 resource_type;
 	int rc;
 
+
+printk(" #### %s #### \n", __func__);
 	if (!dev->of_node) {
 		dev_err(dev, "%s: device tree information missing\n", __func__);
 		return -ENODEV;

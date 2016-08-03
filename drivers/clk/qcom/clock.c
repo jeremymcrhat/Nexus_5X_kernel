@@ -705,6 +705,7 @@ int clk_set_rate(struct clk *clk, unsigned long rate)
 
 out:
 	mutex_unlock(&clk->prepare_lock);
+printk(" %s: clk_name: %s rate: %lu \n", __func__, clk->dbg_name, clk->rate);
 	return rc;
 
 abort_set_rate:

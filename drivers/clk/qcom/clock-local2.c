@@ -28,6 +28,8 @@
 #include <soc/qcom/clock-local2.h>
 #include <soc/qcom/msm-clock-controller.h>
 
+#include <asm/memory.h>
+
 /*
  * When enabling/disabling a clock, check the halt bit up to this number
  * number of times (with a 1 us delay in between) before continuing.
@@ -91,6 +93,8 @@ enum branch_state {
 static void rcg_update_config(struct rcg_clk *rcg)
 {
 	u32 cmd_rcgr_regval, count;
+printk(" %s -->> CMD_RCGR_REG 0x%x \n", __func__, rcg->cmd_rcgr_reg);
+printk("   --> 0x%lx baseaddr: 0x%lx  \n", (unsigned long)CFG_RCGR_REG(rcg), (unsigned long)*(rcg)->base);
 
 	cmd_rcgr_regval = readl_relaxed(CMD_RCGR_REG(rcg));
 	cmd_rcgr_regval |= CMD_RCGR_CONFIG_UPDATE_BIT;
@@ -111,13 +115,20 @@ static void rcg_update_config(struct rcg_clk *rcg)
 static void __set_rate_hid(struct rcg_clk *rcg, struct clk_freq_tbl *nf)
 {
 	u32 cfg_regval;
+printk(" %s --> CFG_RCGR_REG 0x%x \n", __func__, rcg->cmd_rcgr_reg );
+printk("   --> 0x%lx baseaddr: 0x%lx  \n", (unsigned long)CFG_RCGR_REG(rcg), (unsigned long)*(rcg)->base);
 
 	cfg_regval = readl_relaxed(CFG_RCGR_REG(rcg));
+printk(" %s - cfg_regval1 = 0x%x \n",__func__, cfg_regval);
 	cfg_regval &= ~(CFG_RCGR_DIV_MASK | CFG_RCGR_SRC_SEL_MASK);
+printk(" %s - cfg_regval2 = 0x%x \n",__func__, cfg_regval);
 	cfg_regval |= nf->div_src_val;
+printk(" %s - cfg_regval3 = 0x%x \n",__func__, cfg_regval);
 	writel_relaxed(cfg_regval, CFG_RCGR_REG(rcg));
 
-	rcg_update_config(rcg);
+printk(" %s -- cfg_regval: 0x%x \n", __func__, cfg_regval);
+
+	rcg_update_config(rcg); //update_config(rcg) in 4.7
 }
 
 void set_rate_hid(struct rcg_clk *rcg, struct clk_freq_tbl *nf)
@@ -134,13 +145,17 @@ static void __set_rate_mnd(struct rcg_clk *rcg, struct clk_freq_tbl *nf)
 	u32 cfg_regval;
 
 	cfg_regval = readl_relaxed(CFG_RCGR_REG(rcg));
+printk(" %s: cfg_regval = 0x%x address: 0x%lx \n", __func__, cfg_regval, (unsigned long) virt_to_phys(CFG_RCGR_REG(rcg)));
+printk("   --> 0x%lx baseaddr: 0x%lx  \n", (unsigned long)CFG_RCGR_REG(rcg), (unsigned long)*(rcg)->base);
+
 	writel_relaxed(nf->m_val, M_REG(rcg));
 	writel_relaxed(nf->n_val, N_REG(rcg));
 	writel_relaxed(nf->d_val, D_REG(rcg));
-
+printk(" %s: M= 0x%x N= 0x%x D= 0x%x \n", __func__, nf->m_val, nf->n_val, nf->d_val); 
 	cfg_regval = readl_relaxed(CFG_RCGR_REG(rcg));
 	cfg_regval &= ~(CFG_RCGR_DIV_MASK | CFG_RCGR_SRC_SEL_MASK);
 	cfg_regval |= nf->div_src_val;
+printk(" %s: new_cfg: 0x%x \n", __func__, cfg_regval);
 
 	/* Activate or disable the M/N:D divider as necessary */
 	cfg_regval &= ~MND_MODE_MASK;
@@ -148,7 +163,8 @@ static void __set_rate_mnd(struct rcg_clk *rcg, struct clk_freq_tbl *nf)
 		cfg_regval |= MND_DUAL_EDGE_MODE_BVAL;
 	writel_relaxed(cfg_regval, CFG_RCGR_REG(rcg));
 
-	rcg_update_config(rcg);
+printk(" %s: new_cfg2: 0x%x \n", __func__, cfg_regval);
+	rcg_update_config(rcg); // 4.7 --> update_config
 }
 
 void set_rate_mnd(struct rcg_clk *rcg, struct clk_freq_tbl *nf)
@@ -177,6 +193,7 @@ static int rcg_clk_set_rate(struct clk *c, unsigned long rate)
 	int rc;
 	unsigned long flags;
 
+	printk(" %s : %s  rate = %lu\n", __func__,  c->dbg_name, rate);
 	for (nf = rcg->freq_tbl; nf->freq_hz != FREQ_END
 			&& nf->freq_hz != rate; nf++)
 		;
@@ -237,7 +254,7 @@ static struct clk *_rcg_clk_get_parent(struct rcg_clk *rcg, int has_mnd)
 	u32 cfg_regval, div, div_regval;
 	struct clk_freq_tbl *freq;
 	u32 cmd_rcgr_regval;
-
+printk(" %s : %s \n", __func__, rcg->c.dbg_name);
 	/* Is there a pending configuration? */
 	cmd_rcgr_regval = readl_relaxed(CMD_RCGR_REG(rcg));
 	if (cmd_rcgr_regval & CMD_RCGR_CONFIG_DIRTY_MASK)
@@ -466,7 +483,8 @@ static int branch_clk_enable(struct clk *c)
 	unsigned long flags;
 	u32 cbcr_val;
 	struct branch_clk *branch = to_branch_clk(c);
-
+printk(" %s : clkname: %s \n", __func__, c->dbg_name);
+printk("   --> 0x%lx baseaddr: 0x%lx  \n", (unsigned long)CBCR_REG(branch), (unsigned long)*(branch)->base);
 	if (branch->toggle_memory) {
 		branch_clk_set_flags(c, CLKFLAG_RETAIN_MEM);
 		branch_clk_set_flags(c, CLKFLAG_RETAIN_PERIPH);
@@ -510,6 +528,8 @@ static int branch_cdiv_set_rate(struct branch_clk *branch, unsigned long rate)
 {
 	unsigned long flags;
 	u32 regval;
+
+printk(" %s : name: %s rate: %lu \n", __func__, branch->c.dbg_name, rate);
 
 	if (rate > branch->max_div)
 		return -EINVAL;
@@ -1113,6 +1133,7 @@ static int rcg_clk_set_parent(struct clk *clk, struct clk *parent_clk)
 	u32 m_val, n_val, d_val, div_val;
 	u32 cfg_regval;
 
+printk(" %s -- clkName: %s parentCLK: %s \n", __func__, clk->dbg_name, parent_clk->dbg_name);
 	/* Find the source clock freq tbl for the requested parent */
 	if (!rcg->freq_tbl)
 		return -ENXIO;

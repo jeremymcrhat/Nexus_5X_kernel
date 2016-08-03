@@ -183,6 +183,8 @@ struct msm_ebi_regs {
 	unsigned long drv_shft;
 };
 
+//JRM - pull_mask/shift and drv_mask/shift
+//
 static const struct msm_sdc_regs sdc_regs[MSM_PINTYPE_SDC_REGS_MAX] = {
 	/* SDC1 CLK */
 	{
@@ -271,6 +273,7 @@ static int msm_tlmm_sdc_cfg(uint pin_no, unsigned long *config,
 	cfg_reg = reg_base + offset;
 	id = pinconf_to_config_param(*config);
 	val = readl_relaxed(cfg_reg);
+printk(" %s: reg_base 0x%lx offset: 0x%x id: 0x%x val: 0x%x pin_no: %d \n", __func__, (unsigned long)&(pinfo->reg_base), offset, id, val, pin_no);
 	/* Get mask and shft values for this config type */
 	switch (id) {
 	case PIN_CONFIG_BIAS_DISABLE:
@@ -320,11 +323,18 @@ static int msm_tlmm_sdc_cfg(uint pin_no, unsigned long *config,
 	};
 
 	if (write) {
+		printk(" **** WRITING **** \n");
 		val &= ~(mask << shft);
 		val |= (data << shft);
 		writel_relaxed(val, cfg_reg);
-	} else
+		printk("   val = 0x%x mask = %u \n", val, mask);
+		printk("  shft=%u  cfg_reg=0x%lx data=0x%x\n", shft,(unsigned long) (void *)cfg_reg, data);
+		printk(" **** DONE ***** \n");
+	} else {
+		printk(" *** NOT WR *** \n");
 		*config = pinconf_to_config_packed(id, data);
+		printk(" config=0x%lx  id=%x  data= 0x%x \n", *config, id, data);
+	}
 	return 0;
 }
 
@@ -617,6 +627,8 @@ static int msm_tlmm_ebi_cfg(uint pin_no, unsigned long *config,
 static void msm_tlmm_set_reg_base(void __iomem *tlmm_base,
 				  struct msm_pintype_info *pinfo)
 {
+	printk(" %s tlmm_base: 0x%lx reg_base_offset: 0x%lx \n", __func__, (unsigned long)tlmm_base, (unsigned long) pinfo->pintype_data->reg_base_offset);
+	WARN_ON(1);
 	pinfo->reg_base = tlmm_base + pinfo->pintype_data->reg_base_offset;
 }
 
@@ -1199,6 +1211,7 @@ static int msm_tlmm_probe(struct platform_device *pdev)
 		dev_err(&pdev->dev, "cannot find IO resource\n");
 		return -ENOENT;
 	}
+	printk(" TLMM BASE ADDRESS == 0x%lx \n", (unsigned long)res->start);
 	tlmm_desc->base = devm_ioremap(&pdev->dev, res->start,
 							resource_size(res));
 	if (IS_ERR(tlmm_desc->base))

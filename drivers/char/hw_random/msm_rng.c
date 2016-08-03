@@ -144,7 +144,7 @@ int msm_rng_direct_read(struct msm_rng_device *msm_rng_dev, void *data)
 				pr_err("Data not available after retry\n");
 				break;
 			}
-			pr_err("msm_rng:Data not available!\n");
+			//pr_err("msm_rng:Data not available!\n");
 			msleep_interruptible(10);
 			failed++;
 		}
@@ -228,7 +228,7 @@ static int msm_rng_drbg_read(struct hwrng *rng,
 				pr_err("Data not available after retry\n");
 				break;
 			}
-			pr_err("msm_rng:Data not available!\n");
+			//pr_err("msm_rng:Data not available!\n");
 			msleep_interruptible(10);
 			failed++;
 		}

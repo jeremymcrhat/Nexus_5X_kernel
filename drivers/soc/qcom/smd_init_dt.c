@@ -85,7 +85,9 @@ static int msm_smsm_probe(struct platform_device *pdev)
 				__func__, &r->start, &irq_out_size);
 		return -ENOMEM;
 	}
-	SMSM_DBG("%s: %s = %p", __func__, key, irq_out_base);
+	printk("%s: %s = %p\n", __func__, key, irq_out_base);
+
+	printk("%s: R->Start 0x%x \n", __func__, (uint32_t) r->start);
 
 	key = "qcom,smsm-edge";
 	ret = of_property_read_u32(node, key, &edge);
@@ -198,7 +200,8 @@ static int msm_smd_probe(struct platform_device *pdev)
 				__func__, &r->start, &irq_out_size);
 		return -ENOMEM;
 	}
-	SMD_DBG("%s: %s = %p", __func__, key, irq_out_base);
+	printk("%s: %s = %p \n", __func__, key, irq_out_base);
+	printk(" %s: r->start = 0x%x \n", __func__, (unsigned int) r->start);
 
 	key = "qcom,smd-edge";
 	ret = of_property_read_u32(node, key, &edge);

@@ -705,6 +705,7 @@ static int msm_register_pinctrl(struct msm_pinctrl_dd *dd)
 	for (i = 0; i < dd->num_pins; i++) {
 		pindesc[i].number = i;
 		pindesc[i].name = dd->msm_pindesc[i].name;
+		printk("%s Name: %s Num: %d \n", __func__, pindesc[i].name, pindesc[i].number);
 	}
 	ctrl_desc->pins = pindesc;
 	ctrl_desc->npins = dd->num_pins;

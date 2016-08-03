@@ -47,7 +47,7 @@ enum {
 	MSM_RPM_LOG_REQUEST_SHOW_MSG_ID	= BIT(2),
 };
 
-static int msm_rpm_debug_mask;
+static int msm_rpm_debug_mask = MSM_RPM_LOG_REQUEST_PRETTY | MSM_RPM_LOG_REQUEST_RAW | MSM_RPM_LOG_REQUEST_SHOW_MSG_ID;
 module_param_named(
 	debug_mask, msm_rpm_debug_mask, int, S_IRUGO | S_IWUSR
 );
