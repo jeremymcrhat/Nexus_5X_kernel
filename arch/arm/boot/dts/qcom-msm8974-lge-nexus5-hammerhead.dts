@@ -10,7 +10,7 @@
 	compatible = "lge,hammerhead", "qcom,msm8974";
 
 	aliases {
-		serial0 = &blsp1_uart1;
+		serial0 = &blsp1_uart2;
 	};
 
 	chosen {
