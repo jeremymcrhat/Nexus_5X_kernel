@@ -557,6 +557,8 @@ static bool qcom_smd_channel_intr(struct qcom_smd_channel *channel)
 	int avail;
 	int ret;
 
+printk(" INTR !! W00T !! %s \n", __func__);
+
 	/* Handle state changes */
 	remote_state = GET_RX_CHANNEL_INFO(channel, state);
 	if (remote_state != channel->remote_state) {
@@ -571,8 +573,10 @@ static bool qcom_smd_channel_intr(struct qcom_smd_channel *channel)
 		wake_up_interruptible(&channel->fblockread_event);
 
 	/* Don't consume any data until we've opened the channel */
-	if (channel->state != SMD_CHANNEL_OPENED)
+	if (channel->state != SMD_CHANNEL_OPENED) {
+		printk("%s : SMD channel not opened \n", __func__);
 		goto out;
+	}
 
 	/* Indicate that we've seen the new data */
 	SET_RX_CHANNEL_FLAG(channel, fHEAD, 0);
@@ -587,8 +591,10 @@ static bool qcom_smd_channel_intr(struct qcom_smd_channel *channel)
 			channel->pkt_size = le32_to_cpu(pktlen);
 		} else if (channel->pkt_size && avail >= channel->pkt_size) {
 			ret = qcom_smd_channel_recv_single(channel);
-			if (ret)
+			if (ret) {
+				printk(" %s err recv channel single \n", __func__);
 				break;
+			}
 		} else {
 			break;
 		}
@@ -659,10 +665,15 @@ static irqreturn_t qcom_smd_edge_intr(int irq, void *data)
 static void qcom_smd_channel_resume(struct qcom_smd_channel *channel)
 {
 	unsigned long flags;
+	bool ret = false;
 
 	spin_lock_irqsave(&channel->recv_lock, flags);
-	qcom_smd_channel_intr(channel);
+	ret = qcom_smd_channel_intr(channel);
 	spin_unlock_irqrestore(&channel->recv_lock, flags);
+
+	if (ret == true)
+		printk(" %s Error QCOM smd channel intr ret = %d \n", __func__, (int)ret);
+
 }
 
 /*
@@ -859,11 +870,13 @@ static int qcom_smd_dev_probe(struct device *dev)
 	struct qcom_smd_device *qsdev = to_smd_device(dev);
 	struct qcom_smd_driver *qsdrv = to_smd_driver(dev);
 	struct qcom_smd_channel *channel = qsdev->channel;
-	int ret;
+	int ret = 0;
 
 	ret = qcom_smd_channel_open(channel, qsdrv->callback);
-	if (ret)
+	if (ret) {
+		dev_err(&qsdev->dev, "unable to open smd channel\n");
 		return ret;
+	}
 
 	ret = qsdrv->probe(qsdev);
 	if (ret)
@@ -871,7 +884,7 @@ static int qcom_smd_dev_probe(struct device *dev)
 
 	qcom_smd_channel_resume(channel);
 
-	return 0;
+	return ret;
 
 err:
 	dev_err(&qsdev->dev, "probe failed\n");
@@ -976,6 +989,9 @@ static int qcom_smd_create_device(struct qcom_smd_channel *channel)
 	struct qcom_smd *smd = edge->smd;
 	int ret;
 
+
+printk(" $$ %s $$ \n", __func__);
+
 	if (channel->qsdev)
 		return -EEXIST;
 
@@ -1030,8 +1046,13 @@ static void qcom_smd_destroy_device(struct qcom_smd_channel *channel)
  */
 int qcom_smd_driver_register(struct qcom_smd_driver *qsdrv)
 {
+	int ret = 0; 
+
 	qsdrv->driver.bus = &qcom_smd_bus;
-	return driver_register(&qsdrv->driver);
+	ret = driver_register(&qsdrv->driver);
+
+	printk(" -- %s -- ret: %d \n", __func__, ret);
+	return ret;
 }
 EXPORT_SYMBOL(qcom_smd_driver_register);
 
@@ -1227,37 +1248,59 @@ static void qcom_channel_scan_worker(struct work_struct *work)
 	int i;
 	u32 eflags, cid;
 
+printk(" %s --> enter \n", __func__);
 	for (tbl = 0; tbl < SMD_ALLOC_TBL_COUNT; tbl++) {
 		alloc_tbl = qcom_smem_get(edge->remote_pid,
 				    smem_items[tbl].alloc_tbl_id, NULL);
 		if (IS_ERR(alloc_tbl))
+		{
+			printk(" Error SMEM get \n");
 			continue;
+		}
 
 		for (i = 0; i < SMD_ALLOC_TBL_SIZE; i++) {
 			entry = &alloc_tbl[i];
 			eflags = le32_to_cpu(entry->flags);
 			if (test_bit(i, edge->allocated[tbl]))
+			{
 				continue;
+			}
 
 			if (entry->ref_count == 0)
+			{
 				continue;
+			}
 
 			if (!entry->name[0])
+			{
+				printk(" Error name is null \n");
 				continue;
+			}
 
 			if (!(eflags & SMD_CHANNEL_FLAGS_PACKET))
+			{
+				printk(" error smd channel flags packet \n");
 				continue;
+			}
 
 			if ((eflags & SMD_CHANNEL_FLAGS_EDGE_MASK) != edge->edge_id)
+			{
 				continue;
+			}
 
 			cid = le32_to_cpu(entry->cid);
 			info_id = smem_items[tbl].info_base_id + cid;
 			fifo_id = smem_items[tbl].fifo_base_id + cid;
 
+			printk(" Creating channel info_id (%d) fifo_id (%d) Name (%s)\n", info_id, fifo_id, entry->name); 
 			channel = qcom_smd_create_channel(edge, info_id, fifo_id, entry->name);
 			if (IS_ERR(channel))
+			{
+				printk(" Error creating SMD channel \n");
 				continue;
+			}
+
+			qcom_smd_reset_channel(channel);
 
 			spin_lock_irqsave(&edge->channels_lock, flags);
 			list_add(&channel->list, &edge->channels);
@@ -1289,23 +1332,46 @@ static void qcom_channel_state_worker(struct work_struct *work)
 						  state_work);
 	unsigned remote_state;
 	unsigned long flags;
-
+	int ret = 0;
+printk(" >>>> %s \n", __func__);
 	/*
 	 * Register a device for any closed channel where the remote processor
 	 * is showing interest in opening the channel.
 	 */
 	spin_lock_irqsave(&edge->channels_lock, flags);
 	list_for_each_entry(channel, &edge->channels, list) {
+		printk(" Channel state === %d \n", channel->state);
 		if (channel->state != SMD_CHANNEL_CLOSED)
 			continue;
 
 		remote_state = GET_RX_CHANNEL_INFO(channel, state);
+		printk(" Remote state === %d \n", remote_state);
+
+		printk("Writing remote state of 1 \n");
+		SET_RX_CHANNEL_INFO(channel, state, 1);
+
+		printk(" reading remote state back \n");
+		remote_state = GET_RX_CHANNEL_INFO(channel, state);
+		printk(" Remote state === %d \n", remote_state);
+
+//JRM -->> TODO : remote state should be 1 (double check with 3.10)
+//
+//
+/* Comment this out to get regulators to be called !!! */
+
 		if (remote_state != SMD_CHANNEL_OPENING &&
 		    remote_state != SMD_CHANNEL_OPENED)
 			continue;
 
+
 		spin_unlock_irqrestore(&edge->channels_lock, flags);
-		qcom_smd_create_device(channel);
+		ret = qcom_smd_create_device(channel);
+		if (ret != 0) {
+			printk(" ERROR creating SMD device for channel \n");
+		}
+		else {
+			printk(" %s SMD create dev ret (%d) \n",__func__, ret);
+		}
 		spin_lock_irqsave(&edge->channels_lock, flags);
 	}
 
@@ -1443,6 +1509,7 @@ printk(" %s : NumEdges =  %d \n", __func__, num_edges);
 		init_waitqueue_head(&edge->new_channel_event);
 
 		ret = qcom_smd_parse_edge(&pdev->dev, node, edge);
+		printk(" .... parse edge return (%d) \n", ret);
 		if (ret)
 			continue;
 

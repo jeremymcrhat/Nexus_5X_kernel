@@ -92,7 +92,7 @@
 			linux,reserve-contiguous-region;
 			linux,reserve-region;
 			linux,remove-completely;
-			reg = <0 0x07400000 0 0x1c00000>;
+			reg = <0x0 0x07400000 0x0 0x1c00000>;
 			label = "peripheral_mem";
 		};
 	};
@@ -102,20 +102,22 @@
 		#size-cells = <2>;
 		ranges;
 
-		smem_mem: smem_region@6a00000 {
+		smem_region: smem@6a00000 {
 			reg = <0x0 0x6a00000 0x0 0x200000>;
 			no-map;
 		};
 	};
 
 
-      smd {
+      smd_rpm: smd {
                 compatible = "qcom,smd";
 
                 rpm {
                         interrupts = <GIC_SPI 168 IRQ_TYPE_EDGE_RISING>;
                         qcom,ipc = <&apcs 8 0>;
                         qcom,smd-edge = <15>;
+			qcom,local-pid = <0>;
+			qcom,remote-pid = <6>;
 
                         rpm_requests {
                                 compatible = "qcom,rpm-msm8994";
@@ -127,8 +129,7 @@
                                 };
 
 				smd_rpm_regulators: pm8994-regulators {
-					/*compatible = "qcom,rpm-pm8994-regulators";*/
-					compatible = "qcom,pm8994-regulators";
+					compatible = "qcom,rpm-pm8994-regulators";
 
 					pm8994_s1: s1 {};
 					pm8994_s2: s2 {};
@@ -194,6 +195,11 @@
 		#interrupt-cells = <3>;
 		reg = <0xf9000000 0x1000>,
 		      <0xf9002000 0x1000>;
+	};
+
+	apcs: syscon@0xf900d000 {
+		compatible = "syscon";
+		reg = <0xf900d000 0x2000>;
 	};
 
 	timer {
@@ -309,6 +315,7 @@
 		clock-names = "xo", "xo_a_clk";
 	};
 
+	/* from 3.10 arch/arm64/boot/dts/lge/msm8992-bullhead.dtsi */
 	sdhci1: qcom,sdhci@f9824900 {
 		compatible = "qcom,sdhci-msm-v4";
 		reg = <0xf9824900 0x1a0>, <0xf9824000 0x800>;
@@ -330,12 +337,17 @@
 		vdd-supply = <&pm8994_l20>;
 		qcom,vdd-voltage-level = <2950000 2950000>;
 		qcom,vdd-current-level = <200 570000>;
-
 		
-		vdd-io-supply = <&pm8994_s3>;	
-		qcom,vdd-io-always-on;
+		
+		vdd-io-supply = <&pm8994_s4>;	
 		qcom,vdd-io-voltage-level = <1800000 1800000>;
 		qcom,vdd-io-current-level = <200 325000>;
+		regulator-always-on;
+
+		/** this is going away with the updated MMC patches */
+		vmmc-supply = <&pm8994_l20>;
+		vqmmc-supply = <&pm8994_s4>;
+
 	};
 
 
@@ -396,10 +408,6 @@
 
 ****/		
 
-	apcs: syscon@0xf900d000 {
-		compatible = "syscon";
-		reg = <0xf900d000 0x1000>;
-	};
 
 	cpubw: qcom,cpubw {
 		compatible = "qcom,devbw";
@@ -544,10 +552,14 @@
 		#clock-cells = <1>;
 	};
 
-	dummy_vreg: dummy_vreg {
+	vreg_vph_pwr: vreg-vph-pwr {
 		compatible = "regulator-fixed";
-		status = "ok";
-		regulator-name = "dummy_vreg";
+		status = "okay";
+		regulator-name = "vph-pwr";
+
+		regulator-min-microvolt = <3600000>;
+		regulator-max-microvolt = <3600000>;
+
 		regulator-always-on;
 	};
 
@@ -605,7 +617,7 @@
 
 	smem {
 		compatible = "qcom,smem";
-		memory-region = <&smem_mem>;
+		memory-region = <&smem_region>;
 		qcom,rpm-msg-ram = <&rpm_msg_ram>;
 		hwlocks = <&sfpb_mutex 3>;
 	};

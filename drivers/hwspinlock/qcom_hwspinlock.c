@@ -91,6 +91,8 @@ static int qcom_hwspinlock_probe(struct platform_device *pdev)
 	int ret;
 	int i;
 
+
+printk(" #### qcom_hwspinlock_probe #### \n");
 	syscon = of_parse_phandle(pdev->dev.of_node, "syscon", 0);
 	if (!syscon) {
 		dev_err(&pdev->dev, "no syscon property\n");
@@ -140,7 +142,10 @@ static int qcom_hwspinlock_probe(struct platform_device *pdev)
 	ret = hwspin_lock_register(bank, &pdev->dev, &qcom_hwspinlock_ops,
 				   0, QCOM_MUTEX_NUM_LOCKS);
 	if (ret)
+	{
+		printk(" Error HW lock register \n");
 		pm_runtime_disable(&pdev->dev);
+	}
 
 	return ret;
 }

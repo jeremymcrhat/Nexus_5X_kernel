@@ -256,7 +256,6 @@ static int sdhci_msm_vreg_init_reg(struct device *dev,
 		goto out;
 
 	/* Get the regulator handle */
-printk(" %s getting VREG for %s devName: %s \n", __func__, vreg->name, dev->init_name);
 	vreg->reg = devm_regulator_get(dev, vreg->name);
 	if (IS_ERR(vreg->reg)) {
 		ret = PTR_ERR(vreg->reg);

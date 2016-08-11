@@ -499,8 +499,6 @@ static int rpm_smd_reg_probe(struct platform_device *pdev)
 	struct qcom_smd_rpm *rpm;
 printk(" ^^^^ %s ^^^^ \n", __func__);
 
-WARN(1, "BING BING!!!");
-
 	rpm = dev_get_drvdata(pdev->dev.parent);
 	if (!rpm) {
 		dev_err(&pdev->dev, "unable to retrieve handle to rpm\n");
@@ -550,7 +548,6 @@ static struct platform_driver rpm_reg_driver = {
 
 static int __init rpm_reg_init(void)
 {
-	printk(" --> JRM Calling rpm_reg_init \n");
 	return platform_driver_register(&rpm_reg_driver);
 }
 subsys_initcall(rpm_reg_init);
@@ -560,8 +557,6 @@ static void __exit rpm_reg_exit(void)
 	platform_driver_unregister(&rpm_reg_driver);
 }
 module_exit(rpm_reg_exit);
-
-module_platform_driver(rpm_reg_driver);
 
 MODULE_DESCRIPTION("Qualcomm RPM regulator driver");
 MODULE_LICENSE("GPL v2");

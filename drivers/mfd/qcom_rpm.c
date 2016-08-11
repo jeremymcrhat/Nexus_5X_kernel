@@ -469,7 +469,6 @@ static int qcom_rpm_probe(struct platform_device *pdev)
 	int irq_err;
 	int ret;
 
-#error "Comoiling this "
 	rpm = devm_kzalloc(&pdev->dev, sizeof(*rpm), GFP_KERNEL);
 	if (!rpm)
 		return -ENOMEM;
