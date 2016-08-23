@@ -198,14 +198,14 @@ static struct device_node *of_get_regulator(struct device *dev, const char *supp
 	struct device_node *regnode = NULL;
 	char prop_name[32]; /* 32 is max size of property name */
 
-	dev_dbg(dev, "JRM Looking up %s-supply from device tree\n", supply);
+	//dev_dbg(dev, "JRM Looking up %s-supply from device tree\n", supply);
 
 	snprintf(prop_name, 32, "%s-supply", supply);
 	regnode = of_parse_phandle(dev->of_node, prop_name, 0);
 
 	if (!regnode) {
-		dev_dbg(dev, "Looking up %s property in node %s failed",
-				prop_name, dev->of_node->full_name);
+		/*dev_dbg(dev, "Looking up %s property in node %s failed",
+				prop_name, dev->of_node->full_name);*/
 		return NULL;
 	}
 	else {
@@ -1616,8 +1616,8 @@ static struct regulator *_regulator_get(struct device *dev, const char *id,
 	 * If we have return value from dev_lookup fail, we do not expect to
 	 * succeed, so, quit with appropriate error value
 	 */
-	//if (ret && ret != -ENODEV)
-//		return regulator;
+	if (ret && ret != -ENODEV)
+		return regulator;
 
 
 

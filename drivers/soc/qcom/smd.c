@@ -1254,7 +1254,6 @@ printk(" %s --> enter \n", __func__);
 				    smem_items[tbl].alloc_tbl_id, NULL);
 		if (IS_ERR(alloc_tbl))
 		{
-			printk(" Error SMEM get \n");
 			continue;
 		}
 
@@ -1300,7 +1299,6 @@ printk(" %s --> enter \n", __func__);
 				continue;
 			}
 
-			qcom_smd_reset_channel(channel);
 
 			spin_lock_irqsave(&edge->channels_lock, flags);
 			list_add(&channel->list, &edge->channels);
