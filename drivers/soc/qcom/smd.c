@@ -116,6 +116,7 @@ struct qcom_smd_edge {
 	unsigned edge_id;
 	unsigned remote_pid;
 
+	int wonky_rx;
 	int irq;
 
 	struct regmap *ipc_regmap;
@@ -1166,6 +1167,7 @@ static struct qcom_smd_channel *qcom_smd_create_channel(struct qcom_smd_edge *ed
 	void *fifo_base;
 	void *info;
 	int ret;
+	int remote_state;
 
 	channel = devm_kzalloc(smd->dev, sizeof(*channel), GFP_KERNEL);
 	if (!channel)
@@ -1219,6 +1221,13 @@ static struct qcom_smd_channel *qcom_smd_create_channel(struct qcom_smd_edge *ed
 	channel->fifo_size = fifo_size;
 
 	qcom_smd_channel_reset(channel);
+
+
+	//JRM writing TX state
+	printk(" Reading REmote state initally!\n");
+	remote_state = GET_RX_CHANNEL_INFO(channel, state);
+	printk(" Remote state === %d \n", remote_state);
+
 
 	return channel;
 
@@ -1345,17 +1354,18 @@ printk(" >>>> %s \n", __func__);
 		remote_state = GET_RX_CHANNEL_INFO(channel, state);
 		printk(" Remote state === %d \n", remote_state);
 
-		printk("Writing remote state of 1 \n");
-		SET_RX_CHANNEL_INFO(channel, state, 1);
-
-		printk(" reading remote state back \n");
-		remote_state = GET_RX_CHANNEL_INFO(channel, state);
-		printk(" Remote state === %d \n", remote_state);
-
 //JRM -->> TODO : remote state should be 1 (double check with 3.10)
 //
 //
 /* Comment this out to get regulators to be called !!! */
+
+		if (edge->wonky_rx) {
+			printk("Writing remote state of 1 \n");
+			SET_RX_CHANNEL_INFO(channel, state, 1);
+			printk(" reading remote state back \n");
+			remote_state = GET_RX_CHANNEL_INFO(channel, state);
+			printk(" Remote state === %d \n", remote_state);
+		}
 
 		if (remote_state != SMD_CHANNEL_OPENING &&
 		    remote_state != SMD_CHANNEL_OPENED)
@@ -1373,11 +1383,17 @@ printk(" >>>> %s \n", __func__);
 		spin_lock_irqsave(&edge->channels_lock, flags);
 	}
 
+
 	/*
 	 * Unregister the device for any channel that is opened where the
 	 * remote processor is closing the channel.
 	 */
 	list_for_each_entry(channel, &edge->channels, list) {
+
+		/* Dont trust the channel state of the remote proc when we have
+		* wonky_rx users are expected to manually close */
+		if (edge->wonky_rx)
+			continue;
 		if (channel->state != SMD_CHANNEL_OPENING &&
 		    channel->state != SMD_CHANNEL_OPENED)
 			continue;
@@ -1463,6 +1479,11 @@ static int qcom_smd_parse_edge(struct device *dev,
 		dev_err(dev, "no bit in %s\n", key);
 		return -EINVAL;
 	}
+
+	edge->wonky_rx = 0;
+	key = "qcom,initialize-target-rx";
+	of_property_read_u32(node, key, &edge->wonky_rx);
+	printk(" %s wonky_rx value %d \n", __func__, edge->wonky_rx);
 
 	return 0;
 }

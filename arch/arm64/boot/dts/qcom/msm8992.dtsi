@@ -118,6 +118,7 @@
                         qcom,smd-edge = <15>;
 			qcom,local-pid = <0>;
 			qcom,remote-pid = <6>;
+			qcom,initialize-target-rx = <1>;
 
                         rpm_requests {
                                 compatible = "qcom,rpm-msm8994";
@@ -155,11 +156,7 @@
 					pm8994_l17: l17 {};
 					pm8994_l18: l18 {};
 					pm8994_l19: l19 {};
-					pm8994_l20: l20 {
-						regulator-min-microvolt = <2950000>;
-						regulator-max-microvolt = <2950000>;
-						status = "okay";
-					};
+					pm8994_l20: l20 {};
 					pm8994_l21: l21 {};
 					pm8994_l22: l22 {};
 					pm8994_l23: l23 {};
