@@ -966,7 +966,7 @@ static const struct of_device_id rpm_of_match[] = {
 	{ .compatible = "qcom,rpm-pm8058-regulators", .data = &rpm_pm8058_regulators },
 	{ .compatible = "qcom,rpm-pm8901-regulators", .data = &rpm_pm8901_regulators },
 	{ .compatible = "qcom,rpm-pm8921-regulators", .data = &rpm_pm8921_regulators },
-	{ .compatible = "qcom,rpm-pm8994-regulators", .data = &rpm_pm8994_regulators },
+	//{ .compatible = "qcom,rpm-pm8994-regulators", .data = &rpm_pm8994_regulators },
 	{ }
 };
 MODULE_DEVICE_TABLE(of, rpm_of_match);
