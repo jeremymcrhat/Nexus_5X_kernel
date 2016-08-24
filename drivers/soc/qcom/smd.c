@@ -25,6 +25,7 @@
 #include <linux/soc/qcom/smd.h>
 #include <linux/soc/qcom/smem.h>
 #include <linux/wait.h>
+#include <asm/delay.h>
 
 /*
  * The Qualcomm Shared Memory communication solution provides point-to-point
@@ -563,6 +564,7 @@ printk(" INTR !! W00T !! %s \n", __func__);
 	/* Handle state changes */
 	remote_state = GET_RX_CHANNEL_INFO(channel, state);
 	if (remote_state != channel->remote_state) {
+		printk(" -- Need rescan -- \n");
 		channel->remote_state = remote_state;
 		need_state_scan = true;
 	}
@@ -1168,6 +1170,7 @@ static struct qcom_smd_channel *qcom_smd_create_channel(struct qcom_smd_edge *ed
 	void *info;
 	int ret;
 	int remote_state;
+	int i=0;
 
 	channel = devm_kzalloc(smd->dev, sizeof(*channel), GFP_KERNEL);
 	if (!channel)
@@ -1223,10 +1226,35 @@ static struct qcom_smd_channel *qcom_smd_create_channel(struct qcom_smd_edge *ed
 	qcom_smd_channel_reset(channel);
 
 
+#if 1
 	//JRM writing TX state
 	printk(" Reading REmote state initally!\n");
 	remote_state = GET_RX_CHANNEL_INFO(channel, state);
 	printk(" Remote state === %d \n", remote_state);
+
+	for(i=SMD_CHANNEL_CLOSED; i<=SMD_CHANNEL_OPENING; i++)
+	{
+		printk(" Writing TX value of %d \n", i);
+		SET_TX_CHANNEL_INFO(channel, state,i );
+		udelay(1);
+		remote_state = GET_RX_CHANNEL_INFO(channel, state);
+		printk(" Value read from RX Channel is: %d \n", remote_state);
+		SET_TX_CHANNEL_FLAG(channel, fSTATE, 0);
+		udelay(1);
+		remote_state = GET_RX_CHANNEL_INFO(channel, state);
+		printk(" Value read from RX Channel is: %d \n", remote_state);
+		udelay(1);
+		SET_TX_CHANNEL_FLAG(channel, fSTATE, 1);
+		qcom_smd_signal_channel(channel);
+		udelay(1);
+		remote_state = GET_RX_CHANNEL_INFO(channel, state);
+		printk(" Value read from RX Channel is: %d \n", remote_state);
+	}
+
+	remote_state = GET_RX_CHANNEL_INFO(channel, state);
+	printk(" Remote state === %d \n", remote_state);
+	channel->remote_state = remote_state;
+#endif
 
 
 	return channel;
@@ -1255,6 +1283,7 @@ static void qcom_channel_scan_worker(struct work_struct *work)
 	unsigned info_id;
 	int tbl;
 	int i;
+	int remote_state;
 	u32 eflags, cid;
 
 printk(" %s --> enter \n", __func__);
@@ -1358,7 +1387,7 @@ printk(" >>>> %s \n", __func__);
 //
 //
 /* Comment this out to get regulators to be called !!! */
-
+#if 0
 		if (edge->wonky_rx) {
 			printk("Writing remote state of 1 \n");
 			SET_RX_CHANNEL_INFO(channel, state, 1);
@@ -1366,6 +1395,7 @@ printk(" >>>> %s \n", __func__);
 			remote_state = GET_RX_CHANNEL_INFO(channel, state);
 			printk(" Remote state === %d \n", remote_state);
 		}
+#endif
 
 		if (remote_state != SMD_CHANNEL_OPENING &&
 		    remote_state != SMD_CHANNEL_OPENED)
@@ -1388,6 +1418,7 @@ printk(" >>>> %s \n", __func__);
 	 * Unregister the device for any channel that is opened where the
 	 * remote processor is closing the channel.
 	 */
+#if 0
 	list_for_each_entry(channel, &edge->channels, list) {
 
 		/* Dont trust the channel state of the remote proc when we have
@@ -1407,6 +1438,7 @@ printk(" >>>> %s \n", __func__);
 		qcom_smd_destroy_device(channel);
 		spin_lock_irqsave(&edge->channels_lock, flags);
 	}
+#endif
 	spin_unlock_irqrestore(&edge->channels_lock, flags);
 }
 
