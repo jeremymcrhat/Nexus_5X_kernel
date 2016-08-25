@@ -167,6 +167,7 @@ static int qcom_smd_rpm_callback(struct qcom_smd_channel *channel,
 
 printk(" ### %s ### \n", __func__);
 
+	printk(" Header Type: 0x%x Length: 0x%x \n ", (unsigned int)le32_to_cpu(hdr->service_type), (unsigned int)hdr_length);
 	if (le32_to_cpu(hdr->service_type) != RPM_SERVICE_TYPE_REQUEST ||
 	    hdr_length < sizeof(struct qcom_rpm_message)) {
 		dev_err(rpm->dev, "invalid request\n");

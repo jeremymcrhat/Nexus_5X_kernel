@@ -143,6 +143,8 @@
 				l20 {
 					regulator-min-microvolt = <2950000>;
 					regulator-max-microvolt = <2950000>;
+					regulator-always-on;
+					regulator-boot-on;
 				};
 
 			};  /* end pm8994 regs */

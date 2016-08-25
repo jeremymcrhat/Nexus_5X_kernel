@@ -357,7 +357,7 @@ struct qcom_smd_alloc_entry {
 static void qcom_smd_signal_channel(struct qcom_smd_channel *channel)
 {
 	struct qcom_smd_edge *edge = channel->edge;
-
+printk(" %s regmap: 0x%x offset: 0x%x bit: 0x%x \n", __func__, (unsigned int) edge->ipc_regmap, edge->ipc_offset, edge->ipc_bit);
 	regmap_write(edge->ipc_regmap, edge->ipc_offset, BIT(edge->ipc_bit));
 }
 
@@ -481,6 +481,9 @@ static size_t qcom_smd_channel_peek(struct qcom_smd_channel *channel,
 	tail = GET_RX_CHANNEL_INFO(channel, tail);
 
 	len = min_t(size_t, count, channel->fifo_size - tail);
+
+printk(" %s -> tail %u len %d count %d ch_fifo_size_minus_tail %d \n",
+		__func__, tail, (unsigned int)len, (unsigned int)count, (channel->fifo_size - tail));
 	if (len) {
 		smd_copy_from_fifo(buf,
 				   channel->rx_fifo + tail,
@@ -558,6 +561,7 @@ static bool qcom_smd_channel_intr(struct qcom_smd_channel *channel)
 	__le32 pktlen;
 	int avail;
 	int ret;
+	unsigned tail;
 
 printk(" INTR !! W00T !! %s \n", __func__);
 
@@ -573,7 +577,10 @@ printk(" INTR !! W00T !! %s \n", __func__);
 
 	/* Signal waiting qcom_smd_send() about the interrupt */
 	if (!GET_TX_CHANNEL_FLAG(channel, fBLOCKREADINTR))
+	{
+		printk(" %s Signal waiting qcom_smd_send about IRQ \n", __func__);
 		wake_up_interruptible(&channel->fblockread_event);
+	}
 
 	/* Don't consume any data until we've opened the channel */
 	if (channel->state != SMD_CHANNEL_OPENED) {
@@ -584,14 +591,31 @@ printk(" INTR !! W00T !! %s \n", __func__);
 	/* Indicate that we've seen the new data */
 	SET_RX_CHANNEL_FLAG(channel, fHEAD, 0);
 
+printk(" %s before consume data \n", __func__);
 	/* Consume data */
 	for (;;) {
 		avail = qcom_smd_channel_get_rx_avail(channel);
+		printk("    AVAIL: %d channel->pkt_size== %d \n", avail, channel->pkt_size);
 
 		if (!channel->pkt_size && avail >= SMD_PACKET_HEADER_LEN) {
 			qcom_smd_channel_peek(channel, &pktlen, sizeof(pktlen));
+			printk(" %s pktLen: %u size_pktlen: %d \n", __func__, le32_to_cpu(pktlen), sizeof(pktlen));
+
 			qcom_smd_channel_advance(channel, SMD_PACKET_HEADER_LEN);
-			channel->pkt_size = le32_to_cpu(pktlen);
+			if (le32_to_cpu(pktlen) > channel->fifo_size)
+			{
+				/*** Is there a function which can automagically
+				 * do the subtraction of the bigger of the 2 for us? */
+				tail = GET_RX_CHANNEL_INFO(channel, tail);
+				if (channel->fifo_size > tail)
+					channel->pkt_size = (channel->fifo_size - tail);
+				else
+					channel->pkt_size = (tail - channel->fifo_size);
+			}
+			else
+			{
+				channel->pkt_size = le32_to_cpu(pktlen);
+			}
 		} else if (channel->pkt_size && avail >= channel->pkt_size) {
 			ret = qcom_smd_channel_recv_single(channel);
 			if (ret) {
@@ -708,6 +732,9 @@ static int qcom_smd_write_fifo(struct qcom_smd_channel *channel,
 	word_aligned = channel->info_word;
 	head = GET_TX_CHANNEL_INFO(channel, head);
 
+printk(" %s -> tail %u len %d count %d ch_fifo_size_minus_tail %d \n",
+                __func__, head, (unsigned int)len, (unsigned int)count, (channel->fifo_size - head));
+
 	len = min_t(size_t, count, channel->fifo_size - head);
 	if (len) {
 		smd_copy_to_fifo(channel->tx_fifo + head,
@@ -749,11 +776,17 @@ int qcom_smd_send(struct qcom_smd_channel *channel, const void *data, int len)
 
 	/* Word aligned channels only accept word size aligned data */
 	if (channel->info_word && len % 4)
+	{
+		printk(" %s : error word alignment \n", __func__);
 		return -EINVAL;
+	}
 
 	/* Reject packets that are too big */
 	if (tlen >= channel->fifo_size)
+	{
+		printk(" %s : error fifo_size bigger then tlen \n", __func__);
 		return -EINVAL;
+	}
 
 	ret = mutex_lock_interruptible(&channel->tx_lock);
 	if (ret)
@@ -762,6 +795,7 @@ int qcom_smd_send(struct qcom_smd_channel *channel, const void *data, int len)
 	while (qcom_smd_get_tx_avail(channel) < tlen) {
 		if (channel->state != SMD_CHANNEL_OPENED) {
 			ret = -EPIPE;
+			printk(" %s; channel state != OPENED \n", __func__);
 			goto out;
 		}
 
@@ -770,8 +804,10 @@ int qcom_smd_send(struct qcom_smd_channel *channel, const void *data, int len)
 		ret = wait_event_interruptible(channel->fblockread_event,
 				       qcom_smd_get_tx_avail(channel) >= tlen ||
 				       channel->state != SMD_CHANNEL_OPENED);
-		if (ret)
+		if (ret) {
+			SET_TX_CHANNEL_FLAG(channel, fBLOCKREADINTR, 1);
 			goto out;
+		}
 
 		SET_TX_CHANNEL_FLAG(channel, fBLOCKREADINTR, 1);
 	}
@@ -1174,13 +1210,19 @@ static struct qcom_smd_channel *qcom_smd_create_channel(struct qcom_smd_edge *ed
 
 	channel = devm_kzalloc(smd->dev, sizeof(*channel), GFP_KERNEL);
 	if (!channel)
+	{
+		printk(" %s Error allocating kernel memory\n", __func__);
 		return ERR_PTR(-ENOMEM);
+	}
 
 	INIT_LIST_HEAD(&channel->dev_list);
 	channel->edge = edge;
 	channel->name = devm_kstrdup(smd->dev, name, GFP_KERNEL);
 	if (!channel->name)
+	{
+		printk(" %s error allocating name \n", __func__);
 		return ERR_PTR(-ENOMEM);
+	}
 
 	mutex_init(&channel->tx_lock);
 	spin_lock_init(&channel->recv_lock);
@@ -1216,8 +1258,8 @@ static struct qcom_smd_channel *qcom_smd_create_channel(struct qcom_smd_edge *ed
 	/* The channel consist of a rx and tx fifo of equal size */
 	fifo_size /= 2;
 
-	dev_dbg(smd->dev, "new channel '%s' info-size: %zu fifo-size: %zu\n",
-			  name, info_size, fifo_size);
+	printk("new channel '%s' fifo_base: 0x%lx  info-size: %zu fifo-size: %zu\n",
+			  name, (unsigned long) fifo_base, info_size, fifo_size);
 
 	channel->tx_fifo = fifo_base;
 	channel->rx_fifo = fifo_base + fifo_size;
@@ -1227,12 +1269,23 @@ static struct qcom_smd_channel *qcom_smd_create_channel(struct qcom_smd_edge *ed
 
 
 #if 1
+
+       ret = mutex_lock_interruptible(&channel->tx_lock);
+        if (ret)
+                goto free_name_and_channel;
+
 	//JRM writing TX state
 	printk(" Reading REmote state initally!\n");
 	remote_state = GET_RX_CHANNEL_INFO(channel, state);
 	printk(" Remote state === %d \n", remote_state);
 
-	for(i=SMD_CHANNEL_CLOSED; i<=SMD_CHANNEL_OPENING; i++)
+
+        channel->pkt_size = 0;
+
+
+	SET_TX_CHANNEL_FLAG(channel, fBLOCKREADINTR, 0);
+
+	for(i=SMD_CHANNEL_CLOSED; i<=SMD_CHANNEL_OPENED; i++)
 	{
 		printk(" Writing TX value of %d \n", i);
 		SET_TX_CHANNEL_INFO(channel, state,i );
@@ -1251,9 +1304,17 @@ static struct qcom_smd_channel *qcom_smd_create_channel(struct qcom_smd_edge *ed
 		printk(" Value read from RX Channel is: %d \n", remote_state);
 	}
 
+	udelay(50); // give the remote some time to adjust its state...
+
 	remote_state = GET_RX_CHANNEL_INFO(channel, state);
 	printk(" Remote state === %d \n", remote_state);
 	channel->remote_state = remote_state;
+	
+
+	SET_TX_CHANNEL_FLAG(channel, fBLOCKREADINTR, 1);
+
+	mutex_unlock(&channel->tx_lock);
+
 #endif
 
 
@@ -1388,6 +1449,8 @@ printk(" >>>> %s \n", __func__);
 //
 /* Comment this out to get regulators to be called !!! */
 #if 0
+		//printk(" Value directly is: 0x%lx \n", le32_to_cpu(channel->info_word ? channel->info_word->rx.state : channel->info->rx.state)); 
+
 		if (edge->wonky_rx) {
 			printk("Writing remote state of 1 \n");
 			SET_RX_CHANNEL_INFO(channel, state, 1);
@@ -1395,6 +1458,9 @@ printk(" >>>> %s \n", __func__);
 			remote_state = GET_RX_CHANNEL_INFO(channel, state);
 			printk(" Remote state === %d \n", remote_state);
 		}
+
+		//printk(" Value directly after is: 0x%lx \n", le32_to_cpu(channel->info_word ? channel->info_word->rx.state : channel->info->rx.state)); 
+
 #endif
 
 		if (remote_state != SMD_CHANNEL_OPENING &&

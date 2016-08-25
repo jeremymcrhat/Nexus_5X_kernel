@@ -917,6 +917,7 @@ static int machine_constraints_voltage(struct regulator_dev *rdev,
 			ret = _regulator_do_set_voltage(
 				rdev, target_min, target_max);
 			if (ret < 0) {
+				WARN_ON(1);
 				rdev_err(rdev,
 					"failed to apply %d-%duV constraint(%d)\n",
 					target_min, target_max, ret);
@@ -2810,10 +2811,12 @@ static int _regulator_do_set_voltage(struct regulator_dev *rdev,
 	}
 
 	if (rdev->desc->ops->set_voltage) {
+		printk(" %s: ops set_voltage \n", __func__);
 		ret = _regulator_call_set_voltage(rdev, min_uV, max_uV,
 						  &selector);
 
 		if (ret >= 0) {
+			printk(" %s: Checking list_voltage \n", __func__);
 			if (rdev->desc->ops->list_voltage)
 				best_val = rdev->desc->ops->list_voltage(rdev,
 									 selector);
@@ -3155,10 +3158,13 @@ static int _regulator_get_voltage(struct regulator_dev *rdev)
 	int sel, ret;
 	bool bypassed;
 
+printk(" %s -- enter \n", __func__);
 	if (rdev->desc->ops->get_bypass) {
 		ret = rdev->desc->ops->get_bypass(rdev, &bypassed);
-		if (ret < 0)
+		if (ret < 0){
+			printk(" %s get_bypass failed \n", __func__);
 			return ret;
+		}
 		if (bypassed) {
 			/* if bypassed the regulator must have a supply */
 			if (!rdev->supply) {
@@ -3166,30 +3172,42 @@ static int _regulator_get_voltage(struct regulator_dev *rdev)
 					 "bypassed regulator has no supply!\n");
 				return -EPROBE_DEFER;
 			}
-
+			printk(" bypassed reg get voltage \n");
 			return _regulator_get_voltage(rdev->supply->rdev);
 		}
 	}
 
 	if (rdev->desc->ops->get_voltage_sel) {
 		sel = rdev->desc->ops->get_voltage_sel(rdev);
+		printk("  get_volt sel returned (%d)\n", sel);
 		if (sel < 0)
 			return sel;
 		ret = rdev->desc->ops->list_voltage(rdev, sel);
+		printk(" list voltage returned (%d) \n", ret);
 	} else if (rdev->desc->ops->get_voltage) {
 		ret = rdev->desc->ops->get_voltage(rdev);
+		printk(" get_voltage returned (%d) \n",ret);
 	} else if (rdev->desc->ops->list_voltage) {
 		ret = rdev->desc->ops->list_voltage(rdev, 0);
+		printk(" list_voltage returned (%d) \n", ret);
 	} else if (rdev->desc->fixed_uV && (rdev->desc->n_voltages == 1)) {
 		ret = rdev->desc->fixed_uV;
+		printk(" fixed uV returned (%d)\n", ret);
 	} else if (rdev->supply) {
 		ret = _regulator_get_voltage(rdev->supply->rdev);
+		printk(" rdev supply returned (%d) \n", ret);
 	} else {
+		printk(" %s nothing left \n",__func__);
 		return -EINVAL;
 	}
 
+	printk(" %s ret is currently (%d) \n", __func__, ret);
 	if (ret < 0)
+	{
+		printk(" ret is < 0 val: %d \n", ret);
 		return ret;
+	}
+	printk(" uVoffset = %d \n", rdev->constraints->uV_offset);
 	return ret - rdev->constraints->uV_offset;
 }
 
