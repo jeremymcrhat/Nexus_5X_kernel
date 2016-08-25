@@ -357,7 +357,6 @@ struct qcom_smd_alloc_entry {
 static void qcom_smd_signal_channel(struct qcom_smd_channel *channel)
 {
 	struct qcom_smd_edge *edge = channel->edge;
-printk(" %s regmap: 0x%x offset: 0x%x bit: 0x%x \n", __func__, (unsigned int) edge->ipc_regmap, edge->ipc_offset, edge->ipc_bit);
 	regmap_write(edge->ipc_regmap, edge->ipc_offset, BIT(edge->ipc_bit));
 }
 
@@ -591,7 +590,6 @@ printk(" INTR !! W00T !! %s \n", __func__);
 	/* Indicate that we've seen the new data */
 	SET_RX_CHANNEL_FLAG(channel, fHEAD, 0);
 
-printk(" %s before consume data \n", __func__);
 	/* Consume data */
 	for (;;) {
 		avail = qcom_smd_channel_get_rx_avail(channel);
@@ -731,9 +729,6 @@ static int qcom_smd_write_fifo(struct qcom_smd_channel *channel,
 
 	word_aligned = channel->info_word;
 	head = GET_TX_CHANNEL_INFO(channel, head);
-
-printk(" %s -> tail %u len %d count %d ch_fifo_size_minus_tail %d \n",
-                __func__, head, (unsigned int)len, (unsigned int)count, (channel->fifo_size - head));
 
 	len = min_t(size_t, count, channel->fifo_size - head);
 	if (len) {
@@ -1090,7 +1085,6 @@ int qcom_smd_driver_register(struct qcom_smd_driver *qsdrv)
 	qsdrv->driver.bus = &qcom_smd_bus;
 	ret = driver_register(&qsdrv->driver);
 
-	printk(" -- %s -- ret: %d \n", __func__, ret);
 	return ret;
 }
 EXPORT_SYMBOL(qcom_smd_driver_register);
@@ -1189,6 +1183,64 @@ struct qcom_smd_channel *qcom_smd_open_channel(struct qcom_smd_channel *parent,
 }
 EXPORT_SYMBOL(qcom_smd_open_channel);
 
+/* TODO add comment about purpose and justification of function */
+int qcom_smd_channel_init_tx(struct qcom_smd_channel *channel, int initial_state)
+{
+
+	int ret = 0;
+	int i;
+	int remote_state;
+
+        ret = mutex_lock_interruptible(&channel->tx_lock);
+        if (ret)
+                return ret;
+
+        printk(" Reading REmote state initally!\n");
+        remote_state = GET_RX_CHANNEL_INFO(channel, state);
+        printk(" Remote state === %d \n", remote_state);
+
+        channel->pkt_size = 0;
+
+        SET_TX_CHANNEL_FLAG(channel, fBLOCKREADINTR, 0);
+
+        for(i=SMD_CHANNEL_CLOSED; i<=initial_state; i++)
+        {
+                printk(" Writing TX value of %d \n", i);
+                SET_TX_CHANNEL_INFO(channel, state,i );
+                udelay(1);
+                remote_state = GET_RX_CHANNEL_INFO(channel, state);
+                printk(" Value read from RX Channel is: %d \n", remote_state);
+                SET_TX_CHANNEL_FLAG(channel, fSTATE, 0);
+                udelay(1);
+                remote_state = GET_RX_CHANNEL_INFO(channel, state);
+                printk(" Value read from RX Channel is: %d \n", remote_state);
+                udelay(1);
+                SET_TX_CHANNEL_FLAG(channel, fSTATE, 1);
+                qcom_smd_signal_channel(channel);
+                udelay(1);
+                remote_state = GET_RX_CHANNEL_INFO(channel, state);
+                printk(" Value read from RX Channel is: %d \n", remote_state);
+        }
+
+        udelay(50); // give the remote some time to adjust its state...
+
+        remote_state = GET_RX_CHANNEL_INFO(channel, state);
+        printk(" Remote state === %d \n", remote_state);
+        channel->remote_state = remote_state;
+
+	if (remote_state != initial_state) {
+		printk(" Error setting initial state of %d \n", initial_state);
+		ret = -ENODEV; //or someting more appropriate
+	}
+
+        SET_TX_CHANNEL_FLAG(channel, fBLOCKREADINTR, 1);
+        mutex_unlock(&channel->tx_lock);
+
+	return ret;
+
+}
+
+
 /*
  * Allocate the qcom_smd_channel object for a newly found smd channel,
  * retrieving and validating the smem items involved.
@@ -1205,8 +1257,6 @@ static struct qcom_smd_channel *qcom_smd_create_channel(struct qcom_smd_edge *ed
 	void *fifo_base;
 	void *info;
 	int ret;
-	int remote_state;
-	int i=0;
 
 	channel = devm_kzalloc(smd->dev, sizeof(*channel), GFP_KERNEL);
 	if (!channel)
@@ -1267,56 +1317,12 @@ static struct qcom_smd_channel *qcom_smd_create_channel(struct qcom_smd_edge *ed
 
 	qcom_smd_channel_reset(channel);
 
-
-#if 1
-
-       ret = mutex_lock_interruptible(&channel->tx_lock);
-        if (ret)
-                goto free_name_and_channel;
-
-	//JRM writing TX state
-	printk(" Reading REmote state initally!\n");
-	remote_state = GET_RX_CHANNEL_INFO(channel, state);
-	printk(" Remote state === %d \n", remote_state);
-
-
-        channel->pkt_size = 0;
-
-
-	SET_TX_CHANNEL_FLAG(channel, fBLOCKREADINTR, 0);
-
-	for(i=SMD_CHANNEL_CLOSED; i<=SMD_CHANNEL_OPENED; i++)
-	{
-		printk(" Writing TX value of %d \n", i);
-		SET_TX_CHANNEL_INFO(channel, state,i );
-		udelay(1);
-		remote_state = GET_RX_CHANNEL_INFO(channel, state);
-		printk(" Value read from RX Channel is: %d \n", remote_state);
-		SET_TX_CHANNEL_FLAG(channel, fSTATE, 0);
-		udelay(1);
-		remote_state = GET_RX_CHANNEL_INFO(channel, state);
-		printk(" Value read from RX Channel is: %d \n", remote_state);
-		udelay(1);
-		SET_TX_CHANNEL_FLAG(channel, fSTATE, 1);
-		qcom_smd_signal_channel(channel);
-		udelay(1);
-		remote_state = GET_RX_CHANNEL_INFO(channel, state);
-		printk(" Value read from RX Channel is: %d \n", remote_state);
+	if (edge->wonky_rx) {
+		ret = qcom_smd_channel_init_tx(channel, SMD_CHANNEL_OPENED);  //Feel free to offer a better name for this function..
 	}
 
-	udelay(50); // give the remote some time to adjust its state...
-
-	remote_state = GET_RX_CHANNEL_INFO(channel, state);
-	printk(" Remote state === %d \n", remote_state);
-	channel->remote_state = remote_state;
-	
-
-	SET_TX_CHANNEL_FLAG(channel, fBLOCKREADINTR, 1);
-
-	mutex_unlock(&channel->tx_lock);
-
-#endif
-
+	if (ret)
+		goto free_name_and_channel;
 
 	return channel;
 
@@ -1344,10 +1350,8 @@ static void qcom_channel_scan_worker(struct work_struct *work)
 	unsigned info_id;
 	int tbl;
 	int i;
-	int remote_state;
 	u32 eflags, cid;
 
-printk(" %s --> enter \n", __func__);
 	for (tbl = 0; tbl < SMD_ALLOC_TBL_COUNT; tbl++) {
 		alloc_tbl = qcom_smem_get(edge->remote_pid,
 				    smem_items[tbl].alloc_tbl_id, NULL);
@@ -1371,13 +1375,11 @@ printk(" %s --> enter \n", __func__);
 
 			if (!entry->name[0])
 			{
-				printk(" Error name is null \n");
 				continue;
 			}
 
 			if (!(eflags & SMD_CHANNEL_FLAGS_PACKET))
 			{
-				printk(" error smd channel flags packet \n");
 				continue;
 			}
 
@@ -1394,7 +1396,6 @@ printk(" %s --> enter \n", __func__);
 			channel = qcom_smd_create_channel(edge, info_id, fifo_id, entry->name);
 			if (IS_ERR(channel))
 			{
-				printk(" Error creating SMD channel \n");
 				continue;
 			}
 
@@ -1430,7 +1431,6 @@ static void qcom_channel_state_worker(struct work_struct *work)
 	unsigned remote_state;
 	unsigned long flags;
 	int ret = 0;
-printk(" >>>> %s \n", __func__);
 	/*
 	 * Register a device for any closed channel where the remote processor
 	 * is showing interest in opening the channel.
@@ -1444,24 +1444,6 @@ printk(" >>>> %s \n", __func__);
 		remote_state = GET_RX_CHANNEL_INFO(channel, state);
 		printk(" Remote state === %d \n", remote_state);
 
-//JRM -->> TODO : remote state should be 1 (double check with 3.10)
-//
-//
-/* Comment this out to get regulators to be called !!! */
-#if 0
-		//printk(" Value directly is: 0x%lx \n", le32_to_cpu(channel->info_word ? channel->info_word->rx.state : channel->info->rx.state)); 
-
-		if (edge->wonky_rx) {
-			printk("Writing remote state of 1 \n");
-			SET_RX_CHANNEL_INFO(channel, state, 1);
-			printk(" reading remote state back \n");
-			remote_state = GET_RX_CHANNEL_INFO(channel, state);
-			printk(" Remote state === %d \n", remote_state);
-		}
-
-		//printk(" Value directly after is: 0x%lx \n", le32_to_cpu(channel->info_word ? channel->info_word->rx.state : channel->info->rx.state)); 
-
-#endif
 
 		if (remote_state != SMD_CHANNEL_OPENING &&
 		    remote_state != SMD_CHANNEL_OPENED)
@@ -1484,7 +1466,6 @@ printk(" >>>> %s \n", __func__);
 	 * Unregister the device for any channel that is opened where the
 	 * remote processor is closing the channel.
 	 */
-#if 0
 	list_for_each_entry(channel, &edge->channels, list) {
 
 		/* Dont trust the channel state of the remote proc when we have
@@ -1504,7 +1485,6 @@ printk(" >>>> %s \n", __func__);
 		qcom_smd_destroy_device(channel);
 		spin_lock_irqsave(&edge->channels_lock, flags);
 	}
-#endif
 	spin_unlock_irqrestore(&edge->channels_lock, flags);
 }
 
