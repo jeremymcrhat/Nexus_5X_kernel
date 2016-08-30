@@ -434,29 +434,43 @@ static int sdhci_msm_vreg_init(struct device *dev,
 
 	curr_slot = pdata->vreg_data;
 	if (!curr_slot)
+	{
+		printk(" %s, curr slot failed \n", __func__);
 		goto out;
+	}
 
 	curr_vdd_reg = curr_slot->vdd_data;
 	curr_vdd_io_reg = curr_slot->vdd_io_data;
 
 	if (!is_init)
-		/* Deregister all regulators from regulator framework */
+	{
+		printk(" %s: error not init mode \n", __func__);
+		/* Deregister all regulators from regulator fram ework */
 		goto vdd_io_reg_deinit;
+	}
 
 	/*
 	 * Get the regulator handle from voltage regulator framework
 	 * and then try to set the voltage level for the regulator
 	 */
 	if (curr_vdd_reg) {
+		printk(" %s getting vreg init reg \n", __func__);
 		ret = sdhci_msm_vreg_init_reg(dev, curr_vdd_reg);
 		if (ret)
+		{
+			printk(" %s error init vreg init reg\n", __func__);
 			goto out;
+		}
 	}
 	if (curr_vdd_io_reg) {
+		printk(" %s getting sdhci vreg init reg \n", __func__);
 		ret = sdhci_msm_vreg_init_reg(dev, curr_vdd_io_reg);
-		if (ret)
+		if (ret) {
+			printk(" %s Error vreg init reg %d \n", __func__, ret);
 			goto vdd_reg_deinit;
+		}
 	}
+	printk(" %s vreg reset \n", __func__);
 	ret = sdhci_msm_vreg_reset(pdata);
 	if (ret)
 		dev_err(dev, "vreg reset failed (%d)\n", ret);
@@ -1199,11 +1213,15 @@ printk(" --> %s <-- \n", __func__);
 	if (!IS_ERR(msm_host->bus_clk)) {
 		/* Vote for max. clk rate for max. performance */
 		ret = clk_set_rate(msm_host->bus_clk, INT_MAX);
-		if (ret)
+		if (ret) {
+			printk(" Error setting bus_clk rate \n");
 			goto pltfm_free;
+		}
 		ret = clk_prepare_enable(msm_host->bus_clk);
-		if (ret)
+		if (ret) {
+			printk(" Error preparing clock enable \n");
 			goto pltfm_free;
+		}
 	}
 //printk("   +++ CLK_CORE -> rate %lu \n", msm_host->bus_clk->core->rate);
 
@@ -1221,7 +1239,7 @@ printk(" ----->>>>>> getting iface clk \n");
 		printk(" Error prep en \n");
 		goto bus_clk_disable;
 	}
-printk(" ------->>>>. getting core clk \n");
+
 	/* Setup SDC MMC clock */
 	msm_host->clk = devm_clk_get(&pdev->dev, "core");
 	if (IS_ERR(msm_host->clk)) {
