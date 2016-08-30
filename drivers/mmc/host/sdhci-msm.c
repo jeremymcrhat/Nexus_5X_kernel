@@ -135,9 +135,6 @@ struct sdhci_msm_host {
 	struct clk *pclk;	/* SDHC peripheral bus clock */
 	struct clk *bus_clk;	/* SDHC bus voter clock */
 	struct mmc_host *mmc;
-	u32 curr_pwr_state;
-	u32 curr_io_level;
-	struct completion pwr_irq_completion;
 	struct sdhci_msm_pltfm_data *pdata;
 	int pwr_irq;
 	u32 curr_pwr_state;
@@ -1063,77 +1060,6 @@ void sdhci_msm_dump_vendor_regs(struct sdhci_host *host)
                         CORE_TESTBUS_CONFIG);
 }
 
-#define CORE_GENERICS           0x70
-#define REQ_IO_LOW (1 << 2)
-#define REQ_IO_HIGH        (1 << 3)
-#define SWITCHABLE_SIGNALLING_VOL (1 << 29)
-
-#define MSM_PWR_IRQ_TIMEOUT_MS 5000
-
- void sdhci_msm_check_power_status(struct sdhci_host *host, u32 req_type)
-{
-        unsigned long flags;
-        bool done = false;
-        u32 io_sig_sts;
-        struct sdhci_pltfm_host *pltfm_host;
-        struct sdhci_msm_host *msm_host;
-
-        pltfm_host = sdhci_priv(host);
-        msm_host = sdhci_pltfm_priv(pltfm_host);
-
-        spin_lock_irqsave(&host->lock, flags);
-        pr_debug("%s: %s: request %d curr_pwr_state %x curr_io_level %x\n",
-                        mmc_hostname(host->mmc), __func__, req_type,
-                        msm_host->curr_pwr_state, msm_host->curr_io_level);
-        io_sig_sts = readl_relaxed(msm_host->core_mem + CORE_GENERICS);
-        /*
-         * The IRQ for request type IO High/Low will be generated when -
-         * 1. SWITCHABLE_SIGNALLING_VOL is enabled in HW.
-         * 2. If 1 is true and when there is a state change in 1.8V enable
-         * bit (bit 3) of SDHCI_HOST_CONTROL2 register. The reset state of
-         * that bit is 0 which indicates 3.3V IO voltage. So, when MMC core
-         * layer tries to set it to 3.3V before card detection happens, the
-         * IRQ doesn't get triggered as there is no state change in this bit.
-         * The driver already handles this case by changing the IO voltage
-         * level to high as part of controller power up sequence. Hence, check
-         * for host->pwr to handle a case where IO voltage high request is
-         * issued even before controller power up.
-         */
-
-        if (req_type & (REQ_IO_HIGH | REQ_IO_LOW)) {
-                if (!(io_sig_sts & SWITCHABLE_SIGNALLING_VOL) ||
-                                ((req_type & REQ_IO_HIGH) && !host->pwr)) {
-                        pr_debug("%s: do not wait for power IRQ that never comes\n",
-                                        mmc_hostname(host->mmc));
-                        spin_unlock_irqrestore(&host->lock, flags);
-                        return;
-                }
-        }
-
-        if ((req_type & msm_host->curr_pwr_state) ||
-                        (req_type & msm_host->curr_io_level))
-                done = true;
-        spin_unlock_irqrestore(&host->lock, flags);
-
-        /*
-         * This is needed here to hanlde a case where IRQ gets
-         * triggered even before this function is called so that
-         * x->done counter of completion gets reset. Otherwise,
-         * next call to wait_for_completion returns immediately
-         * without actually waiting for the IRQ to be handled.
-         */
-        if (done)
-                init_completion(&msm_host->pwr_irq_completion);
-        else if (!wait_for_completion_timeout(&msm_host->pwr_irq_completion,
-                                msecs_to_jiffies(MSM_PWR_IRQ_TIMEOUT_MS)))
-                __WARN_printf("%s: request(%d) timed out waiting for pwr_irq\n",
-                                        mmc_hostname(host->mmc), req_type);
-
-        pr_debug("%s: %s: request %d done\n", mmc_hostname(host->mmc),
-                        __func__, req_type);
-}
-
-
 static int sdhci_msm_execute_tuning(struct sdhci_host *host, u32 opcode)
 {
 	int tuning_seq_cnt = 3;
@@ -1260,7 +1186,6 @@ printk(" --> %s <-- \n", __func__);
 
 	sdhci_get_of_property(pdev);
 
-	/* Extract platform data */
 	if (pdev->dev.of_node) {
 		msm_host->pdata = sdhci_msm_populate_pdata(&pdev->dev);
 		if (!msm_host->pdata) {
