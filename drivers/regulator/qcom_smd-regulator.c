@@ -496,6 +496,7 @@ static int rpm_smd_reg_probe(struct platform_device *pdev)
 	struct regulator_dev *rdev;
 	struct qcom_rpm_reg *vreg;
 	struct qcom_smd_rpm *rpm;
+printk(" ^^^^ %s ^^^^ \n", __func__);
 
 	rpm = dev_get_drvdata(pdev->dev.parent);
 	if (!rpm) {
