@@ -92,12 +92,6 @@ config ARCH_MSM8992
 	help
 	  This enables support for the Qualcomm MSM8992 SoC.
 
-config MACH_LGE
-	bool "LGE BullHead (MSM8992)"
-	depends on ARCH_QCOM
-	help
-	  This enables support for the LGE Nexus 5X - BullHead MSM8992.
-
 config ARCH_ROCKCHIP
 	bool "Rockchip Platforms"
 	select ARCH_HAS_RESET_CONTROLLER
