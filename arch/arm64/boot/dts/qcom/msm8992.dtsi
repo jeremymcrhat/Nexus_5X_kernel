@@ -10,16 +10,12 @@
  * GNU General Public License for more details.
  */
 
-/memreserve/ 0x00000000 0x00001000;
-
 #include <dt-bindings/interrupt-controller/arm-gic.h>
 #include <dt-bindings/clock/qcom,gcc-msm8994.h>
 
 / {
 	model = "Qualcomm Technologies, Inc. MSM 8992";
 	compatible = "qcom,msm8992";
-	qcom,msm-id = <251 0>, <252 0>;
-	qcom,pmic-id = <0x10009 0x1000A 0x0 0x0>;
 	interrupt-parent = <&intc>;
 
 	#address-cells = <2>;
@@ -76,6 +72,17 @@
 			linux,remove-completely;
 			reg = <0 0x07400000 0 0x1c00000>;
 			label = "peripheral_mem";
+		};
+	};
+
+	reserved-memory {
+		#address-cells = <2>;
+		#size-cells = <2>;
+		ranges;
+
+		hidden_mem: mem@0x000000 {   /* TODO: better name for this */
+			reg = <0x0 0x000000 0x0 0x1000>;
+			no-map;
 		};
 	};
 };

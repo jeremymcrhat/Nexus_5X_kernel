@@ -13,12 +13,11 @@
 
 /dts-v1/;
 
-#include "../qcom/msm8992.dtsi"
+#include "msm8992.dtsi"
 
 / {
 	model = "LGE MSM8992 BULLHEAD rev-1.01";
 	compatible = "qcom,msm8992";
-	qcom,board-id = <0xb64 0>;
 };
 
 / {
