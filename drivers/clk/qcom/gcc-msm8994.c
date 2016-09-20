@@ -50,7 +50,7 @@ static const char * const gcc_xo_gpll0[] = {
 static const struct parent_map gcc_xo_gpll0_gpll4_map[] = {
 	{ P_XO, 0 },
 	{ P_GPLL0, 1 },
-	{ P_GPLL4, 2 },
+	{ P_GPLL4, 5 },
 };
 
 static const char * const gcc_xo_gpll0_gpll4[] = {
