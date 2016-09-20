@@ -76,16 +76,6 @@
 		};
 	};
 
-	reserved-memory {
-		#address-cells = <2>;
-		#size-cells = <2>;
-		ranges;
-
-		hidden_mem: mem@0x000000 {   /* TODO: better name for this */
-			reg = <0x0 0x000000 0x0 0x1000>;
-			no-map;
-		};
-	};
 };
 
 &soc {
