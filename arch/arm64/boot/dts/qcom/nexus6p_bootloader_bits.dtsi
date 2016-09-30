@@ -1,0 +1,24 @@
+/*
+ * Copyright (c) 2016, Red Hat Inc.
+ * Author: Jeremy McNicoll
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 and
+ * only version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+/* WARNING:  This file and associated DTS nodes are non-standard
+	and their use should be avoided.  If this code is referenced
+	in any way you put yourself at great risk of catching Bubonic
+	plague. */
+
+/ {
+	qcom,board-id = <8026 0>;
+	qcom,msm-id = <257 0>;
+	qcom,pmic-id = <0x10009 0x1000A 0x0 0x0>;
+};
