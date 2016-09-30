@@ -13,7 +13,7 @@
 
 /dts-v1/;
 
-#include "../qcom/msm8994-v2.0.dtsi"
+#include "msm8994-v2.0.dtsi"
 
 / {
 	model = "HUAWEI MSM8994 ANGLER rev-1.01";
