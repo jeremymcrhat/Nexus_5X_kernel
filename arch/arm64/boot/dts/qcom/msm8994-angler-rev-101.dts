@@ -18,7 +18,6 @@
 / {
 	model = "HUAWEI MSM8994 ANGLER rev-1.01";
 	compatible = "qcom,msm8994";
-	qcom,board-id= <8026 0>;
 };
 
 / {
