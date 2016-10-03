@@ -4,6 +4,13 @@
 #include <linux/device.h>
 #include <linux/mod_devicetable.h>
 
+
+/*
+ * SMD packets to the RPM may not exceed 256 bytes
+ */
+#define SMD_RPM_MAX_SIZE 256
+
+
 struct qcom_smd;
 struct qcom_smd_channel;
 struct qcom_smd_lookup;

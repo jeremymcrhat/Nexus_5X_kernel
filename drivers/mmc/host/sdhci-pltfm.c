@@ -121,10 +121,12 @@ struct sdhci_host *sdhci_pltfm_init(struct platform_device *pdev,
 	struct resource *iomem;
 	void __iomem *ioaddr;
 	int irq, ret;
+printk(" >>> %s \n", __func__);
 
 	iomem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 	ioaddr = devm_ioremap_resource(&pdev->dev, iomem);
 	if (IS_ERR(ioaddr)) {
+		dev_err(&pdev->dev, "failed to get iomem\n");
 		ret = PTR_ERR(ioaddr);
 		goto err;
 	}
@@ -140,6 +142,7 @@ struct sdhci_host *sdhci_pltfm_init(struct platform_device *pdev,
 		sizeof(struct sdhci_pltfm_host) + priv_size);
 
 	if (IS_ERR(host)) {
+		dev_err(&pdev->dev, "unable to allocate sdhci host\n");
 		ret = PTR_ERR(host);
 		goto err;
 	}

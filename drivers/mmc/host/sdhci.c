@@ -40,6 +40,9 @@
 
 #define MAX_TUNING_LOOP 40
 
+#define CORE_DLL_RST            (1 << 30)
+#define CORE_DLL_PDN            (1 << 29)
+
 static unsigned int debug_quirks = 0;
 static unsigned int debug_quirks2;
 
@@ -49,6 +52,33 @@ static void sdhci_finish_command(struct sdhci_host *);
 static int sdhci_execute_tuning(struct mmc_host *mmc, u32 opcode);
 static void sdhci_enable_preset_value(struct sdhci_host *host, bool enable);
 static int sdhci_get_cd(struct mmc_host *mmc);
+
+static void sdhci_dump_rpm_info(struct sdhci_host *host)
+{
+        struct mmc_host *mmc = host->mmc;
+
+        pr_info("%s: rpmstatus[pltfm](runtime-suspend:usage_count:disable_depth)(%d:%d:%d)\n",
+                mmc_hostname(mmc), mmc->parent->power.runtime_status,
+                atomic_read(&mmc->parent->power.usage_count),
+                mmc->parent->power.disable_depth);
+}
+
+
+static void sdhci_dump_state(struct sdhci_host *host)
+{
+        struct mmc_host *mmc = host->mmc;
+
+#if 0
+        pr_info("%s: clk: %d clk-gated: %d claimer: %s pwr: %d\n",
+                mmc_hostname(mmc), host->clock, mmc->clk_gated,
+                mmc->claimer->comm, host->pwr);
+#endif
+
+        pr_info("%s: clk: %d claimer: %s pwr: %d\n",
+                mmc_hostname(mmc), host->clock, 
+                mmc->claimer->comm, host->pwr);
+        sdhci_dump_rpm_info(host);
+}
 
 static void sdhci_dumpregs(struct sdhci_host *host)
 {
@@ -103,6 +133,10 @@ static void sdhci_dumpregs(struct sdhci_host *host)
 				 readl(host->ioaddr + SDHCI_ADMA_ADDRESS));
 	}
 
+	if (host->ops->dump_vendor_regs)
+		host->ops->dump_vendor_regs(host);
+
+	sdhci_dump_state(host);
 	pr_debug(DRIVER_NAME ": ===========================================\n");
 }
 
@@ -173,8 +207,7 @@ void sdhci_reset(struct sdhci_host *host, u8 mask)
 			sdhci_runtime_pm_bus_off(host);
 	}
 
-	/* Wait max 100 ms */
-	timeout = 100;
+	timeout = 5000;
 
 	if (host->ops->check_power_status && host->pwr &&
 	    (mask & SDHCI_RESET_ALL))
@@ -227,7 +260,7 @@ static void sdhci_init(struct sdhci_host *host, int soft)
 		    SDHCI_INT_DATA_CRC | SDHCI_INT_DATA_TIMEOUT |
 		    SDHCI_INT_INDEX | SDHCI_INT_END_BIT | SDHCI_INT_CRC |
 		    SDHCI_INT_TIMEOUT | SDHCI_INT_DATA_END |
-		    SDHCI_INT_RESPONSE;
+		    SDHCI_INT_RESPONSE | SDHCI_INT_AUTO_CMD_ERR;
 
 	sdhci_writel(host, host->ier, SDHCI_INT_ENABLE);
 	sdhci_writel(host, host->ier, SDHCI_SIGNAL_ENABLE);
@@ -1244,8 +1277,8 @@ void sdhci_set_clock(struct sdhci_host *host, unsigned int clock)
 	clk |= SDHCI_CLOCK_INT_EN;
 	sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
 
-	/* Wait max 20 ms */
-	timeout = 20;
+	/* Wait max 200 ms */
+	timeout = 200;
 	while (!((clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL))
 		& SDHCI_CLOCK_INT_STABLE)) {
 		if (timeout == 0) {
@@ -1460,7 +1493,45 @@ void sdhci_set_uhs_signaling(struct sdhci_host *host, unsigned timing)
 		ctrl_2 |= SDHCI_CTRL_UHS_DDR50;
 	else if (timing == MMC_TIMING_MMC_HS400)
 		ctrl_2 |= SDHCI_CTRL_HS400; /* Non-standard */
-	sdhci_writew(host, ctrl_2, SDHCI_HOST_CONTROL2);
+
+        /*
+         * When clock frquency is less than 100MHz, the feedback clock must be
+         * provided and DLL must not be used so that tuning can be skipped. To
+         * provide feedback clock, the mode selection can be any value less
+         * than 3'b011 in bits [2:0] of HOST CONTROL2 register.
+         */
+        if (host->clock <= CORE_FREQ_100MHZ) {
+                if ((timing == MMC_TIMING_MMC_HS400) ||
+                    (timing == MMC_TIMING_MMC_HS200) ||
+                    (timing == MMC_TIMING_UHS_SDR104))
+                        ctrl_2 &= ~SDHCI_CTRL_UHS_MASK;
+
+                /*
+                 * Make sure DLL is disabled when not required
+                 *
+                 * Write 1 to DLL_RST bit of DLL_CONFIG register
+                 */
+                writel_relaxed((readl_relaxed(host->ioaddr + CORE_DLL_CONFIG)
+                                | CORE_DLL_RST),
+                                host->ioaddr + CORE_DLL_CONFIG);
+
+                /* Write 1 to DLL_PDN bit of DLL_CONFIG register */
+                writel_relaxed((readl_relaxed(host->ioaddr + CORE_DLL_CONFIG)
+                                | CORE_DLL_PDN),
+                                host->ioaddr + CORE_DLL_CONFIG);
+                mb();
+
+                /*
+                 * The DLL needs to be restored and CDCLP533 recalibrated
+                 * when the clock frequency is set back to 400MHz.
+                 */
+                //msm_host->calibration_done = false;
+        }
+
+        pr_debug("%s: %s-clock:%u uhs mode:%u ctrl_2:0x%x\n",
+                mmc_hostname(host->mmc), __func__, host->clock, timing, ctrl_2);
+        sdhci_writew(host, ctrl_2, SDHCI_HOST_CONTROL2);
+
 }
 EXPORT_SYMBOL_GPL(sdhci_set_uhs_signaling);
 
@@ -2544,6 +2615,37 @@ static irqreturn_t sdhci_irq(int irq, void *dev_id)
 			result = IRQ_WAKE_THREAD;
 		}
 
+        if (intmask & SDHCI_INT_CMD_MASK) {
+                if (intmask & SDHCI_INT_ACMD12ERR)
+                        host->auto_cmd_err_sts = sdhci_readw(host,
+                                        SDHCI_ACMD12_ERR);
+                sdhci_writel(host, intmask & SDHCI_INT_CMD_MASK,
+                        SDHCI_INT_STATUS);
+                if ((host->quirks2 & SDHCI_QUIRK2_SLOW_INT_CLR) && (host->clock <= 400000))
+		{
+			printk(" SDHCI delay 40\n");
+                        udelay(40);
+		}
+                //sdhci_cmd_irq(host, intmask & SDHCI_INT_CMD_MASK);
+		sdhci_cmd_irq(host, intmask & SDHCI_INT_CMD_MASK, &intmask);
+        }
+
+        if (intmask & SDHCI_INT_DATA_MASK) {
+                sdhci_writel(host, intmask & SDHCI_INT_DATA_MASK,
+                        SDHCI_INT_STATUS);
+                if ((host->quirks2 & SDHCI_QUIRK2_SLOW_INT_CLR) && (host->clock <= 400000))
+		{
+			printk(" SDHCI delay 40 \n");
+                        udelay(40);
+		}
+                sdhci_data_irq(host, intmask & SDHCI_INT_DATA_MASK);
+        }
+
+		intmask &= ~(SDHCI_INT_CMD_MASK | SDHCI_INT_DATA_MASK);
+
+		intmask &= ~SDHCI_INT_ERROR;
+
+
 		if (intmask & SDHCI_INT_CMD_MASK)
 			sdhci_cmd_irq(host, intmask & SDHCI_INT_CMD_MASK,
 				      &intmask);
@@ -2843,6 +2945,7 @@ int sdhci_add_host(struct sdhci_host *host)
 	unsigned int override_timeout_clk;
 	u32 max_clk;
 	int ret;
+	u16 host_version;
 
 	WARN_ON(host == NULL);
 	if (host == NULL)
@@ -3075,6 +3178,21 @@ int sdhci_add_host(struct sdhci_host *host)
 		DBG("%s: Auto-CMD23 available\n", mmc_hostname(mmc));
 	} else {
 		DBG("%s: Auto-CMD23 unavailable\n", mmc_hostname(mmc));
+	}
+
+	host_version = readw_relaxed((host->ioaddr + SDHCI_HOST_VERSION));
+        pr_debug("%s: JRM Host Version: 0x%x Vendor Version 0x%x\n",
+                mmc_hostname(mmc), host_version, ((host_version & SDHCI_VENDOR_VER_MASK) >>
+                  SDHCI_VENDOR_VER_SHIFT));
+
+	if (((host_version & SDHCI_VENDOR_VER_MASK) >>
+		SDHCI_VENDOR_VER_SHIFT) >= SDHCI_VER_100) {
+		/*
+		 * Add 40us delay in interrupt handler when
+		 * operating at initialization frequency(400KHz).
+		 */
+		printk("  -->>>> ADding delay via quirks2 \n");
+		host->quirks2 |= SDHCI_QUIRK2_SLOW_INT_CLR;
 	}
 
 	/*

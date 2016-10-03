@@ -170,6 +170,7 @@ static const struct pinmux_ops msm_pinmux_ops = {
 	.set_mux		= msm_pinmux_set_mux,
 };
 
+//JRM - pull_bit and mask
 static int msm_config_reg(struct msm_pinctrl *pctrl,
 			  const struct msm_pingroup *g,
 			  unsigned param,

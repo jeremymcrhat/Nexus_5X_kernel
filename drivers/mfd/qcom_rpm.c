@@ -369,6 +369,7 @@ static const struct of_device_id qcom_rpm_of_match[] = {
 	{ .compatible = "qcom,rpm-msm8660", .data = &msm8660_template },
 	{ .compatible = "qcom,rpm-msm8960", .data = &msm8960_template },
 	{ .compatible = "qcom,rpm-ipq8064", .data = &ipq806x_template },
+	//{ .compatible = "qcom,rpm-msm8994", .data = &msm8994_template },  //JRM - do I need to use this file?
 	{ }
 };
 MODULE_DEVICE_TABLE(of, qcom_rpm_of_match);

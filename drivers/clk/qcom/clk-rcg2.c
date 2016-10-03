@@ -91,13 +91,37 @@ static int update_config(struct clk_rcg2 *rcg)
 	struct clk_hw *hw = &rcg->clkr.hw;
 	const char *name = clk_hw_get_name(hw);
 
+printk(" %s ->> CMD_RCGR CMD 0x%x \n", __func__, rcg->cmd_rcgr + CMD_REG);
+
+
+	if (!clk_rcg2_is_enabled(hw))
+	{
+		WARN(1, "%s: rcg hw clock is not enabled\n", __func__);
+		        /* force enable RCG */
+        	ret = regmap_update_bits(rcg->clkr.regmap, rcg->cmd_rcgr + CMD_REG,
+                                 CMD_ROOT_EN, CMD_ROOT_EN);
+        	if (ret)
+                	return ret;
+
+        	/* wait for RCG to turn ON */
+        	for (count = 500; count > 0; count--) {
+                	ret = clk_rcg2_is_enabled(hw);
+                	if (ret)
+                        	break;
+                	udelay(1);
+        	}
+        	if (!count)
+                	pr_err("%s: RCG did not turn on\n", name);
+
+	}
+	
 	ret = regmap_update_bits(rcg->clkr.regmap, rcg->cmd_rcgr + CMD_REG,
 				 CMD_UPDATE, CMD_UPDATE);
 	if (ret)
 		return ret;
 
 	/* Wait for update to take effect */
-	for (count = 500; count > 0; count--) {
+	for (count = 5000; count > 0; count--) {
 		ret = regmap_read(rcg->clkr.regmap, rcg->cmd_rcgr + CMD_REG, &cmd);
 		if (ret)
 			return ret;
@@ -224,6 +248,9 @@ static int clk_rcg2_determine_rate(struct clk_hw *hw,
 	return _freq_tbl_determine_rate(hw, rcg->freq_tbl, req);
 }
 
+
+//JRM -- this is equivalent to __set_rate_mnd in 3.10
+//
 static int clk_rcg2_configure(struct clk_rcg2 *rcg, const struct freq_tbl *f)
 {
 	u32 cfg, mask;
@@ -231,36 +258,56 @@ static int clk_rcg2_configure(struct clk_rcg2 *rcg, const struct freq_tbl *f)
 	int ret, index = qcom_find_src_index(hw, rcg->parent_map, f->src);
 
 	if (index < 0)
+	{
+		printk(" %s: cannot locate src index (%s) \n", __func__, clk_hw_get_name(hw)); 
 		return index;
+	}
 
 	if (rcg->mnd_width && f->n) {
+
 		mask = BIT(rcg->mnd_width) - 1;
 		ret = regmap_update_bits(rcg->clkr.regmap,
 				rcg->cmd_rcgr + M_REG, mask, f->m);
+		printk(" %s mask 0x%x RCGR: 0x%x \n", __func__, mask, rcg->cmd_rcgr);
 		if (ret)
+		{
+			printk(" %s : update_bits1 ret=%d \n", __func__, ret);
 			return ret;
+		}
 
 		ret = regmap_update_bits(rcg->clkr.regmap,
 				rcg->cmd_rcgr + N_REG, mask, ~(f->n - f->m));
 		if (ret)
+		{
+			printk(" %s : update_bits2 ret=%d \n", __func__, ret);
 			return ret;
+		}
 
 		ret = regmap_update_bits(rcg->clkr.regmap,
 				rcg->cmd_rcgr + D_REG, mask, ~f->n);
 		if (ret)
+		{
+			printk(" %s : update_bits3 ret=%d \n", __func__, ret);
 			return ret;
+		}
 	}
 
 	mask = BIT(rcg->hid_width) - 1;
 	mask |= CFG_SRC_SEL_MASK | CFG_MODE_MASK;
+
 	cfg = f->pre_div << CFG_SRC_DIV_SHIFT;
+
 	cfg |= rcg->parent_map[index].cfg << CFG_SRC_SEL_SHIFT;
+
 	if (rcg->mnd_width && f->n && (f->m != f->n))
 		cfg |= CFG_MODE_DUAL_EDGE;
 	ret = regmap_update_bits(rcg->clkr.regmap,
 			rcg->cmd_rcgr + CFG_REG, mask, cfg);
 	if (ret)
+	{
+		printk(" %s : update_bits4 ret=%d \n", __func__, ret);
 		return ret;
+	}
 
 	return update_config(rcg);
 }
@@ -272,7 +319,10 @@ static int __clk_rcg2_set_rate(struct clk_hw *hw, unsigned long rate)
 
 	f = qcom_find_freq(rcg->freq_tbl, rate);
 	if (!f)
+	{
+		printk(" %s: unable to find freq rate %ul \n", __func__, rate);
 		return -EINVAL;
+	}
 
 	return clk_rcg2_configure(rcg, f);
 }

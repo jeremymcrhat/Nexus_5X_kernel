@@ -489,6 +489,7 @@ int of_device_is_compatible(const struct device_node *device,
 	raw_spin_lock_irqsave(&devtree_lock, flags);
 	res = __of_device_is_compatible(device, compat, NULL, NULL);
 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+
 	return res;
 }
 EXPORT_SYMBOL(of_device_is_compatible);
@@ -983,6 +984,7 @@ const struct of_device_id *of_match_node(const struct of_device_id *matches,
 	raw_spin_lock_irqsave(&devtree_lock, flags);
 	match = __of_match_node(matches, node);
 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+
 	return match;
 }
 EXPORT_SYMBOL(of_match_node);

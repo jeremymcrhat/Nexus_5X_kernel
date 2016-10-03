@@ -2658,6 +2658,8 @@ int regmap_update_bits_base(struct regmap *map, unsigned int reg,
 
 	map->unlock(map->lock_arg);
 
+printk(" %s: reg 0x%x mask 0x%x val 0x%x \n", __func__, reg, mask, val);
+
 	return ret;
 }
 EXPORT_SYMBOL_GPL(regmap_update_bits_base);
