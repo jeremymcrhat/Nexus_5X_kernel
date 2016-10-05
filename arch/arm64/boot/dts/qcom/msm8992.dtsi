@@ -119,9 +119,15 @@
 			qcom,local-pid = <0>;
 			qcom,remote-pid = <6>;
 
-                        rpm_requests {
+                        jeremy_rpm: rpm_requests {
                                 compatible = "qcom,rpm-msm8994";
                                 qcom,smd-channels = "rpm_requests";
+				/* potentially create a quirks node
+					in case there are more workarounds needed */
+				smd_quirks: qcom,smd_quirks {
+					compatible = "qcom,smd_quirks";
+					qcom,initial-tx-state = <2>;
+				};
 
 				rpmcc: qcom,rpmcc {
                                         compatible = "qcom,rpmcc-msm8994", "qcom,rpmcc";

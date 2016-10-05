@@ -117,7 +117,6 @@ struct qcom_smd_edge {
 	unsigned edge_id;
 	unsigned remote_pid;
 
-	int wonky_rx;
 	int irq;
 
 	struct regmap *ipc_regmap;
@@ -378,6 +377,7 @@ static void qcom_smd_channel_reset(struct qcom_smd_channel *channel)
 	SET_TX_CHANNEL_INFO(channel, head, 0);
 	SET_RX_CHANNEL_INFO(channel, tail, 0);
 
+
 	qcom_smd_signal_channel(channel);
 
 	channel->state = SMD_CHANNEL_CLOSED;
@@ -484,7 +484,7 @@ static size_t qcom_smd_channel_peek(struct qcom_smd_channel *channel,
 
 	len = min_t(size_t, count, channel->fifo_size - tail);
 
-printk(" %s -> tail %u len %zx count %zx ch_fifo_size_minus_tail %d fifo_size %d head %u \n",
+printk(" %s -> tail %u len 0x%zx count 0x%zx ch_fifo_size_minus_tail %d fifo_size %d head %u \n",
 		__func__, tail, len, count, (channel->fifo_size - tail), channel->fifo_size, head);
 	if (len) {
 		smd_copy_from_fifo(buf,
@@ -605,7 +605,7 @@ printk(" INTR !! W00T !! %s \n", __func__);
 			if (le32_to_cpu(pktlen) > channel->fifo_size)
 			{
 				//print an error and move on for now.  ON the todo list for problems later
-				//WARN("oooOOOOoooo spegetti OOOs \n");
+				printk("oooOOOOoooo spegetti OOOs \n");
 				break;
 			}
 			else
@@ -990,15 +990,19 @@ static void qcom_smd_release_device(struct device *dev)
  * Finds the device_node for the smd child interested in this channel.
  */
 static struct device_node *qcom_smd_match_channel(struct device_node *edge_node,
-						  const char *channel)
+						  const char *channel,
+						  const char *key)
 {
 	struct device_node *child;
 	const char *name;
-	const char *key;
 	int ret;
 
+	if (!key) {
+		printk(" %s returning NULL , key is nULL \n", __func__);
+		return NULL;
+	}
+
 	for_each_available_child_of_node(edge_node, child) {
-		key = "qcom,smd-channels";
 		ret = of_property_read_string(child, key, &name);
 		if (ret)
 			continue;
@@ -1021,9 +1025,6 @@ static int qcom_smd_create_device(struct qcom_smd_channel *channel)
 	struct qcom_smd *smd = edge->smd;
 	int ret;
 
-
-printk(" $$ %s $$ \n", __func__);
-
 	if (channel->qsdev)
 		return -EEXIST;
 
@@ -1033,7 +1034,7 @@ printk(" $$ %s $$ \n", __func__);
 	if (!qsdev)
 		return -ENOMEM;
 
-	node = qcom_smd_match_channel(edge->of_node, channel->name);
+	node = qcom_smd_match_channel(edge->of_node, channel->name, "qcom,smd-channels");
 	dev_set_name(&qsdev->dev, "%s.%s",
 		     edge->of_node->name,
 		     node ? node->name : channel->name);
@@ -1181,22 +1182,72 @@ struct qcom_smd_channel *qcom_smd_open_channel(struct qcom_smd_channel *parent,
 }
 EXPORT_SYMBOL(qcom_smd_open_channel);
 
+/* JRM */
+/* TODO add comment about purpose and justification of function */
+bool qcom_smd_channel_force_open(struct qcom_smd_channel *channel, int initial_state)
+{
+	int i = 0;
+	int remote_state;
+
+        remote_state = GET_RX_CHANNEL_INFO(channel, state);
+
+	printk(KERN_INFO " channel: %s current state %d \n", channel->name, remote_state);
+	/* In order to get the remote and host back in sync we need to
+		start from closed and iterate to our desired state. */
+	/* We can't skip states as it must be sequenced in the correct order */
+	/* Lets not assume that we are starting at any given initial state on the
+	   host as that could potentially lead to problems */
+	for(i=SMD_CHANNEL_CLOSED; i<=initial_state; i++)
+	{
+	        SET_TX_CHANNEL_FLAG(channel, fSTATE, 0);
+		SET_TX_CHANNEL_INFO(channel, state, i);
+	        SET_TX_CHANNEL_FLAG(channel, fSTATE, 1);
+		qcom_smd_signal_channel(channel);
+		udelay(50); /* state changes dont happen instantaneously */
+	}
+
+	remote_state = GET_RX_CHANNEL_INFO(channel, state);
+	channel->remote_state = remote_state;
+
+	/* Be aware that the states tend to transistion very quickly and as
+	 * such we may not be able to catch it.  ie) SMD_CHANNEL_OPENING->
+	 *   SMD_CHANNEL_OPENED  will occur but we probably wont be able to
+	 *   see it.
+	 */
+
+	return ((remote_state == SMD_CHANNEL_OPENING) ||
+		(remote_state == SMD_CHANNEL_OPENED));
+}
+
+
+void print_channel_flags(struct qcom_smd_channel *channel)
+{
+
+
+	printk(" RX CH Flag BLOCKREADINTR %d \n", GET_RX_CHANNEL_FLAG(channel, fBLOCKREADINTR));
+	printk(" RX CH Flag DSR %d \n", GET_RX_CHANNEL_FLAG(channel, fDSR));
+	printk(" RX CH Flag CTS %d \n", GET_RX_CHANNEL_FLAG(channel, fCTS));
+	printk(" RX CH Flag CD %d \n", GET_RX_CHANNEL_FLAG(channel, fCD));
+	printk(" RX CH Flag RI %d \n", GET_RX_CHANNEL_FLAG(channel, fRI));
+} 
+
+
 void print_head_tail(struct qcom_smd_channel *channel)
 {
 
-       unsigned head;
-       unsigned tail;
+       size_t head;
+       size_t tail;
 
        head = GET_RX_CHANNEL_INFO(channel, head);
        tail = GET_RX_CHANNEL_INFO(channel, tail);
-       printk(" RX Current head is: 0x%u \n", head);
-       printk(" RX Current tail is: 0x%u \n", tail);
+       printk(" RX Current head is: %zu \n", head);
+       printk(" RX Current tail is: %zu \n", tail);
 
 
        head = GET_TX_CHANNEL_INFO(channel, head);
        tail = GET_TX_CHANNEL_INFO(channel, tail);
-       printk(" TX Current head is: 0x%u \n", head);
-       printk(" TX Current tail is: 0x%u \n", tail);
+       printk(" TX Current head is: %zu \n", head);
+       printk(" TX Current tail is: %zu \n", tail);
 	
 }
 
@@ -1217,7 +1268,7 @@ static struct qcom_smd_channel *qcom_smd_create_channel(struct qcom_smd_edge *ed
 	void *info;
 	u32 initial_state = 0;
 	int ret = 0;
-	int i = 0;
+	struct device_node *dn = NULL;
 
 
 	channel = devm_kzalloc(smd->dev, sizeof(*channel), GFP_KERNEL);
@@ -1279,7 +1330,26 @@ static struct qcom_smd_channel *qcom_smd_create_channel(struct qcom_smd_edge *ed
 
 	qcom_smd_channel_reset(channel);
 
-	//print_head_tail(channel);
+	dn = of_find_compatible_node(edge->of_node, NULL, "qcom,smd_quirks");
+	if (dn != NULL) {
+		struct device_node *dnp = of_get_parent(dn);
+		if (strcmp(dnp->name, channel->name) == 0) {
+			ret = of_property_read_u32(dn, "qcom,initial-tx-state", &initial_state);
+			if (ret) {
+				printk(KERN_INFO " SMD_RPM: No initial TX state found! \n");
+				goto free_name_and_channel;
+			}
+			else {
+				printk(KERN_INFO " SMD_RPM: Applying quirk TX init state value: %d \n", initial_state);
+				if ((initial_state > SMD_CHANNEL_CLOSED) && (initial_state < SMD_CHANNEL_RESET_OPENING)) {
+					if(!qcom_smd_channel_force_open(channel, (int)initial_state)) {
+						printk(KERN_INFO " Unable to force RX channel %s to \
+							initial state of %d\n", channel->name, (int)initial_state);
+					}
+				}
+			}
+		}
+	}
 
 	if (ret)
 		goto free_name_and_channel;
@@ -1428,10 +1498,6 @@ static void qcom_channel_state_worker(struct work_struct *work)
 	 */
 	list_for_each_entry(channel, &edge->channels, list) {
 
-		/* Dont trust the channel state of the remote proc when we have
-		* wonky_rx users are expected to manually close */
-		if (edge->wonky_rx)
-			continue;
 		if (channel->state != SMD_CHANNEL_OPENING &&
 		    channel->state != SMD_CHANNEL_OPENED)
 			continue;
