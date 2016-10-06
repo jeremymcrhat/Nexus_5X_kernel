@@ -91,6 +91,25 @@ static int update_config(struct clk_rcg2 *rcg)
 	struct clk_hw *hw = &rcg->clkr.hw;
 	const char *name = clk_hw_get_name(hw);
 
+	if (!clk_rcg2_is_enabled(hw))
+	{
+		WARN(1, "%s: rcg hw clock is not enabled\n", __func__);
+		/* force enable RCG */
+		ret = regmap_update_bits(rcg->clkr.regmap, rcg->cmd_rcgr + CMD_REG,
+					CMD_ROOT_EN, CMD_ROOT_EN);
+		if (ret)
+			return ret;
+
+		/* wait for RCG to turn ON */
+		for (count = 500; count > 0; count--) {
+			ret = clk_rcg2_is_enabled(hw);
+			if (ret)
+				break;
+			udelay(1);
+		}
+		if (!count)
+			pr_err("%s: RCG did not turn on\n", name);
+	}
 	ret = regmap_update_bits(rcg->clkr.regmap, rcg->cmd_rcgr + CMD_REG,
 				 CMD_UPDATE, CMD_UPDATE);
 	if (ret)
