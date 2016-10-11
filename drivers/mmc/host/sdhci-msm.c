@@ -135,9 +135,6 @@ struct sdhci_msm_host {
 	struct clk *pclk;	/* SDHC peripheral bus clock */
 	struct clk *bus_clk;	/* SDHC bus voter clock */
 	struct mmc_host *mmc;
-	u32 curr_pwr_state;
-	u32 curr_io_level;
-	struct completion pwr_irq_completion;
 	struct sdhci_msm_pltfm_data *pdata;
 	int pwr_irq;
 	u32 curr_pwr_state;
@@ -437,29 +434,43 @@ static int sdhci_msm_vreg_init(struct device *dev,
 
 	curr_slot = pdata->vreg_data;
 	if (!curr_slot)
+	{
+		printk(" %s, curr slot failed \n", __func__);
 		goto out;
+	}
 
 	curr_vdd_reg = curr_slot->vdd_data;
 	curr_vdd_io_reg = curr_slot->vdd_io_data;
 
 	if (!is_init)
-		/* Deregister all regulators from regulator framework */
+	{
+		printk(" %s: error not init mode \n", __func__);
+		/* Deregister all regulators from regulator fram ework */
 		goto vdd_io_reg_deinit;
+	}
 
 	/*
 	 * Get the regulator handle from voltage regulator framework
 	 * and then try to set the voltage level for the regulator
 	 */
 	if (curr_vdd_reg) {
+		printk(" %s getting vreg init reg \n", __func__);
 		ret = sdhci_msm_vreg_init_reg(dev, curr_vdd_reg);
 		if (ret)
+		{
+			printk(" %s error init vreg init reg\n", __func__);
 			goto out;
+		}
 	}
 	if (curr_vdd_io_reg) {
+		printk(" %s getting sdhci vreg init reg \n", __func__);
 		ret = sdhci_msm_vreg_init_reg(dev, curr_vdd_io_reg);
-		if (ret)
+		if (ret) {
+			printk(" %s Error vreg init reg %d \n", __func__, ret);
 			goto vdd_reg_deinit;
+		}
 	}
+	printk(" %s vreg reset \n", __func__);
 	ret = sdhci_msm_vreg_reset(pdata);
 	if (ret)
 		dev_err(dev, "vreg reset failed (%d)\n", ret);
@@ -988,6 +999,81 @@ static int msm_init_cm_dll(struct sdhci_host *host)
 	return 0;
 }
 
+
+#define MAX_TEST_BUS 20
+#define CORE_MCI_DATA_CNT 0x30
+#define CORE_MCI_FIFO_CNT 0x44
+#define CORE_MCI_STATUS 0x34
+#define CORE_VENDOR_SPEC_ADMA_ERR_ADDR0        0x114
+#define CORE_VENDOR_SPEC_ADMA_ERR_ADDR1        0x118
+#define CORE_TESTBUS_SEL2_BIT  4
+#define CORE_TESTBUS_SEL2      (1 << CORE_TESTBUS_SEL2_BIT)
+
+#define CORE_TESTBUS_ENA       (1 << 3)
+
+#define CORE_TESTBUS_CONFIG    0x0CC
+
+#define CORE_SDCC_DEBUG_REG    0x124
+
+
+
+void sdhci_msm_dump_vendor_regs(struct sdhci_host *host)
+{
+
+        int tbsel, tbsel2;
+        int i, index = 0;
+        u32 test_bus_val = 0;
+        u32 debug_reg[MAX_TEST_BUS] = {0};
+	struct sdhci_pltfm_host *pltfm_host;
+        struct sdhci_msm_host *msm_host;
+
+	pltfm_host = sdhci_priv(host);
+	msm_host = sdhci_pltfm_priv(pltfm_host);
+
+        pr_info("----------- VENDOR REGISTER DUMP -----------\n");
+        pr_info("Data cnt: 0x%08x | Fifo cnt: 0x%08x | Int sts: 0x%08x\n",
+                readl_relaxed(msm_host->core_mem + CORE_MCI_DATA_CNT),
+                readl_relaxed(msm_host->core_mem + CORE_MCI_FIFO_CNT),
+                readl_relaxed(msm_host->core_mem + CORE_MCI_STATUS));
+        pr_info("DLL cfg:  0x%08x | DLL sts:  0x%08x | SDCC ver: 0x%08x\n",
+                readl_relaxed(host->ioaddr + CORE_DLL_CONFIG),
+                readl_relaxed(host->ioaddr + CORE_DLL_STATUS),
+                readl_relaxed(msm_host->core_mem + CORE_MCI_VERSION));
+        pr_info("Vndr func: 0x%08x | Vndr adma err : addr0: 0x%08x addr1: 0x%08x\n",
+                readl_relaxed(host->ioaddr + CORE_VENDOR_SPEC),
+                readl_relaxed(host->ioaddr + CORE_VENDOR_SPEC_ADMA_ERR_ADDR0),
+                readl_relaxed(host->ioaddr + CORE_VENDOR_SPEC_ADMA_ERR_ADDR1));
+
+        /*
+         * tbsel indicates [2:0] bits and tbsel2 indicates [7:4] bits
+         * of CORE_TESTBUS_CONFIG register.
+         *
+         * To select test bus 0 to 7 use tbsel and to select any test bus
+         * above 7 use (tbsel2 | tbsel) to get the test bus number. For eg,
+         * to select test bus 14, write 0x1E to CORE_TESTBUS_CONFIG register
+         * i.e., tbsel2[7:4] = 0001, tbsel[2:0] = 110.
+         */
+        for (tbsel2 = 0; tbsel2 < 3; tbsel2++) {
+                for (tbsel = 0; tbsel < 8; tbsel++) {
+                        if (index >= MAX_TEST_BUS)
+                                break;
+                        test_bus_val = (tbsel2 << CORE_TESTBUS_SEL2_BIT) |
+                                        tbsel | CORE_TESTBUS_ENA;
+                        writel_relaxed(test_bus_val,
+                                msm_host->core_mem + CORE_TESTBUS_CONFIG);
+                        debug_reg[index++] = readl_relaxed(msm_host->core_mem +
+                                                        CORE_SDCC_DEBUG_REG);
+                }
+        }
+        for (i = 0; i < MAX_TEST_BUS; i = i + 4)
+                pr_info(" Test bus[%d to %d]: 0x%08x 0x%08x 0x%08x 0x%08x\n",
+                                i, i + 3, debug_reg[i], debug_reg[i+1],
+                                debug_reg[i+2], debug_reg[i+3]);
+        /* Disable test bus */
+        writel_relaxed(~CORE_TESTBUS_ENA, msm_host->core_mem +
+                        CORE_TESTBUS_CONFIG);
+}
+
 static int sdhci_msm_execute_tuning(struct sdhci_host *host, u32 opcode)
 {
 	int tuning_seq_cnt = 3;
@@ -1069,6 +1155,8 @@ static const struct sdhci_ops sdhci_msm_ops = {
 	.set_clock = sdhci_set_clock,
 	.set_bus_width = sdhci_set_bus_width,
 	.set_uhs_signaling = sdhci_set_uhs_signaling,
+	.check_power_status = sdhci_msm_check_power_status,
+	.dump_vendor_regs = sdhci_msm_dump_vendor_regs,
 };
 
 static const struct sdhci_pltfm_data sdhci_msm_pdata = {
@@ -1089,9 +1177,15 @@ static int sdhci_msm_probe(struct platform_device *pdev)
 	u32 core_version, caps;
 	u8 core_major;
 
+
+printk(" --> %s <-- \n", __func__);
+
 	host = sdhci_pltfm_init(pdev, &sdhci_msm_pdata, sizeof(*msm_host));
 	if (IS_ERR(host))
+	{
+		printk(" Error sdhci_pltfm_init \n");
 		return PTR_ERR(host);
+	}
 
 	pltfm_host = sdhci_priv(host);
 	msm_host = sdhci_pltfm_priv(pltfm_host);
@@ -1099,12 +1193,13 @@ static int sdhci_msm_probe(struct platform_device *pdev)
 	msm_host->pdev = pdev;
 
 	ret = mmc_of_parse(host->mmc);
-	if (ret)
+	if (ret) {
+		printk(" Error parsing mmc-of-parse \n");
 		goto pltfm_free;
+	}
 
 	sdhci_get_of_property(pdev);
 
-	/* Extract platform data */
 	if (pdev->dev.of_node) {
 		msm_host->pdata = sdhci_msm_populate_pdata(&pdev->dev);
 		if (!msm_host->pdata) {
@@ -1118,12 +1213,19 @@ static int sdhci_msm_probe(struct platform_device *pdev)
 	if (!IS_ERR(msm_host->bus_clk)) {
 		/* Vote for max. clk rate for max. performance */
 		ret = clk_set_rate(msm_host->bus_clk, INT_MAX);
-		if (ret)
+		if (ret) {
+			printk(" Error setting bus_clk rate \n");
 			goto pltfm_free;
+		}
 		ret = clk_prepare_enable(msm_host->bus_clk);
-		if (ret)
+		if (ret) {
+			printk(" Error preparing clock enable \n");
 			goto pltfm_free;
+		}
 	}
+//printk("   +++ CLK_CORE -> rate %lu \n", msm_host->bus_clk->core->rate);
+
+printk(" %s: getting main peripheral bus clk \n", __func__);
 
 	/* Setup main peripheral bus clock */
 	msm_host->pclk = devm_clk_get(&pdev->dev, "iface");
@@ -1134,8 +1236,11 @@ static int sdhci_msm_probe(struct platform_device *pdev)
 	}
 
 	ret = clk_prepare_enable(msm_host->pclk);
-	if (ret)
+	if (ret) {
+		printk(" Error prep en \n");
 		goto bus_clk_disable;
+	}
+printk(" finished prep enable \n");
 
 	/* Setup SDC MMC clock */
 	msm_host->clk = devm_clk_get(&pdev->dev, "core");
@@ -1152,7 +1257,10 @@ static int sdhci_msm_probe(struct platform_device *pdev)
 
 	ret = clk_prepare_enable(msm_host->clk);
 	if (ret)
+	{
+		dev_warn(&pdev->dev, "clk prep enable failed\n");
 		goto pclk_disable;
+	}
 
 	/* Setup regulators */
 	ret = sdhci_msm_vreg_init(&pdev->dev, msm_host->pdata, true);
@@ -1290,7 +1398,7 @@ static struct platform_driver sdhci_msm_driver = {
 	.probe = sdhci_msm_probe,
 	.remove = sdhci_msm_remove,
 	.driver = {
-		   .name = "sdhci_msm",
+		   .name = "sdhci_msm_JRM",
 		   .of_match_table = sdhci_msm_dt_match,
 	},
 };
