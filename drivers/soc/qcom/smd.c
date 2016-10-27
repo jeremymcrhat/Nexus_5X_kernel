@@ -1117,6 +1117,80 @@ void qcom_smd_close_channel(struct qcom_smd_channel *channel)
 }
 EXPORT_SYMBOL(qcom_smd_close_channel);
 
+/* Some bootloaders leave the RX channel (remote) in an undesirable state
+ * specifically SMD_CHANNEL_CLOSING when handing off to Linux.
+ * By running this quark, which simply starts the host side (TX) in the
+ * starting state (SMD_CHANNEL_CLOSED) and incrementally changes the state
+ * to the desired value.  It allows the host and RPM to move back into the
+ * the _CORRECT_ initial state and continue to function as expected.
+ */
+bool qcom_smd_channel_force_open(struct qcom_smd_channel *channel,
+		int initial_state)
+{
+	int i = 0;
+	int remote_state;
+
+	remote_state = GET_RX_CHANNEL_INFO(channel, state);
+
+	pr_info("RPM_SMD channel: %s current state %d\n",
+			channel->name, remote_state);
+
+	/* In order to get the remote and host back in sync we need to
+	 * start from closed and iterate to our desired state.
+	 * We can't skip states as it must be sequenced in the correct order
+	 * Lets not assume that we are starting at any given initial state on
+	 * the host as that could potentially lead to problems
+	 */
+	for (i = SMD_CHANNEL_CLOSED; i <= initial_state; i++) {
+		SET_TX_CHANNEL_FLAG(channel, fSTATE, 0);
+		SET_TX_CHANNEL_INFO(channel, state, i);
+		SET_TX_CHANNEL_FLAG(channel, fSTATE, 1);
+		qcom_smd_signal_channel(channel);
+		udelay(50); /* state changes dont happen instantaneously */
+	}
+
+	remote_state = GET_RX_CHANNEL_INFO(channel, state);
+	channel->remote_state = remote_state;
+
+	/* Be aware that the states tend to transistion very quickly and as
+	 * such we may not be able to catch it.  ie) SMD_CHANNEL_OPENING->
+	 *   SMD_CHANNEL_OPENED  will occur but we probably wont be able to
+	 *   see it.
+	 */
+
+	return ((remote_state == SMD_CHANNEL_OPENING) ||
+		(remote_state == SMD_CHANNEL_OPENED));
+}
+
+void apply_quirks(struct device_node *dn, struct qcom_smd_channel *channel)
+{
+	struct device_node *dnp = of_get_parent(dn);
+	int ret = 0;
+	u32 initial_state = 0;
+
+	if (strcmp(dnp->name, channel->name) == 0) {
+		ret = of_property_read_u32(dn, "qcom,initial-tx-state",
+					&initial_state);
+		if (ret) {
+			pr_info("SMD_RPM: No initial TX state found!\n");
+			return;
+		} else {
+			pr_info("SMD_RPM: Applying quirk TX init state value: %d\n",
+					initial_state);
+			if ((initial_state > SMD_CHANNEL_CLOSED) &&
+					(initial_state < SMD_CHANNEL_RESET_OPENING)) {
+
+				if (!qcom_smd_channel_force_open(channel,
+							(int)initial_state)) {
+					pr_info("Unable to force RX channel %s to
+						initial state of %d\n", channel->name,
+						(int)initial_state);
+				}
+			}
+		}
+	}
+}
+
 /*
  * Allocate the qcom_smd_channel object for a newly found smd channel,
  * retrieving and validating the smem items involved.
@@ -1131,7 +1205,9 @@ static struct qcom_smd_channel *qcom_smd_create_channel(struct qcom_smd_edge *ed
 	size_t info_size;
 	void *fifo_base;
 	void *info;
-	int ret;
+	int ret = 0;
+	struct device_node *dn = NULL;
+
 
 	channel = devm_kzalloc(&edge->dev, sizeof(*channel), GFP_KERNEL);
 	if (!channel)
@@ -1184,6 +1260,13 @@ static struct qcom_smd_channel *qcom_smd_create_channel(struct qcom_smd_edge *ed
 	channel->fifo_size = fifo_size;
 
 	qcom_smd_channel_reset(channel);
+
+	dn = of_find_compatible_node(edge->of_node, NULL, "qcom,smd_quirks");
+	if (dn != NULL)
+		apply_quirks(dn, channel);
+
+	if (ret)
+		goto free_name_and_channel;
 
 	return channel;
 
