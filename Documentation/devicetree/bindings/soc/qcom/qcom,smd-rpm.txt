@@ -28,6 +28,13 @@ resources.
 	Value type: <string>
 	Definition: must be "rpm_requests"
 
+- qcom,initial-tx-state:
+	Usage: optional
+	Value type: <integer>
+		If a value is specified this is the state which will be
+		set initially on the host TX end.  This is useful when
+		the target/RX side is left in an incorrect initial state.
+
 Refer to Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt
 for information on the regulator subnodes that can exist under the rpm-requests.
 

@@ -269,7 +269,19 @@
 				compatible = "qcom,rpm-msm8994";
 				qcom,smd-channels = "rpm_requests";
 
-				pm8994-regulators {
+				smd_quirks: qcom,smd_quirks {
+					compatible = "qcom,smd_quirks";
+					qcom,initial-tx-state = <2>;
+				};
+
+				rpmcc: qcom,rpmcc {
+					/* TODO: update when rpmcc-msm8994 support added */
+					compatible = "qcom,rpmcc-msm8916",
+							"qcom,rpmcc";
+					#clock-cells = <1>;
+				};
+
+				smd_rpm_regulators: pm8994-regulators {
 					compatible = "qcom,rpm-pm8994-regulators";
 
 					pm8994_s1: s1 {};
