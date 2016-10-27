@@ -357,6 +357,11 @@
 				compatible = "qcom,rpm-msm8994";
 				qcom,smd-channels = "rpm_requests";
 
+				smd_quirks: qcom,smd_quirks {
+					compatible = "qcom,smd_quirks";
+					qcom,initial-tx-state = <2>;
+				};
+
 				rpmcc: qcom,rpmcc {
 					compatible = "qcom,rpmcc-msm8994", "qcom,rpmcc";
 					#clock-cells = <1>;
