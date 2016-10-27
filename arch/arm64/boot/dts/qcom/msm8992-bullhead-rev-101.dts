@@ -39,3 +39,115 @@
 		};
 	};
 };
+
+&smd_rpm {
+	rpm {
+		rpm_requests {
+			pm8994-regulators {
+
+				vdd_l1-supply = <&pm8994_s3>;
+				vdd_l2_26_28 = <&pm8994_s3>;
+				vdd_l3_11 = <&pm8994_s3>;
+				vdd_l4_27_31 = <&pm8994_s3>;
+				vdd_l5_7 = <&pm8994_s3>;
+				vdd_l6_12_32 = <&pm8994_s5>;
+				vdd_l8_16_30 = <&vreg_vph_pwr>;
+				vdd_l9_10_18_22 = <&vreg_vph_pwr>;
+				vdd_l13_19_23_24 = <&vreg_vph_pwr>;
+				vdd_l14_15 = <&pm8994_s5>;
+				vdd_l17_29 = <&vreg_vph_pwr>;
+				vdd_l20_21 = <&vreg_vph_pwr>;
+				vdd_l25 = <&pm8994_s5>;
+				/*vin_lvs1_2 = <&pm8994_s4>; */
+
+
+
+				s1 {
+				};
+
+				s2 {
+				};
+
+				s3 {
+					regulator-min-microvolt = <1300000>;
+					regulator-max-microvolt = <1300000>;
+				};
+
+				s4 {
+					regulator-min-microvolt = <1800000>;
+					regulator-max-microvolt = <1800000>;
+				};
+
+				l1 {
+					regulator-min-microvolt = <1000000>;
+					regulator-max-microvolt = <1000000>;
+				};
+
+				l2 {
+					regulator-min-microvolt = <1250000>;
+					regulator-max-microvolt = <1250000>;
+				};
+
+				l3 {
+					regulator-min-microvolt = <1200000>;
+					regulator-max-microvolt = <1200000>;
+				};
+
+				l4 {
+					regulator-min-microvolt = <1225000>;
+					regulator-max-microvolt = <1225000>;
+				};
+
+				l5 {
+				};
+
+				l6 {
+				};
+
+				l7 {
+				};
+
+				l8 {
+				};
+
+				l9 {
+				};
+
+				l10 {
+				};
+
+				l11 {
+				};
+
+				l12 {
+				};
+
+				l13 {
+				};
+
+				l14 {
+				};
+
+				l15 {
+				};
+
+				l16 {
+				};
+
+				l17 {
+				};
+
+				l19 {
+				};
+
+				l20 {
+					regulator-min-microvolt = <2950000>;
+					regulator-max-microvolt = <2950000>;
+					regulator-always-on;
+					regulator-boot-on;
+				};
+
+			};  /* end pm8994 regs */
+		}; /* end rpm_requests */
+	}; /* end rpm */
+}; /* end smd_rpm */
