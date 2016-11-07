@@ -46,6 +46,32 @@ struct freq_tbl *qcom_find_freq(const struct freq_tbl *f, unsigned long rate)
 }
 EXPORT_SYMBOL_GPL(qcom_find_freq);
 
+const
+struct freq_tbl *qcom_find_freq_floor(const struct freq_tbl *f,
+				      unsigned long rate)
+{
+	int size = 0;
+
+	if (!f)
+		return NULL;
+
+	/*
+	 * The freq table has entries in the ascending order of frequencies
+	 * To find the floor for a given frequency, we need to do a reverse
+	 * lookup of the table
+	 */
+	for (; f->freq; f++, size++)
+		;
+
+	for (f--; size; f--, size--)
+		if (rate >= f->freq)
+			return f;
+
+	/* could not find any rates lower than *rate* */
+	return NULL;
+}
+EXPORT_SYMBOL_GPL(qcom_find_freq_floor);
+
 int qcom_find_src_index(struct clk_hw *hw, const struct parent_map *map, u8 src)
 {
 	int i, num_parents = clk_hw_get_num_parents(hw);
