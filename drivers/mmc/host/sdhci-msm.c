@@ -81,6 +81,7 @@
 
 #define CORE_VENDOR_SPEC_CAPABILITIES0	0x11c
 
+#define INVALID_TUNING_PHASE	-1
 #define TCXO_FREQ		19200000
 #define SDHCI_MSM_MIN_CLOCK	400000
 #define CORE_FREQ_100MHZ	(100 * 1000 * 1000)
@@ -102,6 +103,7 @@ struct sdhci_msm_reg_data {
 	/* voltage level to be set */
 	bool tuning_done;
 	bool calibration_done;
+	u8 saved_tuning_phase;
 	u32 low_vol_level;
 	u32 high_vol_level;
 
@@ -722,6 +724,9 @@ static int msm_config_cm_dll_phase(struct sdhci_host *host, u8 phase)
 	u32 config;
 	struct mmc_host *mmc = host->mmc;
 
+	if (phase > 0xf)
+		return -EINVAL;
+
 	spin_lock_irqsave(&host->lock, flags);
 
 	config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG);
@@ -1062,6 +1067,8 @@ static int sdhci_msm_execute_tuning(struct sdhci_host *host, u32 opcode)
 	int rc;
 	struct mmc_host *mmc = host->mmc;
 	struct mmc_ios ios = host->mmc->ios;
+	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
 
 	/*
 	 * Tuning is required for SDR104, HS200 and HS400 cards and
@@ -1086,6 +1093,7 @@ retry:
 		if (rc)
 			return rc;
 
+		msm_host->saved_tuning_phase = phase;
 		rc = mmc_send_tuning(mmc, opcode, NULL);
 		if (!rc) {
 			/* Tuning is successful at this tuning point */
@@ -1466,6 +1474,8 @@ static int sdhci_msm_probe(struct platform_device *pdev)
 			goto pltfm_free;
 		}
 	}
+
+	msm_host->saved_tuning_phase = INVALID_TUNING_PHASE;
 
 	/* Setup SDCC bus voter clock. */
 	msm_host->bus_clk = devm_clk_get(&pdev->dev, "bus");
