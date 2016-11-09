@@ -76,6 +76,7 @@
 
 #define TCXO_FREQ		19200000
 
+	bool use_14lpp_dll_reset;
 #define CDR_SELEXT_SHIFT	20
 #define CDR_SELEXT_MASK		(0xf << CDR_SELEXT_SHIFT)
 #define CMUX_SHIFT_PHASE_SHIFT	24
@@ -304,6 +305,8 @@ static int sdhci_msm_vreg_set_optimum_mode(struct sdhci_msm_reg_data
 		 * value even for success case.
 		 */
 		ret = 0;
+	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
 	return ret;
 }
 
@@ -927,6 +930,16 @@ static int msm_init_cm_dll(struct sdhci_host *host)
 	}
 
 
+	if (msm_host->use_14lpp_dll_reset) {
+		config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG);
+		config &= ~CORE_CK_OUT_EN;
+		writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG);
+
+		config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG_2);
+		config |= CORE_DLL_CLOCK_DISABLE;
+		writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG_2);
+	}
+
 	/* Write 1 to DLL_RST bit of DLL_CONFIG register */
 	config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG);
 	config |= CORE_DLL_RST;
@@ -955,6 +968,24 @@ static int msm_init_cm_dll(struct sdhci_host *host)
 	}
 
 
+	if (msm_host->use_14lpp_dll_reset) {
+		u32 mclk_freq = 0;
+
+		if ((readl_relaxed(host->ioaddr + CORE_DLL_CONFIG_2)
+					& CORE_FLL_CYCLE_CNT))
+			mclk_freq = (u32)((host->clock / TCXO_FREQ) * 8);
+		else
+			mclk_freq = (u32)((host->clock / TCXO_FREQ) * 4);
+
+		config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG_2);
+		config &= ~(0xFF << 10);
+		config |= mclk_freq << 10;
+
+		writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG_2);
+		/* wait for 5us before enabling DLL clock */
+		udelay(5);
+	}
+
 	/* Write 0 to DLL_RST bit of DLL_CONFIG register */
 	config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG);
 	config &= ~CORE_DLL_RST;
@@ -973,6 +1004,14 @@ static int msm_init_cm_dll(struct sdhci_host *host)
 		writel_relaxed((readl_relaxed(host->ioaddr + CORE_DLL_CONFIG_2)
 				& ~CORE_DLL_CLOCK_DISABLE),
 				host->ioaddr + CORE_DLL_CONFIG_2);
+	}
+
+	if (msm_host->use_14lpp_dll_reset) {
+		msm_cm_dll_set_freq(host);
+		/* Enable the DLL clock */
+		config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG_2);
+		config &= ~CORE_DLL_CLOCK_DISABLE;
+		writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG_2);
 	}
 
 	/* Set DLL_EN bit to 1. */
@@ -1300,6 +1339,9 @@ static int sdhci_msm_probe(struct platform_device *pdev)
 
 	if ((core_major == 1) && (core_minor >= 0x42))
 		msm_host->use_updated_dll_reset = true;
+
+	if ((core_major == 1) && (core_minor >= 0x42))
+		msm_host->use_14lpp_dll_reset = true;
 
 	/*
 	 * Support for some capabilities is not advertised by newer
