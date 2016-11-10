@@ -1093,7 +1093,6 @@ static struct clk_rcg2 pdm2_clk_src = {
 };
 
 static struct freq_tbl ftbl_sdcc1_apps_clk_src[] = {
-	F(144000, P_XO, 16, 3, 25),
 	F(400000, P_XO, 12, 1, 4),
 	F(20000000, P_GPLL0, 15, 1, 2),
 	F(25000000, P_GPLL0, 12, 1, 2),

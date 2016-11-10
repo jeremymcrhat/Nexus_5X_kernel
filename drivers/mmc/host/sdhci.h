@@ -24,6 +24,9 @@
  * Controller registers
  */
 
+#define SDHCI_QUIRK2_SLOW_INT_CLR                 (1<<5)
+#define SDHCI_VER_100           0x2B
+
 #define SDHCI_DMA_ADDRESS	0x00
 #define SDHCI_ARGUMENT2		SDHCI_DMA_ADDRESS
 
@@ -68,6 +71,8 @@
 #define  SDHCI_DOING_READ	0x00000200
 #define  SDHCI_SPACE_AVAILABLE	0x00000400
 #define  SDHCI_DATA_AVAILABLE	0x00000800
+#define  SDHCI_INT_ERROR        0x00008000
+#define  SDHCI_INT_TIMEOUT      0x00010000
 #define  SDHCI_CARD_PRESENT	0x00010000
 #define  SDHCI_WRITE_PROTECT	0x00080000
 #define  SDHCI_DATA_LVL_MASK	0x00F00000
@@ -141,6 +146,7 @@
 #define  SDHCI_INT_DATA_END_BIT	0x00400000
 #define  SDHCI_INT_BUS_POWER	0x00800000
 #define  SDHCI_INT_ACMD12ERR	0x01000000
+#define  SDHCI_INT_AUTO_CMD_ERR 0x01000000
 #define  SDHCI_INT_ADMA_ERROR	0x02000000
 
 #define  SDHCI_INT_NORMAL_MASK	0x00007FFF
@@ -259,6 +265,18 @@
 #define   SDHCI_SPEC_100	0
 #define   SDHCI_SPEC_200	1
 #define   SDHCI_SPEC_300	2
+
+
+
+#define CORE_DLL_CONFIG         0x100
+#define CORE_CMD_DAT_TRACK_SEL  (1 << 0)
+
+#define CORE_DLL_STATUS         0x108
+
+
+#define CORE_FREQ_100MHZ        (100 * 1000 * 1000)
+#define TCXO_FREQ               19200000
+
 
 /*
  * End of controller registers.
@@ -511,6 +529,7 @@ struct sdhci_host {
 	unsigned		timing;		/* Current timing */
 
 	u32			thread_isr;
+	u32			auto_cmd_err_sts;
 
 	/* cached registers */
 	u32			ier;
@@ -568,6 +587,7 @@ struct sdhci_ops {
 #define REQ_IO_LOW	BIT(2)
 #define REQ_IO_HIGH	BIT(3)
 	void    (*check_power_status)(struct sdhci_host *host, u32 req_type);
+	void	(*dump_vendor_regs)(struct sdhci_host *host);
 };
 
 #ifdef CONFIG_MMC_SDHCI_IO_ACCESSORS

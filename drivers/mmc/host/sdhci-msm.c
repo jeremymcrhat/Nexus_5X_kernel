@@ -14,6 +14,8 @@
  *
  */
 
+#define DEBUG
+
 #include <linux/module.h>
 #include <linux/of_device.h>
 #include <linux/delay.h>
@@ -130,7 +132,6 @@
 
 #define CORE_DLL_RST  BIT(30)
 
-#define CORE_DLL_PDN            (1 << 29)
 /* This structure keeps information per regulator */
 struct sdhci_msm_reg_data {
 	struct regulator *reg;	/* voltage regulator handle */
@@ -193,13 +194,13 @@ struct sdhci_msm_host {
 	u32 curr_pwr_state;
 	u32 curr_io_level;
 	struct completion pwr_irq_completion;
-	struct sdhci_msm_pltfm_data *pdata;
-	int pwr_irq;
-	u32 curr_pwr_state;
-	u32 curr_io_level;
-	struct completion pwr_irq_completion;
 	spinlock_t pwr_irq_lock;
 	bool use_updated_dll_reset;
+	bool tuning_done;
+	bool calibration_done;
+	bool use_14lpp_dll_reset;
+	u8 saved_tuning_phase;
+	bool use_cdclp533;
 };
 
 #define MAX_PROP_SIZE 32
@@ -356,8 +357,7 @@ static int sdhci_msm_vreg_set_optimum_mode(struct sdhci_msm_reg_data
 		 * value even for success case.
 		 */
 		ret = 0;
-	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+
 	return ret;
 }
 
@@ -1104,7 +1104,7 @@ static int sdhci_msm_cdclp533_calibration(struct sdhci_host *host)
 	u32 config, calib_done;
 	int ret;
 
-	pr_debug("%s: %s: Enter\n", mmc_hostname(host->mmc), __func__);
+	printk("%s: %s: Enter\n", mmc_hostname(host->mmc), __func__);
 
 	/*
 	 * Retuning in HS400 (DDR mode) will fail, just reset the
@@ -1278,7 +1278,7 @@ static int sdhci_msm_hs400_dll_calibration(struct sdhci_host *host)
 	int ret;
 	u32 config;
 
-	pr_debug("%s: %s: Enter\n", mmc_hostname(host->mmc), __func__);
+	printk("%s: %s: Enter\n", mmc_hostname(host->mmc), __func__);
 
 	/*
 	 * Retuning in HS400 (DDR mode) will fail, just reset the
@@ -1309,6 +1309,83 @@ out:
 	return ret;
 }
 
+
+
+#define MAX_TEST_BUS 20
+#define CORE_MCI_DATA_CNT 0x30
+#define CORE_MCI_FIFO_CNT 0x44
+#define CORE_MCI_STATUS 0x34
+#define CORE_VENDOR_SPEC_ADMA_ERR_ADDR0        0x114
+#define CORE_VENDOR_SPEC_ADMA_ERR_ADDR1        0x118
+#define CORE_TESTBUS_SEL2_BIT  4
+#define CORE_TESTBUS_SEL2      (1 << CORE_TESTBUS_SEL2_BIT)
+
+#define CORE_TESTBUS_ENA       (1 << 3)
+
+#define CORE_TESTBUS_CONFIG    0x0CC
+
+#define CORE_SDCC_DEBUG_REG    0x124
+
+void sdhci_msm_dump_vendor_regs(struct sdhci_host *host)
+{
+
+        int tbsel, tbsel2;
+        int i, index = 0;
+        u32 test_bus_val = 0;
+        u32 debug_reg[MAX_TEST_BUS] = {0};
+       struct sdhci_pltfm_host *pltfm_host;
+        struct sdhci_msm_host *msm_host;
+
+       pltfm_host = sdhci_priv(host);
+       msm_host = sdhci_pltfm_priv(pltfm_host);
+
+        pr_info("----------- VENDOR REGISTER DUMP -----------\n");
+        pr_info("Data cnt: 0x%08x | Fifo cnt: 0x%08x | Int sts: 0x%08x\n",
+                readl_relaxed(msm_host->core_mem + CORE_MCI_DATA_CNT),
+                readl_relaxed(msm_host->core_mem + CORE_MCI_FIFO_CNT),
+                readl_relaxed(msm_host->core_mem + CORE_MCI_STATUS));
+        pr_info("DLL cfg:  0x%08x | DLL sts:  0x%08x | SDCC ver: 0x%08x\n",
+                readl_relaxed(host->ioaddr + CORE_DLL_CONFIG),
+                readl_relaxed(host->ioaddr + CORE_DLL_STATUS),
+                readl_relaxed(msm_host->core_mem + CORE_MCI_VERSION));
+        pr_info("Vndr func: 0x%08x | Vndr adma err : addr0: 0x%08x addr1: 0x%08x\n",
+                readl_relaxed(host->ioaddr + CORE_VENDOR_SPEC),
+                readl_relaxed(host->ioaddr + CORE_VENDOR_SPEC_ADMA_ERR_ADDR0),
+                readl_relaxed(host->ioaddr + CORE_VENDOR_SPEC_ADMA_ERR_ADDR1));
+
+        /*
+         * tbsel indicates [2:0] bits and tbsel2 indicates [7:4] bits
+         * of CORE_TESTBUS_CONFIG register.
+         *
+         * To select test bus 0 to 7 use tbsel and to select any test bus
+         * above 7 use (tbsel2 | tbsel) to get the test bus number. For eg,
+         * to select test bus 14, write 0x1E to CORE_TESTBUS_CONFIG register
+         * i.e., tbsel2[7:4] = 0001, tbsel[2:0] = 110.
+         */
+        for (tbsel2 = 0; tbsel2 < 3; tbsel2++) {
+                for (tbsel = 0; tbsel < 8; tbsel++) {
+                        if (index >= MAX_TEST_BUS)
+                                break;
+                        test_bus_val = (tbsel2 << CORE_TESTBUS_SEL2_BIT) |
+                                        tbsel | CORE_TESTBUS_ENA;
+                        writel_relaxed(test_bus_val,
+                                msm_host->core_mem + CORE_TESTBUS_CONFIG);
+                        debug_reg[index++] = readl_relaxed(msm_host->core_mem +
+                                                        CORE_SDCC_DEBUG_REG);
+                }
+        }
+        for (i = 0; i < MAX_TEST_BUS; i = i + 4)
+                pr_info(" Test bus[%d to %d]: 0x%08x 0x%08x 0x%08x 0x%08x\n",
+                                i, i + 3, debug_reg[i], debug_reg[i+1],
+                                debug_reg[i+2], debug_reg[i+3]);
+        /* Disable test bus */
+        writel_relaxed(~CORE_TESTBUS_ENA, msm_host->core_mem +
+                        CORE_TESTBUS_CONFIG);
+}
+
+
+
+
 static int sdhci_msm_execute_tuning(struct sdhci_host *host, u32 opcode)
 {
 	int tuning_seq_cnt = 3;
@@ -1319,6 +1396,7 @@ static int sdhci_msm_execute_tuning(struct sdhci_host *host, u32 opcode)
 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
 	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
 
+printk(" %s HOST_clock: %d ios_timing: %d \n", __func__, host->clock, ios.timing);
 	/*
 	 * Tuning is required for SDR104, HS200 and HS400 cards and
 	 * if clock frequency is greater than 100MHz in these modes.
@@ -1327,20 +1405,28 @@ static int sdhci_msm_execute_tuning(struct sdhci_host *host, u32 opcode)
 	    !(ios.timing == MMC_TIMING_MMC_HS400 ||
 	    ios.timing == MMC_TIMING_MMC_HS200 ||
 	    ios.timing == MMC_TIMING_UHS_SDR104))
+	{
+		printk(" %s returning 0\n", __func__);
 		return 0;
+	}
 
 retry:
 	/* First of all reset the tuning block */
 	rc = msm_init_cm_dll(host);
 	if (rc)
+	{
+		printk(" %s init_cm_dll returned (%d) \n", __func__, rc);
 		return rc;
+	}
 
 	phase = 0;
 	do {
 		/* Set the phase in delay line hw block */
 		rc = msm_config_cm_dll_phase(host, phase);
-		if (rc)
+		if (rc) {
+			printk(" %s msm_config_cm_dll_phase returned (%d) \n", __func__, rc);
 			return rc;
+		}
 
 		msm_host->saved_tuning_phase = phase;
 		rc = mmc_send_tuning(mmc, opcode, NULL);
@@ -1349,6 +1435,9 @@ retry:
 			tuned_phases[tuned_phase_cnt++] = phase;
 			dev_dbg(mmc_dev(mmc), "%s: Found good phase = %d\n",
 				 mmc_hostname(mmc), phase);
+		}
+		else {
+			printk(" %s Error in send tuning (%d) \n", __func__, rc);
 		}
 	} while (++phase < ARRAY_SIZE(tuned_phases));
 
@@ -1393,6 +1482,9 @@ static void sdhci_msm_set_uhs_signaling(struct sdhci_host *host,
 	u32 config;
 
 	ctrl_2 = sdhci_readw(host, SDHCI_HOST_CONTROL2);
+
+	printk(" %s -> ctrl_2(1):: %x \n", __func__, ctrl_2);
+
 	/* Select Bus Speed Mode for host */
 	ctrl_2 &= ~SDHCI_CTRL_UHS_MASK;
 	switch (uhs) {
@@ -1415,6 +1507,9 @@ static void sdhci_msm_set_uhs_signaling(struct sdhci_host *host,
 		ctrl_2 |= SDHCI_CTRL_UHS_DDR50;
 		break;
 	}
+
+
+	printk(" %s -> ctrl_2(2):: %x \n", __func__, ctrl_2);
 
 	/*
 	 * When clock frequency is less than 100MHz, the feedback clock must be
@@ -1447,9 +1542,10 @@ static void sdhci_msm_set_uhs_signaling(struct sdhci_host *host,
 		 */
 		msm_host->calibration_done = false;
 	}
-
 	dev_dbg(mmc_dev(mmc), "%s: clock=%u uhs=%u ctrl_2=0x%x\n",
 		mmc_hostname(host->mmc), host->clock, uhs, ctrl_2);
+
+	printk(" %s -> ctrl_2(3):: %x \n", __func__, ctrl_2);
 	sdhci_writew(host, ctrl_2, SDHCI_HOST_CONTROL2);
 
 	spin_unlock_irq(&host->lock);
@@ -1486,6 +1582,7 @@ static void sdhci_msm_voltage_switch(struct sdhci_host *host)
 	writel_relaxed(irq_ack, msm_host->core_mem + CORE_PWRCTL_CTL);
 }
 
+#if 0
 static irqreturn_t sdhci_msm_pwr_irq(int irq, void *data)
 {
 	struct sdhci_host *host = (struct sdhci_host *)data;
@@ -1494,6 +1591,7 @@ static irqreturn_t sdhci_msm_pwr_irq(int irq, void *data)
 
 	return IRQ_HANDLED;
 }
+#endif
 
 static unsigned int sdhci_msm_get_max_clock(struct sdhci_host *host)
 {
@@ -1570,6 +1668,8 @@ static void sdhci_msm_set_clock(struct sdhci_host *host, unsigned int clock)
 	struct mmc_ios curr_ios = host->mmc->ios;
 	u32 config, dll_lock;
 	int rc;
+
+printk(" %s clock: %u \n", __func__, clock);
 
 	if (!clock) {
 		msm_host->clk_rate = clock;
@@ -1712,6 +1812,8 @@ static const struct sdhci_ops sdhci_msm_ops = {
 	.set_bus_width = sdhci_set_bus_width,
 	.set_uhs_signaling = sdhci_msm_set_uhs_signaling,
 	.voltage_switch = sdhci_msm_voltage_switch,
+	.check_power_status = sdhci_msm_check_power_status,
+	.dump_vendor_regs = sdhci_msm_dump_vendor_regs,
 };
 
 static const struct sdhci_pltfm_data sdhci_msm_pdata = {

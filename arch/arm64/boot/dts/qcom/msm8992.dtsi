@@ -59,12 +59,6 @@
 			     <GIC_PPI 1 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
 	};
 
-	apcs: syscon@0xf900d000 {
-		compatible = "syscon";
-		reg = <0xf900d000 0x2000>;
-	};
-
-
 	soc: soc {
 		#address-cells = <1>;
 		#size-cells = <1>;
@@ -78,6 +72,12 @@
 			reg = <0xf9000000 0x1000>,
 				<0xf9002000 0x1000>;
 		};
+
+		apcs: syscon@0xf900d000 {
+			compatible = "syscon";
+			reg = <0xf900d000 0x2000>;
+		};
+
 
 		timer@f9020000 {
 			#address-cells = <1>;
@@ -168,16 +168,6 @@
 			#reset-cells = <1>;
 			#power-domain-cells = <1>;
 			reg = <0xfc400000 0x2000>;
-		};
-
-		blsp1_uart2: serial@f991e000 {
-			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
-			reg = <0xf991e000 0x1000>;
-			interrupts = <0 108 0>;
-			status = "disabled";
-			clock-names = "core", "iface";
-			clocks = <&clock_gcc GCC_BLSP1_UART2_APPS_CLK>,
-				<&clock_gcc GCC_BLSP1_AHB_CLK>;
 		};
 
 		blsp1_uart5: serial@f9922000 {
@@ -290,6 +280,8 @@
 		};
 
 		sfpb_mutex_regs: syscon@fd484000 {
+			#address-cells = <1>;
+			#size-cells = <1>;
 			compatible = "syscon";
 			reg = <0xfd484000 0x400>;
 		};
@@ -363,7 +355,7 @@
 				};
 
 				rpmcc: qcom,rpmcc {
-					compatible = "qcom,rpmcc-msm8994", "qcom,rpmcc";
+					compatible = "qcom,rpmcc-msm8916", "qcom,rpmcc";
 					#clock-cells = <1>;
 				};
 
