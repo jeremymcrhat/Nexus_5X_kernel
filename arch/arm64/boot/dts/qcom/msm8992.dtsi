@@ -59,12 +59,6 @@
 			     <GIC_PPI 1 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
 	};
 
-	apcs: syscon@0xf900d000 {
-		compatible = "syscon";
-		reg = <0xf900d000 0x2000>;
-	};
-
-
 	soc: soc {
 		#address-cells = <1>;
 		#size-cells = <1>;
@@ -78,6 +72,12 @@
 			reg = <0xf9000000 0x1000>,
 				<0xf9002000 0x1000>;
 		};
+
+		apcs: syscon@0xf900d000 {
+			compatible = "syscon";
+			reg = <0xf900d000 0x2000>;
+		};
+
 
 		timer@f9020000 {
 			#address-cells = <1>;
@@ -290,6 +290,8 @@
 		};
 
 		sfpb_mutex_regs: syscon@fd484000 {
+			#address-cells = <1>;
+			#size-cells = <1>;
 			compatible = "syscon";
 			reg = <0xfd484000 0x400>;
 		};
@@ -363,7 +365,7 @@
 				};
 
 				rpmcc: qcom,rpmcc {
-					compatible = "qcom,rpmcc-msm8994", "qcom,rpmcc";
+					compatible = "qcom,rpmcc-msm8916", "qcom,rpmcc";
 					#clock-cells = <1>;
 				};
 

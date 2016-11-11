@@ -40,12 +40,42 @@
 
 #define MAX_TUNING_LOOP 40
 
+#define CORE_DLL_RST            (1 << 30)
+#define CORE_DLL_PDN            (1 << 29)
+
 static unsigned int debug_quirks = 0;
 static unsigned int debug_quirks2;
 
 static void sdhci_finish_data(struct sdhci_host *);
 
 static void sdhci_enable_preset_value(struct sdhci_host *host, bool enable);
+
+static void sdhci_dump_rpm_info(struct sdhci_host *host)
+{
+        struct mmc_host *mmc = host->mmc;
+
+        pr_info("%s: rpmstatus[pltfm](runtime-suspend:usage_count:disable_depth)(%d:%d:%d)\n",
+                mmc_hostname(mmc), mmc->parent->power.runtime_status,
+                atomic_read(&mmc->parent->power.usage_count),
+                mmc->parent->power.disable_depth);
+}
+
+
+static void sdhci_dump_state(struct sdhci_host *host)
+{
+        struct mmc_host *mmc = host->mmc;
+
+#if 0
+        pr_info("%s: clk: %d clk-gated: %d claimer: %s pwr: %d\n",
+                mmc_hostname(mmc), host->clock, mmc->clk_gated,
+                mmc->claimer->comm, host->pwr);
+#endif
+
+        pr_info("%s: clk: %d claimer: %s pwr: %d\n",
+                mmc_hostname(mmc), host->clock, 
+                mmc->claimer->comm, host->pwr);
+        sdhci_dump_rpm_info(host);
+}
 
 static void sdhci_dumpregs(struct sdhci_host *host)
 {
@@ -100,6 +130,10 @@ static void sdhci_dumpregs(struct sdhci_host *host)
 			       readl(host->ioaddr + SDHCI_ADMA_ADDRESS));
 	}
 
+	if (host->ops->dump_vendor_regs)
+		host->ops->dump_vendor_regs(host);
+
+	sdhci_dump_state(host);
 	pr_err(DRIVER_NAME ": ===========================================\n");
 }
 
@@ -227,7 +261,7 @@ static void sdhci_init(struct sdhci_host *host, int soft)
 		    SDHCI_INT_DATA_CRC | SDHCI_INT_DATA_TIMEOUT |
 		    SDHCI_INT_INDEX | SDHCI_INT_END_BIT | SDHCI_INT_CRC |
 		    SDHCI_INT_TIMEOUT | SDHCI_INT_DATA_END |
-		    SDHCI_INT_RESPONSE;
+		    SDHCI_INT_RESPONSE | SDHCI_INT_AUTO_CMD_ERR;
 
 	if (host->tuning_mode == SDHCI_TUNING_MODE_2 ||
 	    host->tuning_mode == SDHCI_TUNING_MODE_3)
@@ -1540,7 +1574,7 @@ EXPORT_SYMBOL_GPL(sdhci_set_bus_width);
 
 void sdhci_set_uhs_signaling(struct sdhci_host *host, unsigned timing)
 {
-	u16 ctrl_2;
+	u16 ctrl_2 = 0;
 
 	ctrl_2 = sdhci_readw(host, SDHCI_HOST_CONTROL2);
 	/* Select Bus Speed Mode for host */
@@ -3031,6 +3065,7 @@ int sdhci_setup_host(struct sdhci_host *host)
 	unsigned int override_timeout_clk;
 	u32 max_clk;
 	int ret;
+	u16 host_version;
 
 	WARN_ON(host == NULL);
 	if (host == NULL)
@@ -3257,6 +3292,21 @@ int sdhci_setup_host(struct sdhci_host *host)
 		DBG("%s: Auto-CMD23 available\n", mmc_hostname(mmc));
 	} else {
 		DBG("%s: Auto-CMD23 unavailable\n", mmc_hostname(mmc));
+	}
+
+	host_version = readw_relaxed((host->ioaddr + SDHCI_HOST_VERSION));
+        pr_debug("%s: JRM Host Version: 0x%x Vendor Version 0x%x\n",
+                mmc_hostname(mmc), host_version, ((host_version & SDHCI_VENDOR_VER_MASK) >>
+                  SDHCI_VENDOR_VER_SHIFT));
+
+	if (((host_version & SDHCI_VENDOR_VER_MASK) >>
+		SDHCI_VENDOR_VER_SHIFT) >= SDHCI_VER_100) {
+		/*
+		 * Add 40us delay in interrupt handler when
+		 * operating at initialization frequency(400KHz).
+		 */
+		printk("  -->>>> ADding delay via quirks2 \n");
+		host->quirks2 |= SDHCI_QUIRK2_SLOW_INT_CLR;
 	}
 
 	/*
