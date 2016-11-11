@@ -218,6 +218,8 @@
 			qcom,vdd-io-current-level = <200 325000>;
 			regulator-always-on;
 
+			mmc-hs400-1_8v;
+
 			/** this is going away with the updated MMC patches */
 			vmmc-supply = <&pm8994_l20>;
 			vqmmc-supply = <&pm8994_s4>;
