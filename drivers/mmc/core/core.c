@@ -61,6 +61,11 @@
 /* The max erase timeout, used when host->max_busy_timeout isn't specified */
 #define MMC_ERASE_TIMEOUT_MS	(60 * 1000) /* 60 s */
 
+
+//JRM
+#undef pr_debug
+#define pr_debug pr_crit
+
 static const unsigned freqs[] = { 400000, 300000, 200000, 100000 };
 
 /*
