@@ -76,6 +76,8 @@
 				s4 {
 					regulator-min-microvolt = <1800000>;
 					regulator-max-microvolt = <1800000>;
+					regulator-allow-set-load;
+					regulator-system-load = <325000>;
 				};
 
 				s5 {
@@ -150,6 +152,8 @@
 					regulator-max-microvolt = <2950000>;
 					regulator-always-on;
 					regulator-boot-on;
+					regulator-allow-set-load;
+					regulator-system-load = <570000>;
 				};
 
 			};  /* end pm8994 regs */
