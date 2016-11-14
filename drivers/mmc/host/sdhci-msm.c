@@ -78,6 +78,11 @@
 #define CORE_HC_SELECT_IN_HS400	(6 << 19)
 #define CORE_HC_SELECT_IN_MASK	(7 << 19)
 
+#define CORE_VENDOR_SPEC_FUNC2 0x110
+#define HC_SW_RST_WAIT_IDLE_DIS (1 << 20)
+#define HC_SW_RST_REQ (1 << 21)
+#define CORE_ONE_MID_EN (1 << 25)
+
 #define CORE_CSR_CDC_CTLR_CFG0		0x130
 #define CORE_SW_TRIG_FULL_CALIB		BIT(16)
 #define CORE_HW_AUTOCAL_ENA		BIT(17)
@@ -1144,6 +1149,53 @@ out:
 	__sdhci_msm_set_clock(host, clock);
 }
 
+
+
+void sdhci_msm_reset_workaround(struct sdhci_host *host, u32 enable)
+{
+        u32 vendor_func2;
+        unsigned long timeout;
+
+        vendor_func2 = readl_relaxed(host->ioaddr + CORE_VENDOR_SPEC_FUNC2);
+
+        if (enable) {
+                writel_relaxed(vendor_func2 | HC_SW_RST_REQ, host->ioaddr +
+                                CORE_VENDOR_SPEC_FUNC2);
+                timeout = 10000;
+                while (readl_relaxed(host->ioaddr + CORE_VENDOR_SPEC_FUNC2) &
+                                HC_SW_RST_REQ) {
+                        if (timeout == 0) {
+                                pr_info("%s: Applying wait idle disable workaround\n",
+                                        mmc_hostname(host->mmc));
+                                /*
+                                 * Apply the reset workaround to not wait for
+                                 * pending data transfers on AXI before
+                                 * resetting the controller. This could be
+                                 * risky if the transfers were stuck on the
+                                 * AXI bus.
+                                 */
+                                vendor_func2 = readl_relaxed(host->ioaddr +
+                                                CORE_VENDOR_SPEC_FUNC2);
+                                writel_relaxed(vendor_func2 |
+                                        HC_SW_RST_WAIT_IDLE_DIS,
+                                        host->ioaddr + CORE_VENDOR_SPEC_FUNC2);
+                                host->reset_wa_t = ktime_get();
+                                return;
+                        }
+                        timeout--;
+                        udelay(10);
+                }
+                pr_info("%s: waiting for SW_RST_REQ is successful\n",
+                                mmc_hostname(host->mmc));
+        } else {
+                writel_relaxed(vendor_func2 & ~HC_SW_RST_WAIT_IDLE_DIS,
+                                host->ioaddr + CORE_VENDOR_SPEC_FUNC2);
+        }
+}
+
+
+
+
 static const struct of_device_id sdhci_msm_dt_match[] = {
 	{ .compatible = "qcom,sdhci-msm-v4" },
 	{},
@@ -1161,6 +1213,7 @@ static const struct sdhci_ops sdhci_msm_ops = {
 	.set_uhs_signaling = sdhci_msm_set_uhs_signaling,
 	.voltage_switch = sdhci_msm_voltage_switch,
 	.dump_vendor_regs = sdhci_msm_dump_vendor_regs,
+	.reset_workaround = sdhci_msm_reset_workaround,
 };
 
 static const struct sdhci_pltfm_data sdhci_msm_pdata = {
@@ -1182,6 +1235,7 @@ static int sdhci_msm_probe(struct platform_device *pdev)
 	u16 host_version, core_minor;
 	u32 core_version, config;
 	u8 core_major;
+	u32 val;
 
 	host = sdhci_pltfm_init(pdev, &sdhci_msm_pdata, sizeof(*msm_host));
 	if (IS_ERR(host))
@@ -1286,6 +1340,16 @@ static int sdhci_msm_probe(struct platform_device *pdev)
 	if ((core_major == 1) && (core_minor >= 0x42))
 		msm_host->use_14lpp_dll_reset = true;
 
+	/*
+	 * Enable one MID mode for SDCC5 (major 1) on 8916/8939 (minor 0x2e) and
+	 * on 8992 (minor 0x3e) as a workaround to reset for data stuck issue.
+	 */
+	if (core_major == 1 && (core_minor == 0x2e || core_minor == 0x3e)) {
+		host->quirks2 |= SDHCI_QUIRK2_USE_RESET_WORKAROUND;
+		val = readl_relaxed(host->ioaddr + CORE_VENDOR_SPEC_FUNC2);
+		writel_relaxed((val | CORE_ONE_MID_EN),
+			host->ioaddr + CORE_VENDOR_SPEC_FUNC2);
+	}
 	/*
 	 * SDCC 5 controller with major version 1, minor version 0x34 and later
 	 * with HS 400 mode support will use CM DLL instead of CDC LP 533 DLL.
