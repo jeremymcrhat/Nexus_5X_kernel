@@ -1160,7 +1160,6 @@ static const struct sdhci_ops sdhci_msm_ops = {
 	.set_bus_width = sdhci_set_bus_width,
 	.set_uhs_signaling = sdhci_msm_set_uhs_signaling,
 	.voltage_switch = sdhci_msm_voltage_switch,
-	.check_power_status = sdhci_msm_check_power_status,
 	.dump_vendor_regs = sdhci_msm_dump_vendor_regs,
 };
 
