@@ -430,6 +430,8 @@ struct sdhci_host {
 #define SDHCI_QUIRK2_ACMD23_BROKEN			(1<<14)
 /* Broken Clock divider zero in controller */
 #define SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN		(1<<15)
+/* Use reset workaround in case sdhci reset timeouts */
+#define SDHCI_QUIRK2_USE_RESET_WORKAROUND (1 << 15)
 
 	int irq;		/* Device IRQ */
 	void __iomem *ioaddr;	/* Mapped address */
@@ -530,6 +532,9 @@ struct sdhci_host {
 #define SDHCI_TUNING_MODE_1	0
 #define SDHCI_TUNING_MODE_2	1
 #define SDHCI_TUNING_MODE_3	2
+	int reset_wa_applied; /* reset workaround status */
+	int reset_wa_cnt; /* total number of times workaround is used */
+	ktime_t reset_wa_t; /* time when the reset workaround is applied */
 
 	unsigned long private[0] ____cacheline_aligned;
 };
@@ -571,6 +576,8 @@ struct sdhci_ops {
 					 unsigned int max_dtr, int host_drv,
 					 int card_drv, int *drv_type);
 	void    (*dump_vendor_regs)(struct sdhci_host *host);
+	void    (*reset_workaround)(struct sdhci_host *host, u32 enable);
+	void	(*platform_reset_exit)(struct sdhci_host *host, u8 mask);
 };
 
 #ifdef CONFIG_MMC_SDHCI_IO_ACCESSORS
