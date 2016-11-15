@@ -216,40 +216,6 @@
 
 		};
 
-		blsp_i2c2: i2c@f9924000 {
-		       status = "okay";
-		       compatible = "qcom,i2c-qup-v2.1.1";
-		       reg = <0xf9924000 0x1000>;
-		       interrupts = <0 96 IRQ_TYPE_NONE>;
-		       clocks = <&clock_gcc GCC_BLSP1_QUP2_I2C_APPS_CLK>, <&clock_gcc GCC_BLSP1_AHB_CLK>;
-		       clock-names = "core", "iface";
-		       #address-cells = <1>;
-		       #size-cells = <0>;
-		       pinctrl-names = "default", "sleep";
-		       pinctrl-0 = <&i2c2_default>;
-		       pinctrl-1 = <&i2c2_sleep>;
-			/****
-		       dmas = <&dma_blsp1 14 64 0x20000020 0x20>,
-				<&dma_blsp1 15 32 0x20000020 0x20>;
-			***/
-			dmas = <&blsp_dma1 0>, <&blsp_dma1 1>;
-			dma-names = "rx", "tx";
-		};
-
-		//TODO: Ask QC people how to figure out the BAM address. 
-		// There used to be a 'qcom,disable-dma' in 8992 3.10 what gives?
-
-		blsp_dma1: dma@f9904000 { /* BLSP1 */
-			compatible = "qcom,bam-v1.4.0";
-			reg = <0xf9904000 0x19000>;
-			interrupts = <0 238 0>;
-			clocks = <&clock_gcc GCC_BLSP1_AHB_CLK>;
-			clock-names = "bam_clk";
-			#dma-cells = <4>; /* JRM this may be 1 not sure*/
-			qcom,ee = <0>;
-			status = "okay";
-		};
-
 		vreg_vph_pwr: vreg-vph-pwr {
 			compatible = "regulator-fixed";
 			status = "okay";
@@ -261,21 +227,6 @@
 			regulator-always-on;
 		};
 
-		spmi_bus: qcom,spmi@fc4c0000 {
-			compatible = "qcom,spmi-pmic-arb";
-			reg-names = "core", "intr", "cnfg";
-			reg = <0xfc4cf000 0x1000>,
-			      <0xfc4cb000 0x1000>,
-			      <0xfc4ca000 0x1000>;
-			interrupts = <0 190 0>; /* ee0_krait_hlos_spmi_periph_irq */
-			qcom,pmic-arb-channel = <0>;
-			qcom,pmic-arb-ee = <0>;
-			#interrupt-cells = <3>;
-			interrupt-controller;
-			#address-cells = <1>;
-			#size-cells = <0>;
-			cell-index = <0>;
-		};
 		rpm_msg_ram: memory@fc428000 {
 			compatible = "qcom,rpm-msg-ram";
 			reg = <0xfc428000 0x4000>;
@@ -395,7 +346,8 @@
 					pm8994_l24: l24 {};
 					pm8994_l25: l25 {};
 					pm8994_l26: l26 {};
-					pm8994_l28: l27 {};
+					pm8994_l27: l27 {};
+					pm8994_l28: l28 {};
 					pm8994_l29: l29 {};
 					pm8994_l30: l30 {};
 					pm8994_l31: l31 {};
@@ -408,5 +360,3 @@
 
 
 #include "msm8992-pins.dtsi"
-#include "msm-pm8994.dtsi"
-#include "msm-pmi8994.dtsi"
