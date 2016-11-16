@@ -13,8 +13,6 @@
 #include <dt-bindings/interrupt-controller/arm-gic.h>
 #include <dt-bindings/clock/qcom,gcc-msm8994.h>
 #include <dt-bindings/clock/msm-clocks-8994.h>
-#include <dt-bindings/gpio/gpio.h>
-#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
 
 / {
 	model = "Qualcomm Technologies, Inc. MSM 8992";
@@ -170,29 +168,16 @@
 			reg = <0xfc400000 0x2000>;
 		};
 
-		blsp1_uart5: serial@f9922000 {
-			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
-			reg = <0xf9922000 0x1000>;
-			interrupts = <0 112 0>;
-			status = "disabled";
-			clock-names = "core", "iface";
-			clocks = <&clock_gcc clk_gcc_blsp1_uart5_apps_clk>,
-				 <&clock_gcc clk_gcc_blsp1_ahb_clk>;
-		};
-
-		/* from 3.10 arch/arm64/boot/dts/lge/msm8992-bullhead.dtsi */
 		sdhci1: qcom,sdhci@f9824900 {
 			compatible = "qcom,sdhci-msm-v4";
 			reg = <0xf9824900 0x1a0>, <0xf9824000 0x800>;
 			reg-names = "hc_mem", "core_mem";
 
-			interrupts = <0 123 0>, <0 138 0>;
+			interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_LOW>, <GIC_SPI 138 IRQ_TYPE_LEVEL_LOW>;
 			interrupt-names = "hc_irq", "pwr_irq";
 
 			clocks = <&clock_gcc GCC_SDCC1_APPS_CLK>, <&clock_gcc GCC_SDCC1_AHB_CLK>;
 			clock-names = "core", "iface";
-			status = "okay";
-			bus-width = <8>;
 
 			pinctrl-names = "default", "sleep";
 			pinctrl-0 = <&sdc1_clk_on &sdc1_cmd_on &sdc1_data_on &sdc1_rclk_on>;
@@ -206,14 +191,11 @@
 			vdd-io-supply = <&pm8994_s4>;
 			qcom,vdd-io-voltage-level = <1800000 1800000>;
 			qcom,vdd-io-current-level = <200 325000>;
+
 			regulator-always-on;
-
+			bus-width = <8>;
 			mmc-hs400-1_8v;
-
-			/** this is going away with the updated MMC patches */
-			vmmc-supply = <&pm8994_l20>;
-			vqmmc-supply = <&pm8994_s4>;
-
+			status = "okay";
 		};
 
 		vreg_vph_pwr: vreg-vph-pwr {
