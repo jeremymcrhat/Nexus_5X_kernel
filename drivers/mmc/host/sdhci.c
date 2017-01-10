@@ -101,6 +101,9 @@ static void sdhci_dumpregs(struct sdhci_host *host)
 			       readl(host->ioaddr + SDHCI_ADMA_ADDRESS));
 	}
 
+	if (host->ops->platform_dumpregs)
+		host->ops->platform_dumpregs(host);
+
 	pr_err(DRIVER_NAME ": ===========================================\n");
 }
 
