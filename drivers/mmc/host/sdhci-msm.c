@@ -29,6 +29,11 @@
 #define CORE_VERSION_MAJOR_MASK		(0xf << CORE_VERSION_MAJOR_SHIFT)
 #define CORE_VERSION_MINOR_MASK		0xff
 
+#define CORE_MCI_DATA_CNT	0x30
+#define CORE_MCI_STATUS		0x34
+#define CORE_MCI_FIFO_CNT	0x44
+#define CORE_MCI_STATUS2	0x6c
+
 #define CORE_HC_MODE		0x78
 #define HC_MODE_EN		0x1
 #define CORE_POWER		0x0
@@ -77,6 +82,10 @@
 #define CORE_HC_SELECT_IN_EN	BIT(18)
 #define CORE_HC_SELECT_IN_HS400	(6 << 19)
 #define CORE_HC_SELECT_IN_MASK	(7 << 19)
+
+#define CORE_VENDOR_SPEC_FUNC2		0x110
+#define CORE_VENDOR_SPEC_ADMA_ERR_ADDR0	0x114
+#define CORE_VENDOR_SPEC_ADMA_ERR_ADDR1	0x118
 
 #define CORE_CSR_CDC_CTLR_CFG0		0x130
 #define CORE_SW_TRIG_FULL_CALIB		BIT(16)
@@ -827,6 +836,30 @@ out:
 	return ret;
 }
 
+static void sdhci_msm_dumpregs(struct sdhci_host *host)
+{
+	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+
+	pr_err("----------- PLATFORM REGISTER DUMP -----------\n");
+
+	pr_err("Data cnt: 0x%08x | Fifo cnt: 0x%08x | Int sts: 0x%08x | Int sts2: 0x%08x\n",
+	       readl_relaxed(msm_host->core_mem + CORE_MCI_DATA_CNT),
+	       readl_relaxed(msm_host->core_mem + CORE_MCI_FIFO_CNT),
+	       readl_relaxed(msm_host->core_mem + CORE_MCI_STATUS),
+	       readl_relaxed(msm_host->core_mem + CORE_MCI_STATUS2));
+	pr_err("DLL cfg:  0x%08x | DLL sts:  0x%08x | SDCC ver: 0x%08x\n",
+	       readl_relaxed(host->ioaddr + CORE_DLL_CONFIG),
+	       readl_relaxed(host->ioaddr + CORE_DLL_STATUS),
+	       readl_relaxed(msm_host->core_mem + CORE_MCI_VERSION));
+	pr_err("Vndr func: 0x%08x | Vndr adma err : addr0: 0x%08x addr1: 0x%08x\n",
+	       readl_relaxed(host->ioaddr + CORE_VENDOR_SPEC),
+	       readl_relaxed(host->ioaddr + CORE_VENDOR_SPEC_ADMA_ERR_ADDR0),
+	       readl_relaxed(host->ioaddr + CORE_VENDOR_SPEC_ADMA_ERR_ADDR1));
+	pr_err("Vndr func2: 0x%08x\n",
+	       readl_relaxed(host->ioaddr + CORE_VENDOR_SPEC_FUNC2));
+}
+
 static int sdhci_msm_execute_tuning(struct sdhci_host *host, u32 opcode)
 {
 	int tuning_seq_cnt = 3;
@@ -1127,6 +1160,7 @@ static const struct sdhci_ops sdhci_msm_ops = {
 	.set_bus_width = sdhci_set_bus_width,
 	.set_uhs_signaling = sdhci_msm_set_uhs_signaling,
 	.voltage_switch = sdhci_msm_voltage_switch,
+	.platform_dumpregs = sdhci_msm_dumpregs,
 };
 
 static const struct sdhci_pltfm_data sdhci_msm_pdata = {
