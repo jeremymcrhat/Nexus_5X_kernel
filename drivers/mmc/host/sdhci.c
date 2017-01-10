@@ -2618,9 +2618,26 @@ static void sdhci_data_irq(struct sdhci_host *host, u32 intmask)
 			host->ops->adma_workaround(host, intmask);
 	}
 
-	if (host->data->error)
+	if (host->data->error) {
+		bool pr_msg = true;
+
+		if (intmask & (SDHCI_INT_DATA_CRC | SDHCI_INT_DATA_TIMEOUT |
+		    SDHCI_INT_DATA_END_BIT)) {
+			command = SDHCI_GET_CMD(sdhci_readw(host,
+							    SDHCI_COMMAND));
+			if (command == MMC_SEND_TUNING_BLOCK_HS200 ||
+			    command == MMC_SEND_TUNING_BLOCK)
+				pr_msg = false;
+		}
+		if (pr_msg) {
+			pr_err("%s: data txfr (0x%08x) error: %d\n",
+			       mmc_hostname(host->mmc), intmask,
+			       host->data->error);
+			sdhci_dumpregs(host);
+		}
+
 		sdhci_finish_data(host);
-	else {
+	} else {
 		if (intmask & (SDHCI_INT_DATA_AVAIL | SDHCI_INT_SPACE_AVAIL))
 			sdhci_transfer_pio(host);
 
