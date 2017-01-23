@@ -11,7 +11,7 @@ RPM node itself.
 
 = SUBDEVICES
 
-The RPM exposes resources to its subnodes.  The rpm_requests node must be
+The RPM exposes resources to its subnodes.  The rpm-requests node must be
 present and this subnode may contain children that designate regulator
 resources.
 
@@ -29,7 +29,7 @@ resources.
 	Definition: must be "rpm_requests"
 
 Refer to Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt
-for information on the regulator subnodes that can exist under the rpm_requests.
+for information on the regulator subnodes that can exist under the rpm-requests.
 
 Example:
 
@@ -48,7 +48,7 @@ Example:
 			qcom,ipc = <&apcs 8 0>;
 			qcom,smd-edge = <15>;
 
-			rpm_requests {
+			rpm-requests {
 				compatible = "qcom,rpm-msm8974";
 				qcom,smd-channels = "rpm_requests";
 

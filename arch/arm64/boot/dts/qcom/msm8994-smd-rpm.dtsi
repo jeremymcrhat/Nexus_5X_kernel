@@ -13,7 +13,7 @@
 
 &smd_rpm {
 	rpm {
-		rpm_requests {
+		rpm-requests {
 			pm8994-regulators {
 
 				vdd_l1-supply = <&pm8994_s1>;
