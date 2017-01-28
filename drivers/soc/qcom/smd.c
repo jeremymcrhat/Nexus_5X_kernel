@@ -1182,9 +1182,8 @@ void apply_quirks(struct device_node *dn, struct qcom_smd_channel *channel)
 
 				if (!qcom_smd_channel_force_open(channel,
 							(int)initial_state)) {
-					pr_info("Unable to force RX channel %s to
-						initial state of %d\n", channel->name,
-						(int)initial_state);
+					pr_info("Unable to force RX channel %s to initial state of %d\n",
+							channel->name, (int)initial_state);
 				}
 			}
 		}
