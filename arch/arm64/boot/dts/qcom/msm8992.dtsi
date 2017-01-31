@@ -281,6 +281,18 @@
 					#clock-cells = <1>;
 				};
 
+
+				wcnss {
+					compatible = "qcom,wcnss";
+					qcom,smd-channels = "WCNSS_CTRL";
+
+					#address-cells = <1>;
+					#size-cells = <1>;
+
+					bt {
+						compatible = "qcom,wcnss-bt";
+					};
+				};
 				smd_rpm_regulators: pm8994-regulators {
 					compatible = "qcom,rpm-pm8994-regulators";
 
