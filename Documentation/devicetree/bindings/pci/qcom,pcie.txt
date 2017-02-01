@@ -8,6 +8,7 @@
 			- "qcom,pcie-apq8064" for apq8064
 			- "qcom,pcie-apq8084" for apq8084
 			- "qcom,pcie-msm8996" for msm8996 or apq8096
+			- "qcom,pcie-msm8994" for msm8994 or msm8992
 
 - reg:
 	Usage: required
