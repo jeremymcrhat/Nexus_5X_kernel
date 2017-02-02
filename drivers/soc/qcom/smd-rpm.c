@@ -134,6 +134,7 @@ int qcom_rpm_smd_write(struct qcom_smd_rpm *rpm,
 	memcpy(pkt->payload, buf, count);
 
 	ret = qcom_smd_send(rpm->rpm_channel, pkt, size);
+	printk(" RPM Sending message #%d state: %d type: %d id: %d \n", msg_id, state, type, id);
 	if (ret)
 		goto out;
 
@@ -164,6 +165,9 @@ static int qcom_smd_rpm_callback(struct qcom_smd_channel *channel,
 	int status = 0;
 	u32 len, msg_length;
 
+printk(" ### %s ### \n", __func__);
+
+	printk(" Header Type: 0x%x Length: 0x%x \n ", (unsigned int)le32_to_cpu(hdr->service_type), (unsigned int)hdr_length);
 	if (le32_to_cpu(hdr->service_type) != RPM_SERVICE_TYPE_REQUEST ||
 	    hdr_length < sizeof(struct qcom_rpm_message)) {
 		dev_err(rpm->dev, "invalid request\n");
@@ -199,7 +203,9 @@ static int qcom_smd_rpm_callback(struct qcom_smd_channel *channel,
 static int qcom_smd_rpm_probe(struct qcom_smd_device *sdev)
 {
 	struct qcom_smd_rpm *rpm;
+	int ret = 0;
 
+printk(" !!!!! %s !!!!!! \n", __func__);
 	rpm = devm_kzalloc(&sdev->dev, sizeof(*rpm), GFP_KERNEL);
 	if (!rpm)
 		return -ENOMEM;
@@ -213,7 +219,9 @@ static int qcom_smd_rpm_probe(struct qcom_smd_device *sdev)
 
 	dev_set_drvdata(&sdev->dev, rpm);
 
-	return of_platform_populate(sdev->dev.of_node, NULL, NULL, &sdev->dev);
+	ret = of_platform_populate(sdev->dev.of_node, NULL, NULL, &sdev->dev);
+	printk(" ::: %s ::: ret = %d \n", __func__, ret);
+	return ret;
 }
 
 static void qcom_smd_rpm_remove(struct qcom_smd_device *sdev)
@@ -225,6 +233,7 @@ static const struct of_device_id qcom_smd_rpm_of_match[] = {
 	{ .compatible = "qcom,rpm-apq8084" },
 	{ .compatible = "qcom,rpm-msm8916" },
 	{ .compatible = "qcom,rpm-msm8974" },
+	{ .compatible = "qcom,rpm-msm8994" },
 	{ .compatible = "qcom,rpm-msm8994" },
 	{}
 };
