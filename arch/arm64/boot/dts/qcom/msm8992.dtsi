@@ -189,6 +189,77 @@
 			reg = <0xfc400000 0x2000>;
 		};
 
+
+        pcie0: pcie@fc520000 {
+                compatible = "qcom,pcie-msm8994", "snps,dw-pcie";
+		status = "disabled";
+		/* power-domains = <&clock_gcc PCIE_GDSC>; ???? */
+		bus-range = <0x00 0xff>;
+		num-lanes = <1>;
+
+                reg = <0xfc520000 0x2000>,
+                      <0xfc526000 0x1000>,
+                      <0xff000000 0xf1d>,
+                      <0xff000f20 0xa8>,
+                      <0xff100000 0x100000>,
+                      <0xff200000 0x100000>,
+                      <0xff300000 0xd00000>;
+
+                reg-names = "parf", "phy", "dm_core", "elbi",
+                                "conf", "io", "bars";
+
+                #address-cells = <0>;
+                interrupt-parent = <&pcie0>;
+                interrupts = <0 1 2 3 4 5 6 7 8 9 10 11>;
+                #interrupt-cells = <1>;
+                interrupt-map-mask = <0xffffffff>;
+                interrupt-map = <0 0 0 0 &intc 0 243 IRQ_TYPE_NONE>,
+                                <0 0 0 1 &intc 0 244 IRQ_TYPE_NONE>,
+                                <0 0 0 2 &intc 0 245 IRQ_TYPE_NONE>,
+                                <0 0 0 3 &intc 0 247 IRQ_TYPE_NONE>,
+                                <0 0 0 4 &intc 0 248 IRQ_TYPE_NONE>,
+                                <0 0 0 5 &intc 0 249 IRQ_TYPE_NONE>,
+                                <0 0 0 6 &intc 0 250 IRQ_TYPE_NONE>,
+                                <0 0 0 7 &intc 0 251 IRQ_TYPE_NONE>,
+                                <0 0 0 8 &intc 0 252 IRQ_TYPE_NONE>,
+                                <0 0 0 9 &intc 0 253 IRQ_TYPE_NONE>,
+                                <0 0 0 10 &intc 0 254 IRQ_TYPE_NONE>,
+                                <0 0 0 11 &intc 0 255 IRQ_TYPE_NONE>;
+
+                interrupt-names = "int_msi", "int_a", "int_b", "int_c", "int_d",
+                                "int_pls_pme", "int_pme_legacy", "int_pls_err",
+                                "int_aer_legacy", "int_pls_link_up",
+                                "int_pls_link_down", "int_bridge_flush_n";
+
+
+                pinctrl-names = "default", "sleep";
+                pinctrl-0 = <&pcie0_clkreq_default &pcie0_perst_default &pcie0_wake_default>;
+                pinctrl-1 = <&pcie0_clkreq_default &pcie0_perst_default &pcie0_wake_sleep>;
+
+                perst-gpio = <&msmgpio 35 0>;
+                wake-gpio = <&msmgpio 37 0>;
+
+                /* gdsc-vdd-supply = <&gdsc_pcie_0>; */
+                vreg-1.8-supply = <&pm8994_l12>;
+                vdda-supply = <&pm8994_l28>;
+
+                qcom,msi-gicm-addr = <0xf9006040>;
+                qcom,msi-gicm-base = <0x180>;
+
+                clocks = <&clock_gcc PCIE_0_PIPE_CLK_SRC>,
+                        <&clock_gcc PCIE_0_AUX_CLK_SRC>,
+                        <&clock_gcc PCIE_0_CFG_AHB_CLK>,
+                        <&clock_gcc PCIE_0_MSTR_AXI_CLK>,
+                        <&clock_gcc PCIE_0_SLV_AXI_CLK>;
+
+                clock-names = "pipe",
+				"aux",
+				"cfg",
+				"bus_master",
+				"bus_slave";
+
+        };
+
 		sdhci1: mmc@f9824900 {
 			compatible = "qcom,sdhci-msm-v4";
 			reg = <0xf9824900 0x1a0>, <0xf9824000 0x800>;

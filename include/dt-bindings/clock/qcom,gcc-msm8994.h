@@ -134,5 +134,14 @@
 #define GCC_USB3_PHY_AUX_CLK			116
 #define GCC_USB_HS_SYSTEM_CLK			117
 #define GCC_SDCC1_AHB_CLK			118
+#define PCIE_0_SLV_AXI_CLK			119
+#define PCIE_0_MSTR_AXI_CLK			120
+#define PCIE_0_CFG_AHB_CLK			121
+
+
+/* Indexes for GDSCs */
+/* XXX place holder for AGGRE0_NOC_GDSC in case
+#define AGGRE0_NOC_GDSC				0 */
+#define PCIE0_GDSC				1
 
 #endif

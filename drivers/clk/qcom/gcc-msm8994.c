@@ -28,6 +28,7 @@
 #include "clk-rcg.h"
 #include "clk-branch.h"
 #include "reset.h"
+#include "gdsc.h"
 
 enum {
 	P_XO,
@@ -819,6 +820,54 @@ static struct clk_rcg2 pcie_0_aux_clk_src = {
 		.ops = &clk_rcg2_ops,
 	},
 };
+
+static struct clk_branch pcie_0_slv_axi_clk = {
+	.halt_reg = 0x1ac8,
+	.clkr = {
+		.enable_reg = 0x1ac8,
+		.enable_mask = BIT(0),
+		.hw.init = &(struct clk_init_data){
+			.name = "pcie_0_slv_axi_clk",
+			.parent_names = (const char *[]){ "system_noc_clk_src" },
+			.num_parents = 1,
+			.flags = CLK_SET_RATE_PARENT,
+			.ops = &clk_branch2_ops,
+		},
+	},
+};
+
+static struct clk_branch pcie_0_mstr_axi_clk = {
+	.halt_reg = 0x1acc,
+	.clkr = {
+		.enable_reg = 0x1acc,
+		.enable_mask = BIT(0),
+		.hw.init = &(struct clk_init_data){
+			.name = "pcie_0_mstr_axi_clk",
+			.parent_names = (const char *[]){ "system_noc_clk_src" },
+			.num_parents = 1,
+			.flags = CLK_SET_RATE_PARENT,
+			.ops = &clk_branch2_ops,
+		},
+	},
+};
+
+
+
+static struct clk_branch pcie_0_cfg_ahb_clk = {
+	.halt_reg = 0x1ad0,
+	.clkr = {
+		.enable_reg = 0x1ad0,
+		.enable_mask = BIT(0),
+		.hw.init = &(struct clk_init_data){
+			.name = "pcie_0_cfg_ahb_clk",
+			.parent_names = (const char *[]){ "config_noc_clk_src" },
+			.num_parents = 1,
+			.flags = CLK_SET_RATE_PARENT,
+			.ops = &clk_branch2_ops,
+		},
+	},
+};
+
 
 static struct freq_tbl ftbl_pcie_pipe_clk_src[] = {
 	F(125000000, P_XO, 1, 0, 0),
@@ -2139,6 +2188,15 @@ static struct clk_branch gcc_usb_hs_system_clk = {
 	},
 };
 
+
+static struct gdsc pcie0_gdsc = {
+	.gdscr = 0x01ac4,
+	.pd = {
+		.name = "pcie0",
+	},
+	.pwrsts = PWRSTS_OFF_ON,
+};
+
 static struct clk_regmap *gcc_msm8994_clocks[] = {
 	[GPLL0_EARLY] = &gpll0_early.clkr,
 	[GPLL0] = &gpll0.clkr,
@@ -2185,6 +2243,9 @@ static struct clk_regmap *gcc_msm8994_clocks[] = {
 	[GP1_CLK_SRC] = &gp1_clk_src.clkr,
 	[GP2_CLK_SRC] = &gp2_clk_src.clkr,
 	[GP3_CLK_SRC] = &gp3_clk_src.clkr,
+	[PCIE_0_SLV_AXI_CLK] = &pcie_0_slv_axi_clk.clkr,
+	[PCIE_0_MSTR_AXI_CLK] = &pcie_0_mstr_axi_clk.clkr,
+	[PCIE_0_CFG_AHB_CLK] = &pcie_0_cfg_ahb_clk.clkr,
 	[PCIE_0_AUX_CLK_SRC] = &pcie_0_aux_clk_src.clkr,
 	[PCIE_0_PIPE_CLK_SRC] = &pcie_0_pipe_clk_src.clkr,
 	[PCIE_1_AUX_CLK_SRC] = &pcie_1_aux_clk_src.clkr,
@@ -2261,6 +2322,11 @@ static struct clk_regmap *gcc_msm8994_clocks[] = {
 	[GCC_USB_HS_SYSTEM_CLK] = &gcc_usb_hs_system_clk.clkr,
 };
 
+static struct gdsc *gcc_msm8994_gdscs[] = {
+	//???? XXX [AGGRE0_NOC_GDSC] = &aggre0_noc_gdsc,
+	[PCIE0_GDSC] = &pcie0_gdsc,
+};
+
 static const struct regmap_config gcc_msm8994_regmap_config = {
 	.reg_bits	= 32,
 	.reg_stride	= 4,
@@ -2273,6 +2339,8 @@ static const struct qcom_cc_desc gcc_msm8994_desc = {
 	.config = &gcc_msm8994_regmap_config,
 	.clks = gcc_msm8994_clocks,
 	.num_clks = ARRAY_SIZE(gcc_msm8994_clocks),
+	.gdscs = gcc_msm8994_gdscs,
+	.num_gdscs = ARRAY_SIZE(gcc_msm8994_gdscs),
 };
 
 static const struct of_device_id gcc_msm8994_match_table[] = {
