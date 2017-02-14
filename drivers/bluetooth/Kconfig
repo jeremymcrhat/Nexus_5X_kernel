@@ -169,6 +169,16 @@ config BT_HCIUART_QCA
 
 	  Say Y here to compile support for QCA protocol.
 
+
+config MSM_BT_POWER
+        tristate "MSM Bluetooth Power Control"
+        depends on BT_QCA && RFKILL
+        default y
+        help
+          Provides a parameter to switch on/off power from PMIC
+          to Bluetooth device.
+
+
 config BT_HCIUART_AG6XX
 	bool "Intel AG6XX protocol support"
 	depends on BT_HCIUART
