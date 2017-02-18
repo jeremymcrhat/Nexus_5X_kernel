@@ -12,6 +12,8 @@
  * GNU General Public License for more details.
  */
 
+#define DEBUG
+
 #include <linux/interrupt.h>
 #include <linux/io.h>
 #include <linux/mfd/syscon.h>
@@ -1216,7 +1218,7 @@ bool qcom_smd_channel_force_open(struct qcom_smd_channel *channel,
 
 	remote_state = GET_RX_CHANNEL_INFO(channel, state);
 
-	pr_info("RPM_SMD channel: %s current state %d\n",
+	printk("RPM_SMD channel: %s current state %d\n",
 			channel->name, remote_state);
 
 	/* In order to get the remote and host back in sync we need to
@@ -1256,17 +1258,17 @@ void apply_quirks(struct device_node *dn, struct qcom_smd_channel *channel)
 		ret = of_property_read_u32(dn, "qcom,initial-tx-state",
 					&initial_state);
 		if (ret) {
-			pr_info("SMD_RPM: No initial TX state found!\n");
+			printk("SMD_RPM: No initial TX state found!\n");
 			return;
 		} else {
-			pr_info("SMD_RPM: Applying quirk TX init state value: %d\n",
+			printk("SMD_RPM: Applying quirk TX init state value: %d\n",
 					initial_state);
 			if ((initial_state > SMD_CHANNEL_CLOSED) &&
 					(initial_state < SMD_CHANNEL_RESET_OPENING)) {
 
 				if (!qcom_smd_channel_force_open(channel,
 							(int)initial_state)) {
-					pr_info("Unable to force RX channel %s to initial state of %d\n",
+					printk("Unable to force RX channel %s to initial state of %d\n",
 							channel->name, (int)initial_state);
 				}
 			}
@@ -1345,8 +1347,13 @@ static struct qcom_smd_channel *qcom_smd_create_channel(struct qcom_smd_edge *ed
 	qcom_smd_channel_reset(channel);
 
 	dn = of_find_compatible_node(edge->of_node, NULL, "qcom,smd_quirks");
-	if (dn != NULL)
+	if (dn != NULL) {
+		printk(" Applying SMD Initial STATE hack! \n");
 		apply_quirks(dn, channel);
+	}
+	else {
+		printk(" NO SMD State HACK found \n");
+	}
 
 	if (ret)
 		goto free_name_and_channel;
@@ -1469,11 +1476,6 @@ static void qcom_channel_state_worker(struct work_struct *work)
 
 		remote_state = GET_RX_CHANNEL_INFO(channel, state);
 		printk(" Remote state === %d \n", remote_state);
-
-
-		if (remote_state != SMD_CHANNEL_OPENING &&
-		    remote_state != SMD_CHANNEL_OPENED)
-			continue;
 
 
 		spin_unlock_irqrestore(&edge->channels_lock, flags);

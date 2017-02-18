@@ -12,6 +12,8 @@
 
 #include <dt-bindings/interrupt-controller/arm-gic.h>
 #include <dt-bindings/clock/qcom,gcc-msm8994.h>
+#include <dt-bindings/clock/qcom,rpmcc.h>
+#include <dt-bindings/gpio/gpio.h>
 
 / {
 	model = "Qualcomm Technologies, Inc. MSM 8992";
@@ -96,6 +98,20 @@
 		apcs: syscon@f900d000 {
 			compatible = "syscon";
 			reg = <0xf900d000 0x2000>;
+		};
+
+		spmi_bus: spmi@fc4c0000 {
+			cell-index = <0>;
+			compatible = "qcom,spmi-pmic-arb";
+			reg-names = "core", "intr", "cnfg";
+			reg = <0xfc4cf000 0x1000>,
+				<0xfc4cb000 0x1000>,
+				<0xfc4ca000 0x1000>;
+			interrupts = <0 190 0>; /* ee0_krait_hlos_spmi_periph_irq */
+			qcom,pmic-arb-channel = <0>;
+			qcom,pmic-arb-ee = <0>;
+			#interrupt-cells = <3>;
+			interrupt-controller;
 		};
 
 		timer@f9020000 {
@@ -189,68 +205,98 @@
 			reg = <0xfc400000 0x2000>;
 		};
 
+		/* TODO - XXX - get this verified !! */
+		pcie_phy: pciephy@fc526000 {
+			compatible = "qcom,msm8996-qmp-pcie-phy";  /* not sure if this is ok */
+			/* XXX this doesnt make sense.  The size of the phy according to downstream
+				is only 0x1000 */
+			reg = <0xfc526000 0x488>,
+				<0xfc527000 0x5bf>,
+				<0xfc528000 0x5bf>,
+				<0xfc529000 0x5bf>;
+
+			lane-offsets = <0x0 0x200 0x400>;
+			#phy-cells = <1>;
+
+			clocks = <&clock_gcc GCC_PCIE_PHY_AUX_CLK>,
+				<&clock_gcc GCC_PCIE_0_CFG_AHB_CLK>,
+				<&rpmcc MSM8996_RPM_SMD_LN_BB_CLK>,
+				<&clock_gcc GCC_PCIE_CLKREF_CLK>,
+				<&clock_gcc GCC_PCIE_0_PIPE_CLK>,
+				<&clock_gcc GCC_PCIE_1_PIPE_CLK>;
+
+			clock-names = "aux", "cfg_ahb",
+					"ref_clk_src",
+					"ref_clk",
+					"pipe0", "pipe1";
+			vdda-phy-supply = <&pm8994_l28>;
+			vdda-pll-supply = <&pm8994_l12>;
+
+			resets = <&clock_gcc GCC_PCIE_PHY_0_PHY_BCR>,
+				<&clock_gcc GCC_PCIE_PHY_0_BCR>;
+				/* <&gcc GCC_PCIE_0_PHY_BCR>, dont know what the value should be for this
+				<&clock_gcc GCC_PCIE_PHY_COM_NOCSR_BCR>; */	
+
+			reset-names = "phy", "common"; /* Double check names */
+		};
+				
 
         pcie0: pcie@fc520000 {
-                compatible = "qcom,pcie-msm8994", "snps,dw-pcie";
-		status = "disabled";
+                compatible = "qcom,pcie-msm8994";
+		status = "okay";
 		/* power-domains = <&clock_gcc PCIE_GDSC>; ???? */
 		bus-range = <0x00 0xff>;
 		num-lanes = <1>;
 
                 reg = <0xfc520000 0x2000>,
-                      <0xfc526000 0x1000>,
-                      <0xff000000 0xf1d>,
-                      <0xff000f20 0xa8>,
-                      <0xff100000 0x100000>,
-                      <0xff200000 0x100000>,
-                      <0xff300000 0xd00000>;
+                      /* <0xfc526000 0x1000>, phy */
+                      <0xff000000 0xf1d>,  /*dbi (3.10=dm_core)*/
+                      <0xff000f20 0xa8>,  /*elbi*/
+                      <0xff100000 0x100000>; /*config*/
 
-                reg-names = "parf", "phy", "dm_core", "elbi",
-                                "conf", "io", "bars";
+                reg-names = "parf", "dbi", "elbi", "config";
 
-                #address-cells = <0>;
-                interrupt-parent = <&pcie0>;
-                interrupts = <0 1 2 3 4 5 6 7 8 9 10 11>;
+		phys = <&pcie_phy 0>;
+		phy-names = "pciephy";
+
+		#address-cells = <3>;
+		#size-cells = <2>;
+		ranges = <0x01000000 0x0 0xff200000 0xff200000 0x0 0x0100000>,
+			<0x02000000 0x0 0xff300000 0xff300000 0x0 0xd00000>;
+
+                /*interrupt-parent = <&pcie0>; */
+                interrupts = <GIC_SPI 243 IRQ_TYPE_NONE>;
+
+                interrupt-names = "msi";
                 #interrupt-cells = <1>;
-                interrupt-map-mask = <0xffffffff>;
-                interrupt-map = <0 0 0 0 &intc 0 243 IRQ_TYPE_NONE>,
-                                <0 0 0 1 &intc 0 244 IRQ_TYPE_NONE>,
+                interrupt-map-mask = <0 0 0 0x7>;
+		interrupt-map = <0 0 0 1 &intc 0 244 IRQ_TYPE_NONE>,
                                 <0 0 0 2 &intc 0 245 IRQ_TYPE_NONE>,
                                 <0 0 0 3 &intc 0 247 IRQ_TYPE_NONE>,
-                                <0 0 0 4 &intc 0 248 IRQ_TYPE_NONE>,
-                                <0 0 0 5 &intc 0 249 IRQ_TYPE_NONE>,
-                                <0 0 0 6 &intc 0 250 IRQ_TYPE_NONE>,
-                                <0 0 0 7 &intc 0 251 IRQ_TYPE_NONE>,
-                                <0 0 0 8 &intc 0 252 IRQ_TYPE_NONE>,
-                                <0 0 0 9 &intc 0 253 IRQ_TYPE_NONE>,
-                                <0 0 0 10 &intc 0 254 IRQ_TYPE_NONE>,
-                                <0 0 0 11 &intc 0 255 IRQ_TYPE_NONE>;
-
-                interrupt-names = "int_msi", "int_a", "int_b", "int_c", "int_d",
-                                "int_pls_pme", "int_pme_legacy", "int_pls_err",
-                                "int_aer_legacy", "int_pls_link_up",
-                                "int_pls_link_down", "int_bridge_flush_n";
+                                <0 0 0 4 &intc 0 248 IRQ_TYPE_NONE>;
 
 
                 pinctrl-names = "default", "sleep";
                 pinctrl-0 = <&pcie0_clkreq_default &pcie0_perst_default &pcie0_wake_default>;
                 pinctrl-1 = <&pcie0_clkreq_default &pcie0_perst_default &pcie0_wake_sleep>;
 
-                perst-gpio = <&msmgpio 35 0>;
-                wake-gpio = <&msmgpio 37 0>;
+                perst-gpio = <&msmgpio 35 GPIO_ACTIVE_LOW>;
+                wake-gpio = <&msmgpio 37 GPIO_ACTIVE_LOW>;
 
-                /* gdsc-vdd-supply = <&gdsc_pcie_0>; */
-                vreg-1.8-supply = <&pm8994_l12>;
+                /* gdsc-vdd-supply = <&gdsc_pcie_0>;
+                vreg-1.8-supply = <&pm8994_l12>; */
                 vdda-supply = <&pm8994_l28>;
+
+		linux,pci-domain = <0>;
 
                 qcom,msi-gicm-addr = <0xf9006040>;
                 qcom,msi-gicm-base = <0x180>;
 
                 clocks = <&clock_gcc PCIE_0_PIPE_CLK_SRC>,
                         <&clock_gcc PCIE_0_AUX_CLK_SRC>,
-                        <&clock_gcc PCIE_0_CFG_AHB_CLK>,
-                        <&clock_gcc PCIE_0_MSTR_AXI_CLK>,
-                        <&clock_gcc PCIE_0_SLV_AXI_CLK>;
+                        <&clock_gcc GCC_PCIE_0_CFG_AHB_CLK>,
+                        <&clock_gcc GCC_PCIE_0_MSTR_AXI_CLK>,
+                        <&clock_gcc GCC_PCIE_0_SLV_AXI_CLK>;
 
                 clock-names = "pipe",
 				"aux",
@@ -347,7 +393,7 @@
 
 				rpmcc: qcom,rpmcc {
 					/* TODO: update when rpmcc-msm8994 support added */
-					compatible = "qcom,rpmcc-msm8916",
+					compatible = "qcom,rpmcc-msm8994",
 							"qcom,rpmcc";
 					#clock-cells = <1>;
 				};
@@ -415,3 +461,7 @@
 };
 
 #include "msm8992-pins.dtsi"
+#include "msm8994-smd-rpm.dtsi"
+
+#include "msm-pm8994.dtsi"
+#include "msm-pmi8994.dtsi"

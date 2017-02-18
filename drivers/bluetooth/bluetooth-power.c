@@ -29,7 +29,6 @@
 #include <linux/bluetooth-power.h>
 #include <linux/slab.h>
 #include <linux/regulator/consumer.h>
-#include <net/cnss.h>
 
 #define BT_PWR_DBG(fmt, arg...)  pr_debug("%s: " fmt "\n" , __func__ , ## arg)
 #define BT_PWR_INFO(fmt, arg...) pr_info("%s: " fmt "\n" , __func__ , ## arg)
@@ -273,30 +272,11 @@ static const struct rfkill_ops bluetooth_power_rfkill_ops = {
 	.set_block = bluetooth_toggle_radio,
 };
 
-#ifdef CONFIG_CNSS_PCI
-static ssize_t enable_extldo(struct device *dev, struct device_attribute *attr,
-			char *buf)
-{
-	int ret;
-	bool enable = false;
-	struct cnss_platform_cap cap;
-
-	ret = cnss_get_platform_cap(&cap);
-	if (ret) {
-		BT_PWR_ERR("Platform capability info from CNSS not available!");
-		enable = false;
-	} else if (!ret && (cap.cap_flag & CNSS_HAS_EXTERNAL_SWREG)) {
-		enable = true;
-	}
-	return snprintf(buf, 6, "%s", (enable ? "true" : "false"));
-}
-#else
 static ssize_t enable_extldo(struct device *dev, struct device_attribute *attr,
 			char *buf)
 {
 	return snprintf(buf, 6, "%s", "false");
 }
-#endif
 
 static DEVICE_ATTR(extldo, S_IRUGO, enable_extldo, NULL);
 

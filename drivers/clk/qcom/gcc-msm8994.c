@@ -2189,6 +2189,21 @@ static struct clk_branch gcc_usb_hs_system_clk = {
 };
 
 
+static struct clk_branch gcc_pcie_0_phy_ldo = {
+        .halt_reg = 0x1e00,
+        .clkr = {
+                .enable_reg = 0x1e00,
+                .enable_mask = BIT(0),
+                .hw.init = &(struct clk_init_data){
+                        .name = "gcc_pcie_0_phy_ldo",
+                        .parent_names = (const char *[]){ "xo" },
+                        .num_parents = 1,
+                        .ops = &clk_branch2_ops,
+                },
+        },
+};
+
+
 static struct gdsc pcie0_gdsc = {
 	.gdscr = 0x01ac4,
 	.pd = {
@@ -2243,9 +2258,9 @@ static struct clk_regmap *gcc_msm8994_clocks[] = {
 	[GP1_CLK_SRC] = &gp1_clk_src.clkr,
 	[GP2_CLK_SRC] = &gp2_clk_src.clkr,
 	[GP3_CLK_SRC] = &gp3_clk_src.clkr,
-	[PCIE_0_SLV_AXI_CLK] = &pcie_0_slv_axi_clk.clkr,
-	[PCIE_0_MSTR_AXI_CLK] = &pcie_0_mstr_axi_clk.clkr,
-	[PCIE_0_CFG_AHB_CLK] = &pcie_0_cfg_ahb_clk.clkr,
+	[GCC_PCIE_0_SLV_AXI_CLK] = &pcie_0_slv_axi_clk.clkr,
+	[GCC_PCIE_0_MSTR_AXI_CLK] = &pcie_0_mstr_axi_clk.clkr,
+	[GCC_PCIE_0_CFG_AHB_CLK] = &pcie_0_cfg_ahb_clk.clkr,
 	[PCIE_0_AUX_CLK_SRC] = &pcie_0_aux_clk_src.clkr,
 	[PCIE_0_PIPE_CLK_SRC] = &pcie_0_pipe_clk_src.clkr,
 	[PCIE_1_AUX_CLK_SRC] = &pcie_1_aux_clk_src.clkr,
@@ -2320,12 +2335,19 @@ static struct clk_regmap *gcc_msm8994_clocks[] = {
 	[GCC_USB30_MOCK_UTMI_CLK] = &gcc_usb30_mock_utmi_clk.clkr,
 	[GCC_USB3_PHY_AUX_CLK] = &gcc_usb3_phy_aux_clk.clkr,
 	[GCC_USB_HS_SYSTEM_CLK] = &gcc_usb_hs_system_clk.clkr,
+	[GCC_PCIE_0_PHY_LDO_EN] = &gcc_pcie_0_phy_ldo.clkr,
 };
 
 static struct gdsc *gcc_msm8994_gdscs[] = {
 	//???? XXX [AGGRE0_NOC_GDSC] = &aggre0_noc_gdsc,
 	[PCIE0_GDSC] = &pcie0_gdsc,
 };
+
+static struct qcom_reset_map gcc_msm8994_resets[] = {
+	[GCC_PCIE_PHY_0_PHY_BCR] = { 0x1B14 },
+	[GCC_PCIE_PHY_0_BCR] = { 0x1B18 },
+};
+
 
 static const struct regmap_config gcc_msm8994_regmap_config = {
 	.reg_bits	= 32,
@@ -2339,6 +2361,8 @@ static const struct qcom_cc_desc gcc_msm8994_desc = {
 	.config = &gcc_msm8994_regmap_config,
 	.clks = gcc_msm8994_clocks,
 	.num_clks = ARRAY_SIZE(gcc_msm8994_clocks),
+	.resets = gcc_msm8994_resets,
+	.num_resets = ARRAY_SIZE(gcc_msm8994_resets),
 	.gdscs = gcc_msm8994_gdscs,
 	.num_gdscs = ARRAY_SIZE(gcc_msm8994_gdscs),
 };

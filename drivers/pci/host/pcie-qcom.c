@@ -491,6 +491,8 @@ static int qcom_pcie_init_v2(struct qcom_pcie *pcie)
 	u32 val;
 	int ret;
 
+printk(" ++++>>>>>> %s <<<<< \n", __func__);
+
 	ret = clk_prepare_enable(res->aux_clk);
 	if (ret) {
 		dev_err(dev, "cannot prepare/enable aux clock\n");
@@ -669,6 +671,11 @@ static int qcom_pcie_probe(struct platform_device *pdev)
 	struct pcie_port *pp;
 	int ret;
 
+
+WARN_ON(1);
+
+printk(" ===>> %s <<=== \n", __func__);
+
 	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
 	if (!pcie)
 		return -ENOMEM;
@@ -690,27 +697,44 @@ static int qcom_pcie_probe(struct platform_device *pdev)
 	if (IS_ERR(pp->dbi_base))
 		return PTR_ERR(pp->dbi_base);
 
+
+printk(" %s: finsihed getting dbi \n", __func__);
 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "elbi");
 	pcie->elbi = devm_ioremap_resource(dev, res);
-	if (IS_ERR(pcie->elbi))
+	if (IS_ERR(pcie->elbi)) {
+		printk(" Error getting elbi resource \n");
 		return PTR_ERR(pcie->elbi);
+	}
 
+printk(" %s: getting pciEPHY \n", __func__);
 	pcie->phy = devm_phy_optional_get(dev, "pciephy");
-	if (IS_ERR(pcie->phy))
+	if (IS_ERR(pcie->phy) && (pcie->phy != NULL)) {
+		if (IS_ERR(pcie->phy))
+			printk(" IS_ERR phy \n");
+
+		printk(" %s Error unable to locate pciephy in dt\n", __func__);
 		return PTR_ERR(pcie->phy);
+	}
 
 	pp->dev = dev;
 	ret = pcie->ops->get_resources(pcie);
-	if (ret)
+	if (ret) {
+		printk(" %s ops getRESOURCES err (%d) \n",__func__, ret);
 		return ret;
+	}
+	else {
+		printk(" %s successfully acquired ops_resources \n", __func__);
+	}
 
 	pp->root_bus_nr = -1;
 	pp->ops = &qcom_pcie_dw_ops;
 
 	if (IS_ENABLED(CONFIG_PCI_MSI)) {
 		pp->msi_irq = platform_get_irq_byname(pdev, "msi");
-		if (pp->msi_irq < 0)
+		if (pp->msi_irq < 0) {
+			printk(" %s error get_IRQ by name \n", __func__);
 			return pp->msi_irq;
+		}
 
 		ret = devm_request_irq(dev, pp->msi_irq,
 				       qcom_pcie_msi_irq_handler,
@@ -721,15 +745,22 @@ static int qcom_pcie_probe(struct platform_device *pdev)
 		}
 	}
 
-	ret = phy_init(pcie->phy);
-	if (ret)
-		return ret;
+	if (pcie->phy == NULL)
+		printk(" PHY null \n");
+
+	if (pcie->phy != NULL) {
+		ret = phy_init(pcie->phy);
+		if (ret)
+			return ret;
+	}
 
 	ret = dw_pcie_host_init(pp);
 	if (ret) {
 		dev_err(dev, "cannot initialize host\n");
 		return ret;
 	}
+
+	printk(" Successfully initialized PCIe \n");
 
 	return 0;
 }
