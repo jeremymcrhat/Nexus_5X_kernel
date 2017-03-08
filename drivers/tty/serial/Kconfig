@@ -1089,6 +1089,28 @@ config SERIAL_MSM_CONSOLE
 	select SERIAL_CORE_CONSOLE
 	select SERIAL_EARLYCON
 
+config SERIAL_MSM_HS
+        tristate "MSM UART High Speed: Serial Driver"
+        depends on ARCH_QCOM
+        select SERIAL_CORE
+        help
+          If you have a machine based on MSM family of SoCs, you
+          can enable its onboard high speed serial port by enabling
+          this option.
+
+          Choose M here to compile it as a module. The module will be
+          called msm_serial_hs.
+
+config SERIAL_MSM_RX_WAKEUP
+        bool "Wakeup the msm uart clock on GPIO activity."
+        depends on SERIAL_MSM_CLOCK_CONTROL
+        default n
+        help
+         Requires SERIAL_MSM_CLOCK_CONTROL. Wake up the uart while the uart
+         clock is off, using a wakeup GPIO.
+
+
+
 config SERIAL_VT8500
 	bool "VIA VT8500 on-chip serial port support"
 	depends on ARCH_VT8500
