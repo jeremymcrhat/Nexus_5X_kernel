@@ -197,6 +197,57 @@
 				<&clock_gcc GCC_BLSP1_AHB_CLK>;
 		};
 
+		blsp1_uart5: serial@f9922000 {
+			compatible = "qcom,msm-lsuart-v14", "qcom,msm-uartdm";
+			reg = <0xf9922000 0x1000>;
+			interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_LOW>;
+			status = "disabled";
+			clock-names = "core", "iface";
+			clocks = <&clock_gcc GCC_BLSP1_UART5_APPS_CLK>,
+				<&clock_gcc GCC_BLSP1_AHB_CLK>;
+		};
+
+	/*** BAM on the 8992 is v1.6.2 but 1.4.0 compatible string should
+	still work */
+
+        blsp2_uart2: uart@f995e000 { /* BLSP2 UART2 */
+                compatible = "qcom,msm-hsuart-v14", "qcom,msm-uartdm";
+                reg = <0xf995e000 0x1000>,
+                        <0xf9944000 0x19000>;
+                reg-names = "core_mem", "bam_mem";
+                interrupt-names = "core_irq", "bam_irq", "wakeup_irq";
+                #address-cells = <0>;
+                interrupt-parent = <&blsp2_uart2>;
+                interrupts = <GIC_SPI 1 2>;
+                #interrupt-cells = <1>;
+                interrupt-map-mask = <0xffffffff>;
+                interrupt-map = <0 &intc 0 114 0
+                                1 &intc 0 239 0
+                                2 &msm_gpio 46 0>;
+
+                qcom,inject-rx-on-wakeup;
+                qcom,rx-char-to-inject = <0xFD>;
+
+                qcom,bam-tx-ep-pipe-index = <2>;
+                qcom,bam-rx-ep-pipe-index = <3>;
+                qcom,master-id = <84>;
+                clock-names = "core_clk", "iface_clk";
+                clocks = <&clock_gcc GCC_BLSP2_UART2_APPS_CLK>,
+                        <&clock_gcc GCC_BLSP2_AHB_CLK>;
+                pinctrl-names = "sleep", "default";
+                pinctrl-0 = <&hsuart_sleep>;
+                pinctrl-1 = <&hsuart_active>;
+
+                qcom,msm-bus,name = "buart8";
+                qcom,msm-bus,num-cases = <2>;
+                qcom,msm-bus,num-paths = <1>;
+                qcom,msm-bus,vectors-KBps =
+                                <84 512 0 0>,
+                                <84 512 500 800>;
+                status = "disabled";
+        };
+
+			
 		clock_gcc: clock-controller@fc400000 {
 			compatible = "qcom,gcc-msm8994";
 			#clock-cells = <1>;
@@ -205,30 +256,40 @@
 			reg = <0xfc400000 0x2000>;
 		};
 
+		clock_rpm: qcom,rpmcc@fc401880 {
+			compatible = "qcom,rpmcc-8992";
+			reg = <0xfc401880 0x4>;
+			reg-names = "cc_base";
+			#clock-cells = <1>;
+		};
+
 		/* TODO - XXX - get this verified !! */
 		pcie_phy: pciephy@fc526000 {
 			compatible = "qcom,msm8996-qmp-pcie-phy";  /* not sure if this is ok */
 			/* XXX this doesnt make sense.  The size of the phy according to downstream
 				is only 0x1000 */
-			reg = <0xfc526000 0x488>,
-				<0xfc527000 0x5bf>,
-				<0xfc528000 0x5bf>,
-				<0xfc529000 0x5bf>;
+			/* common base = 526000
+				tx = 526200
+				rx = 526400
+				pcs = 526600
+			*/
+
+			reg = <0xfc526000 0x1000>;
 
 			lane-offsets = <0x0 0x200 0x400>;
 			#phy-cells = <1>;
 
-			clocks = <&clock_gcc GCC_PCIE_PHY_AUX_CLK>,
-				<&clock_gcc GCC_PCIE_0_CFG_AHB_CLK>,
+			clocks = /*<&clock_gcc GCC_PCIE_PHY_AUX_CLK>,*/
+				<&clock_gcc GCC_PCIE_0_CFG_AHB_CLK>, /* clk_gcc_pcie_0_cfg_ahb_clk */
 				<&rpmcc MSM8996_RPM_SMD_LN_BB_CLK>,
 				<&clock_gcc GCC_PCIE_CLKREF_CLK>,
-				<&clock_gcc GCC_PCIE_0_PIPE_CLK>,
-				<&clock_gcc GCC_PCIE_1_PIPE_CLK>;
+				<&clock_gcc GCC_PCIE_0_PIPE_CLK>;
 
-			clock-names = "aux", "cfg_ahb",
+			clock-names = /*"aux",*/
+					"cfg_ahb",
 					"ref_clk_src",
 					"ref_clk",
-					"pipe0", "pipe1";
+					"pipe0";
 			vdda-phy-supply = <&pm8994_l28>;
 			vdda-pll-supply = <&pm8994_l12>;
 

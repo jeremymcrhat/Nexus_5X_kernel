@@ -96,6 +96,31 @@
 		bias-pull-down; /* pull down */
 	};
 
+
+	blsp2_uart2_active {
+		qcom,pins = <&gp 45>, <&gp 46>, <&gp 47>, <&gp 48>;
+		qcom,num-grp-pins = <4>;
+		qcom,pin-func = <2>;
+		label = "blsp2_uart2_active";
+		hsuart_active: default {
+			drive-strength = <16>;
+			bias-disable;
+		};
+	};
+
+	blsp2_uart2_sleep {
+		qcom,pins = <&gp 45>, <&gp 46>, <&gp 47>, <&gp 48>;
+		qcom,num-grp-pins = <4>;
+		qcom,pin-func = <0>;
+		label = "blsp2_uart2_sleep";
+		hsuart_sleep: sleep {
+			drive-strength = <2>;
+			bias-disable;
+		};
+	};
+
+
+
 	pcie0_clkreq_default: pcie0_clkreq_default {
 		mux {
 			pins = "gpio36";
