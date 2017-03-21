@@ -98,7 +98,7 @@
 
 
 	blsp2_uart2_active {
-		qcom,pins = <&gp 45>, <&gp 46>, <&gp 47>, <&gp 48>;
+		pins = "gpio45", "gpio46", "gpio47", "gpio48";
 		qcom,num-grp-pins = <4>;
 		qcom,pin-func = <2>;
 		label = "blsp2_uart2_active";
@@ -109,7 +109,7 @@
 	};
 
 	blsp2_uart2_sleep {
-		qcom,pins = <&gp 45>, <&gp 46>, <&gp 47>, <&gp 48>;
+		qcom,pins = "gpio45", "gpio46", "gpio47", "gpio48";
 		qcom,num-grp-pins = <4>;
 		qcom,pin-func = <0>;
 		label = "blsp2_uart2_sleep";

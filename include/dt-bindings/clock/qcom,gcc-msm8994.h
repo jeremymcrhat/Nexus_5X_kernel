@@ -141,6 +141,7 @@
 #define GCC_PCIE_PHY_0_BCR			123
 #define GCC_PCIE_0_PHY_LDO_EN			124
 #define GCC_PCIE_CLKREF_CLK			125
+#define GCC_BAM_DMA_AHB_CLK			126
 
 /* Indexes for GDSCs */
 /* XXX place holder for AGGRE0_NOC_GDSC in case

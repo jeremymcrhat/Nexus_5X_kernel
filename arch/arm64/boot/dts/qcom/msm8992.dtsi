@@ -207,11 +207,21 @@
 				<&clock_gcc GCC_BLSP1_AHB_CLK>;
 		};
 
+	dma_blsp2: dma-controller@f9944000 { /* BLSP2 */
+		compatible = "qcom,bam-v1.4.0";
+		reg = <0xf9944000 0x19000>;
+		interrupts = <0 239 0>;
+		clocks = <&clock_gcc GCC_BAM_DMA_AHB_CLK>;
+		clock-names = "bam_clk";
+		#dma-cells = <1>;
+		qcom,ee = <0>;
+	};
+
 	/*** BAM on the 8992 is v1.6.2 but 1.4.0 compatible string should
 	still work */
 
         blsp2_uart2: uart@f995e000 { /* BLSP2 UART2 */
-                compatible = "qcom,msm-hsuart-v14", "qcom,msm-uartdm";
+                compatible = "qcom,msm-hsuart-v14";
                 reg = <0xf995e000 0x1000>,
                         <0xf9944000 0x19000>;
                 reg-names = "core_mem", "bam_mem";
@@ -223,7 +233,7 @@
                 interrupt-map-mask = <0xffffffff>;
                 interrupt-map = <0 &intc 0 114 0
                                 1 &intc 0 239 0
-                                2 &msm_gpio 46 0>;
+                                2 &msmgpio 46 0>;
 
                 qcom,inject-rx-on-wakeup;
                 qcom,rx-char-to-inject = <0xFD>;
@@ -244,9 +254,18 @@
                 qcom,msm-bus,vectors-KBps =
                                 <84 512 0 0>,
                                 <84 512 500 800>;
-                status = "disabled";
+                status = "okay";
         };
 
+	bt_qca6174 {
+                compatible = "qca,qca6174";
+                qca,bt-reset-gpio = <&pm8994_gpios 19 0>; /* BT_EN */
+                qca,bt-vdd-pa-supply = <&bt_vreg>;
+                qca,bt-vdd-io-supply = <&pm8994_s4>;
+                qca,bt-vdd-xtal-supply = <&pm8994_l30>;
+                qca,bt-vdd-io-voltage-level = <1800000 1800000>;
+                qca,bt-vdd-xtal-voltage-level = <1800000 1800000>;
+        };
 			
 		clock_gcc: clock-controller@fc400000 {
 			compatible = "qcom,gcc-msm8994";
