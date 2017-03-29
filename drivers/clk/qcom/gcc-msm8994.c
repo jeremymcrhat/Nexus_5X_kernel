@@ -1097,6 +1097,23 @@ static struct clk_rcg2 usb_hs_system_clk_src = {
 	},
 };
 
+static struct clk_branch gcc_bam_dma_ahb_clk = {
+        .halt_reg = 0x0d44,
+        .halt_check = BRANCH_HALT_VOTED,
+        .clkr = {
+                .enable_reg = 0x1484,
+                .enable_mask = BIT(12),
+                .hw.init = &(struct clk_init_data){
+                        .name = "gcc_bam_dma_ahb_clk",
+                        .parent_names = (const char *[]){
+                                "periph_noc_clk_src",
+                        },
+                        .num_parents = 1,
+                        .ops = &clk_branch2_ops,
+                },
+        },
+};
+
 static struct clk_branch gcc_blsp1_ahb_clk = {
 	.halt_reg = 0x05c4,
 	.halt_check = BRANCH_HALT_VOTED,
@@ -2274,6 +2291,7 @@ static struct clk_regmap *gcc_msm8994_clocks[] = {
 	[USB30_MOCK_UTMI_CLK_SRC] = &usb30_mock_utmi_clk_src.clkr,
 	[USB3_PHY_AUX_CLK_SRC] = &usb3_phy_aux_clk_src.clkr,
 	[USB_HS_SYSTEM_CLK_SRC] = &usb_hs_system_clk_src.clkr,
+	[GCC_BAM_DMA_AHB_CLK] = &gcc_bam_dma_ahb_clk.clkr,
 	[GCC_BLSP1_AHB_CLK] = &gcc_blsp1_ahb_clk.clkr,
 	[GCC_BLSP1_QUP1_I2C_APPS_CLK] = &gcc_blsp1_qup1_i2c_apps_clk.clkr,
 	[GCC_BLSP1_QUP1_SPI_APPS_CLK] = &gcc_blsp1_qup1_spi_apps_clk.clkr,

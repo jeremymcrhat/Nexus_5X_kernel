@@ -70,7 +70,6 @@
 #define UART_SPS_CONS_PERIPHERAL 0
 #define UART_SPS_PROD_PERIPHERAL 1
 
-static void *ipc_msm_hs_log_ctxt;
 #define IPC_MSM_HS_LOG_PAGES 5
 #define UART_DMA_DESC_NR 8
 
@@ -347,16 +346,22 @@ busreset:
  */
 static void msm_hs_clk_bus_unvote(struct msm_hs_port *msm_uport)
 {
+
+	printk(" NOT! disabling clk as PM framework not supported currently\n");
+#if 0
 	clk_disable_unprepare(msm_uport->clk);
 	if (msm_uport->pclk)
 		clk_disable_unprepare(msm_uport->pclk);
 	msm_hs_bus_voting(msm_uport, BUS_RESET);
 	pr_debug("%s: Clock OFF successful\n", __func__);
+#endif
 }
 
  /* Remove vote for resources when done */
 static void msm_hs_resource_unvote(struct msm_hs_port *msm_uport)
 {
+
+#if 0
 	struct uart_port *uport = &(msm_uport->uport);
 	int rc = atomic_read(&msm_uport->clk_count);
 
@@ -369,6 +374,8 @@ static void msm_hs_resource_unvote(struct msm_hs_port *msm_uport)
 	atomic_dec(&msm_uport->clk_count);
 	pm_runtime_mark_last_busy(uport->dev);
 	pm_runtime_put_autosuspend(uport->dev);
+#endif
+	printk(" NOT! calling %s \n", __func__);
 }
 
  /* Vote for resources before accessing them */
@@ -687,6 +694,7 @@ static int msm_hs_spsconnect_tx(struct msm_hs_port *msm_uport)
 	if (tx->flush != FLUSH_SHUTDOWN)
 		return 0;
 
+//msm_request_tx_dma
 	/* Establish connection between peripheral and memory endpoint */
 	ret = sps_connect(sps_pipe_handle, sps_config);
 	if (ret) {
@@ -2293,6 +2301,9 @@ static int msm_hs_config_uart_gpios(struct uart_port *uport)
 	int ret = 0;
 	struct msm_hs_port *msm_uport = UARTDM_TO_MSM(uport);
 
+
+printk(" --> msm_hs_config_uart_gpios <-- \n");
+
 	if (!IS_ERR_OR_NULL(msm_uport->pinctrl)) {
 		pr_debug("%s(): Using Pinctrl", __func__);
 		msm_uport->use_pinctrl = true;
@@ -2438,7 +2449,8 @@ static int msm_hs_startup(struct uart_port *uport)
 		if (unlikely(ret)) {
 			pr_err("%s():Err getting uart wakeup_irq %d\n",
 				  __func__, ret);
-			goto unvote_exit;
+			pr_err("%s(): Not calling unvote just trucking on!! \n", __func__);
+			//goto unvote_exit;
 		}
 
 		msm_uport->wakeup.freed = false;
@@ -2448,35 +2460,39 @@ static int msm_hs_startup(struct uart_port *uport)
 		ret = irq_set_irq_wake(msm_uport->wakeup.irq, 1);
 		if (unlikely(ret)) {
 			pr_err("%s():Err setting wakeup irq\n", __func__);
-			goto free_uart_irq;
+			pr_err(" %s   Not freeing UART Wake IRQ \n", __func__);
+			//goto free_uart_irq;
 		}
 	}
 
 	wakeup_source_init(&msm_uport->ws, tty->name);
 	ret = msm_hs_config_uart_gpios(uport);
 	if (ret) {
-		pr_err("Uart GPIO request failed\n");
-		goto deinit_ws;
+		pr_err("Uart GPIO request failed ret = %d \n", ret);
+		//goto deinit_ws;
 	}
 
 	msm_hs_write(uport, UART_DM_DMEN, 0);
+printk(" [%s]  ---==>> Connect TX \n", __func__);
 
 	/* Connect TX */
 	sps_tx_disconnect(msm_uport);
 	ret = msm_hs_spsconnect_tx(msm_uport);
 	if (ret) {
 		pr_err("msm_serial_hs: SPS connect failed for TX");
-		goto unconfig_uart_gpios;
+		//goto unconfig_uart_gpios;
 	}
 
 	/* Connect RX */
+
+printk(" [%s]  ---==>> Connect RX \n", __func__);
 	kthread_flush_worker(&msm_uport->rx.kworker);
 	if (rx->flush != FLUSH_SHUTDOWN)
 		disconnect_rx_endpoint(msm_uport);
 	ret = msm_hs_spsconnect_rx(uport);
 	if (ret) {
 		pr_err("msm_serial_hs: SPS connect failed for RX");
-		goto sps_disconnect_tx;
+		//goto sps_disconnect_tx;
 	}
 
 	data = (UARTDM_BCR_TX_BREAK_DISABLE | UARTDM_BCR_STALE_IRQ_EMPTY |
@@ -2539,7 +2555,7 @@ static int msm_hs_startup(struct uart_port *uport)
 			  "msm_hs_uart", msm_uport);
 	if (unlikely(ret)) {
 		pr_err("%s():Error getting uart irq\n", __func__);
-		goto sps_disconnect_rx;
+		//goto sps_disconnect_rx;
 	}
 
 
@@ -2551,6 +2567,7 @@ static int msm_hs_startup(struct uart_port *uport)
 	spin_unlock_irqrestore(&uport->lock, flags);
 
 	msm_hs_resource_unvote(msm_uport);
+	printk(" Leaving %s \n", __func__);
 	return 0;
 
 sps_disconnect_rx:
@@ -2878,6 +2895,7 @@ static int msm_hs_sps_init(struct msm_hs_port *msm_uport)
 							bam.virt_addr);
 
 		/* Register UART Peripheral BAM device to SPS driver */
+#if 0
 		rc = sps_register_bam_device(&bam, &bam_handle);
 		if (rc) {
 			pr_err("%s: BAM device register failed\n",
@@ -2886,7 +2904,16 @@ static int msm_hs_sps_init(struct msm_hs_port *msm_uport)
 		}
 		pr_debug("%s:BAM device registered. bam_handle=0x%lx",
 			   __func__, msm_uport->bam_handle);
+#endif 
+		pr_debug(" Skipping BAM device reg! \n");
+
 	}
+
+	//JRM instead we should consider using 
+	//   msm_request_tx_dma
+	//   msm_request_rx_dma
+	//
+#if 0
 	msm_uport->bam_handle = bam_handle;
 
 	rc = msm_hs_sps_init_ep_conn(msm_uport, &msm_uport->rx.prod,
@@ -2902,6 +2929,7 @@ static int msm_hs_sps_init(struct msm_hs_port *msm_uport)
 		pr_err("%s: Failed to Init Consumer BAM-pipe", __func__);
 		goto deinit_ep_conn_prod;
 	}
+#endif
 	return 0;
 
 deinit_ep_conn_prod:
@@ -3090,8 +3118,8 @@ static int msm_hs_runtime_resume(struct device *dev)
 }
 #else
 static void  msm_serial_hs_rt_init(struct uart_port *uport) {}
-static int msm_hs_runtime_suspend(struct device *dev) {}
-static int msm_hs_runtime_resume(struct device *dev) {}
+static int msm_hs_runtime_suspend(struct device *dev) { return 0; }
+static int msm_hs_runtime_resume(struct device *dev) { return 0; }
 #endif
 
 
@@ -3324,6 +3352,7 @@ printk(" %s: upIRQ=%u bamIRQ=%u wakeIRQ=%u \n",
 	}
 
 err_clock:
+	pr_err("Error setting clock \n");
 	msm_hs_clk_bus_unvote(msm_uport);
 
 destroy_mutex:
@@ -3350,6 +3379,7 @@ static int __init msm_serial_hs_init(void)
 {
 	int ret;
 
+printk(" Calling +++ %s +++ \n", __func__);
 	ret = uart_register_driver(&msm_hs_driver);
 	if (unlikely(ret)) {
 		pr_err("%s failed to load\n", __func__);
@@ -3367,7 +3397,7 @@ static int __init msm_serial_hs_init(void)
 		return ret;
 	}
 
-	pr_info("msm_serial_hs module loaded\n");
+	pr_info(" JRM msm_serial_hs module loaded\n");
 	return ret;
 }
 
@@ -3521,8 +3551,8 @@ static struct uart_ops msm_hs_ops = {
 	.ioctl = msm_hs_ioctl,
 };
 
-module_init(msm_serial_hs_init);
-module_exit(msm_serial_hs_exit);
+//module_init(msm_serial_hs_init);
+late_initcall(msm_serial_hs_init);
+//module_exit(msm_serial_hs_exit);
 MODULE_DESCRIPTION("High Speed UART Driver for the MSM chipset");
-MODULE_VERSION("1.2");
 MODULE_LICENSE("GPL v2");

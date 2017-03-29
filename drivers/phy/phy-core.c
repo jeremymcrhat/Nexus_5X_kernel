@@ -533,7 +533,7 @@ struct phy *phy_get(struct device *dev, const char *string)
 	struct phy *phy;
 
 	if (string == NULL) {
-		dev_WARN(dev, "missing string\n");
+		dev_err(dev, "missing string\n");
 		return ERR_PTR(-EINVAL);
 	}
 
@@ -594,6 +594,8 @@ struct phy *devm_phy_get(struct device *dev, const char *string)
 	ptr = devres_alloc(devm_phy_release, sizeof(*ptr), GFP_KERNEL);
 	if (!ptr)
 		return ERR_PTR(-ENOMEM);
+
+	printk(" %s getting [%s] \n", __func__, string);
 
 	phy = phy_get(dev, string);
 	if (!IS_ERR(phy)) {

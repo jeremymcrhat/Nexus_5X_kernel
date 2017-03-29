@@ -81,6 +81,17 @@
 		regulator-always-on;
 	};
 
+
+	bt_vreg: bt_vreg {
+                compatible = "regulator-fixed";
+                regulator-name = "bt_vreg";
+                startup-delay-us = <4000>;
+                enable-active-high;
+                gpio = <&msmgpio 9 GPIO_ACTIVE_LOW>;
+		regulator-always-on;  /* JRM XXX dont submit this line */
+		status = "okay";
+        };
+
 	soc {
 		#address-cells = <1>;
 		#size-cells = <1>;
@@ -207,59 +218,57 @@
 				<&clock_gcc GCC_BLSP1_AHB_CLK>;
 		};
 
-	dma_blsp2: dma-controller@f9944000 { /* BLSP2 */
-		compatible = "qcom,bam-v1.4.0";
-		reg = <0xf9944000 0x19000>;
-		interrupts = <0 239 0>;
-		clocks = <&clock_gcc GCC_BAM_DMA_AHB_CLK>;
-		clock-names = "bam_clk";
-		#dma-cells = <1>;
-		qcom,ee = <0>;
-	};
+		uart_bam: dma-controller@f9944000 { /* BLSP2 */
+			compatible = "qcom,bam-v1.4.0";
+			reg = <0xf9944000 0x19000>;
+			interrupts = <GIC_SPI 239 0>;
+			clocks = <&clock_gcc GCC_BAM_DMA_AHB_CLK>;
+			clock-names = "bam_clk";
+			#dma-cells = <4>;
+			qcom,ee = <0>;
+		};
 
 	/*** BAM on the 8992 is v1.6.2 but 1.4.0 compatible string should
 	still work */
 
-        blsp2_uart2: uart@f995e000 { /* BLSP2 UART2 */
-                compatible = "qcom,msm-hsuart-v14";
-                reg = <0xf995e000 0x1000>,
-                        <0xf9944000 0x19000>;
-                reg-names = "core_mem", "bam_mem";
-                interrupt-names = "core_irq", "bam_irq", "wakeup_irq";
-                #address-cells = <0>;
-                interrupt-parent = <&blsp2_uart2>;
-                interrupts = <GIC_SPI 1 2>;
-                #interrupt-cells = <1>;
-                interrupt-map-mask = <0xffffffff>;
-                interrupt-map = <0 &intc 0 114 0
-                                1 &intc 0 239 0
-                                2 &msmgpio 46 0>;
+	/* f995e000.uart: ttyHS0 at MMIO 0xf995e000 (irq = 146) is a MSM HS UART */
+        blsp2_uart2: serial@f995e000 {
+		compatible = "qcom,jrm-uartdm-v1.4", "qcom,jrm-uartdm";
+		/*compatible = "qcom,msm-hsuart-v14"; */
+                reg = <0xf995e000 0x1000>;
+                        /*<0xf9944000 0x19000>; */
+                reg-names = "core_mem"; /* "bam_mem"; */
+		qcom,inject-rx-on-wakeup;
+		qcom,rx-char-to-inject = <0xFD>;
+		qcom,bam-tx-ep-pipe-index = <2>;
+		qcom,bam-rx-ep-pipe-index = <3>;
+		qcom,master-id = <84>;
+	
+		interrupts = <GIC_SPI 146 IRQ_TYPE_LEVEL_LOW>;
 
-                qcom,inject-rx-on-wakeup;
-                qcom,rx-char-to-inject = <0xFD>;
+		/***
+				<GIC_SPI 271 IRQ_TYPE_LEVEL_LOW>,
+				<GIC_SPI 448 IRQ_TYPE_EDGE_FALLING>;
+		interrupt-names = "core_irq", "bam_irq", "wakeup_irq";
 
-                qcom,bam-tx-ep-pipe-index = <2>;
-                qcom,bam-rx-ep-pipe-index = <3>;
-                qcom,master-id = <84>;
                 clock-names = "core_clk", "iface_clk";
+		****/
+		clock-names = "core", "iface";
                 clocks = <&clock_gcc GCC_BLSP2_UART2_APPS_CLK>,
                         <&clock_gcc GCC_BLSP2_AHB_CLK>;
-                pinctrl-names = "sleep", "default";
-                pinctrl-0 = <&hsuart_sleep>;
-                pinctrl-1 = <&hsuart_active>;
 
-                qcom,msm-bus,name = "buart8";
-                qcom,msm-bus,num-cases = <2>;
-                qcom,msm-bus,num-paths = <1>;
-                qcom,msm-bus,vectors-KBps =
-                                <84 512 0 0>,
-                                <84 512 500 800>;
+		pinctrl-names = "sleep", "default";
+		pinctrl-0 = <&blsp2_uart2_sleep>;
+		pinctrl-1 = <&blsp2_uart2_default>;
+
+		dmas = <&uart_bam 3>, <&uart_bam 2>;
+		dma-names = "rx", "tx";
                 status = "okay";
         };
 
 	bt_qca6174 {
                 compatible = "qca,qca6174";
-                qca,bt-reset-gpio = <&pm8994_gpios 19 0>; /* BT_EN */
+                qca,bt-reset-gpio = <&msmgpio 19 GPIO_ACTIVE_HIGH>; /* BT_EN */
                 qca,bt-vdd-pa-supply = <&bt_vreg>;
                 qca,bt-vdd-io-supply = <&pm8994_s4>;
                 qca,bt-vdd-xtal-supply = <&pm8994_l30>;
@@ -543,5 +552,5 @@
 #include "msm8992-pins.dtsi"
 #include "msm8994-smd-rpm.dtsi"
 
-#include "msm-pm8994.dtsi"
+/*#include "msm-pm8994.dtsi"*/
 #include "msm-pmi8994.dtsi"

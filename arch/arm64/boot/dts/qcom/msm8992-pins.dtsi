@@ -36,6 +36,31 @@
 		};
 	};
 
+	blsp2_uart2_default: blsp2_uart2_default {
+		pinmux {
+			function = "blsp_uart8";
+			pins = "gpio45", "gpio46", "gpio47", "gpio48";
+		};
+		pinconf {
+			pins = "gpio45", "gpio46", "gpio47", "gpio48";
+			drive-strength = <16>;
+			bias-disable;
+		};
+	};
+
+	blsp2_uart2_sleep: blsp2_uart2_sleep {
+		pinmux {
+			function = "blsp_uart8";
+			pins = "gpio45", "gpio46", "gpio47", "gpio48";
+		};
+		pinconf {
+			pins = "gpio45", "gpio46", "gpio47", "gpio48";
+			drive-strength = <2>;
+			bias-disable;
+		};
+	};
+
+
 	/* 0-3 for sdc1 4-6 for sdc2 */
 	/* Order of pins */
 	/* SDC1: CLK -> 0, CMD -> 1, DATA -> 2, RCLK -> 3 */
@@ -95,30 +120,6 @@
 	sdc1_rclk_off: rclk-off {
 		bias-pull-down; /* pull down */
 	};
-
-
-	blsp2_uart2_active {
-		pins = "gpio45", "gpio46", "gpio47", "gpio48";
-		qcom,num-grp-pins = <4>;
-		qcom,pin-func = <2>;
-		label = "blsp2_uart2_active";
-		hsuart_active: default {
-			drive-strength = <16>;
-			bias-disable;
-		};
-	};
-
-	blsp2_uart2_sleep {
-		qcom,pins = "gpio45", "gpio46", "gpio47", "gpio48";
-		qcom,num-grp-pins = <4>;
-		qcom,pin-func = <0>;
-		label = "blsp2_uart2_sleep";
-		hsuart_sleep: sleep {
-			drive-strength = <2>;
-			bias-disable;
-		};
-	};
-
 
 
 	pcie0_clkreq_default: pcie0_clkreq_default {

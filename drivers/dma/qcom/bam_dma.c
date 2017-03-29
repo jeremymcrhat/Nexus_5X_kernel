@@ -412,6 +412,11 @@ static inline void __iomem *bam_addr(struct bam_device *bdev, u32 pipe,
 {
 	const struct reg_offset_data r = bdev->layout[reg];
 
+	unsigned long bam_addr = (unsigned long) bdev->regs + r.base_offset +
+				r.pipe_mult * pipe + r.evnt_mult * pipe + r.ee_mult * bdev->ee;
+
+	printk(" -->> Bam ADDR 0x%lx \n", (unsigned long) bam_addr);
+
 	return bdev->regs + r.base_offset +
 		r.pipe_mult * pipe +
 		r.evnt_mult * pipe +

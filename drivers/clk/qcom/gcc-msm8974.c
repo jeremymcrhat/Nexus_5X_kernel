@@ -1075,6 +1075,9 @@ static struct clk_branch gcc_bam_dma_ahb_clk = {
 	},
 };
 
+
+
+
 static struct clk_branch gcc_blsp1_ahb_clk = {
 	.halt_reg = 0x05c4,
 	.halt_check = BRANCH_HALT_VOTED,

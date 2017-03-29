@@ -422,7 +422,7 @@ static int bt_power_populate_dt_pinfo(struct platform_device *pdev)
 			return rc;
 
 	}
-
+printk(" %s setting up BLUETOOTH_POWER GPIO \n", __func__);
 	bt_power_pdata->bt_power_setup = bluetooth_power;
 
 	return 0;

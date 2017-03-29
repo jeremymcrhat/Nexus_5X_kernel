@@ -706,9 +706,12 @@ struct dma_chan *dma_request_chan(struct device *dev, const char *name)
 	struct dma_device *d, *_d;
 	struct dma_chan *chan = NULL;
 
+printk(" -%s- \n", __func__);
+
 	/* If device-tree is present get slave info from here */
-	if (dev->of_node)
+	if (dev->of_node) {
 		chan = of_dma_request_slave_channel(dev->of_node, name);
+	}
 
 	/* If device was enumerated by ACPI get slave info from here */
 	if (has_acpi_companion(dev) && !chan)
@@ -716,8 +719,10 @@ struct dma_chan *dma_request_chan(struct device *dev, const char *name)
 
 	if (chan) {
 		/* Valid channel found or requester need to be deferred */
-		if (!IS_ERR(chan) || PTR_ERR(chan) == -EPROBE_DEFER)
+		if (!IS_ERR(chan) || PTR_ERR(chan) == -EPROBE_DEFER) {
+			printk(" %s Valid channel or ptr err \n", __func__);
 			return chan;
+		}
 	}
 
 	/* Try to find the channel via the DMA filter map(s) */
@@ -738,6 +743,9 @@ struct dma_chan *dma_request_chan(struct device *dev, const char *name)
 	}
 	mutex_unlock(&dma_list_mutex);
 
+	if (IS_ERR(chan)) {
+		printk(" %s Error channel returning \n", __func__);
+	}
 	return chan ? chan : ERR_PTR(-EPROBE_DEFER);
 }
 EXPORT_SYMBOL_GPL(dma_request_chan);

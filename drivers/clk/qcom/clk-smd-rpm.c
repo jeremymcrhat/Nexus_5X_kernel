@@ -539,8 +539,8 @@ static const struct rpm_smd_clk_desc rpm_clk_msm8996 = {
 
 static const struct of_device_id rpm_smd_clk_match_table[] = {
 	{ .compatible = "qcom,rpmcc-msm8916", .data = &rpm_clk_msm8916 },
-	{ .compatible = "qcom,rpmcc-msm8996", .data = &rpm_clk_msm8996},
-	//{ .compatible = "qcom,rpmcc-msm8992", .data = &rpm_clk_msm8992 },
+	{ .compatible = "qcom,rpmcc-msm8996", .data = &rpm_clk_msm8996 },
+	{ .compatible = "qcom,rpmcc-msm8992", .data = &rpm_clk_msm8996 },
 	{ }
 };
 MODULE_DEVICE_TABLE(of, rpm_smd_clk_match_table);

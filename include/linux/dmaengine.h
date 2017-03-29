@@ -1316,6 +1316,8 @@ struct dma_chan *dma_request_chan_by_mask(const dma_cap_mask_t *mask);
 void dma_release_channel(struct dma_chan *chan);
 int dma_get_slave_caps(struct dma_chan *chan, struct dma_slave_caps *caps);
 #else
+
+#error " Error DMA Engine not enabled \n"
 static inline struct dma_chan *dma_find_channel(enum dma_transaction_type tx_type)
 {
 	return NULL;
