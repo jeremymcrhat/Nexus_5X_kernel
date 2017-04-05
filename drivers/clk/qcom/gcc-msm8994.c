@@ -802,6 +802,15 @@ static struct clk_rcg2 gp3_clk_src = {
 	},
 };
 
+/* See drivers/pci/host/pci-msm.c  downstream 
+static struct msm_pcie_clk_info_t
+        msm_pcie_clk_info[MAX_RC_NUM][MSM_PCIE_MAX_CLK] = {
+        {
+        {NULL, "pcie_0_ref_clk_src", 0, false},
+        {NULL, "pcie_0_aux_clk", 1010000, true},
+
+****/ 
+
 static struct freq_tbl ftbl_pcie_0_aux_clk_src[] = {
 	F(1011000, P_XO, 1, 1, 19),
 	{ }

@@ -22,6 +22,7 @@ struct clk *devm_clk_get(struct device *dev, const char *id)
 	if (!ptr)
 		return ERR_PTR(-ENOMEM);
 
+printk(" %s looking for id of %s \n", __func__, id);
 	clk = clk_get(dev, id);
 	if (!IS_ERR(clk)) {
 		*ptr = clk;

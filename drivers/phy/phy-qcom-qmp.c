@@ -890,32 +890,44 @@ static int qcom_qmp_phy_clk_init(struct device *dev)
 	struct qcom_qmp_phy *qphy = dev_get_drvdata(dev);
 	int ret;
 
+printk(" %s - getting aux clk \n", __func__);
+
 	qphy->aux_clk = devm_clk_get(dev, "aux");
 	if (IS_ERR(qphy->aux_clk)) {
+		printk(" %s error getting aux clock (%d)\n", __func__, ret);
 		ret = PTR_ERR(qphy->aux_clk);
 		if (ret != -EPROBE_DEFER)
 			dev_err(dev, "failed to get aux_clk\n");
 		return ret;
 	}
 
+
+printk(" %s - gettting config AHB \n", __func__);
+
 	qphy->cfg_ahb_clk = devm_clk_get(dev, "cfg_ahb");
 	if (IS_ERR(qphy->cfg_ahb_clk)) {
+		printk(" %s error getting cfg_ahb clock (%d)\n", __func__, ret);
 		ret = PTR_ERR(qphy->cfg_ahb_clk);
 		if (ret != -EPROBE_DEFER)
 			dev_err(dev, "failed to get cfg_ahb_clk\n");
 		return ret;
 	}
 
+printk(" %s - getting ref_clk_src \n", __func__);
 	qphy->ref_clk_src = devm_clk_get(dev, "ref_clk_src");
 	if (IS_ERR(qphy->ref_clk_src)) {
+		printk(" %s error getting ref_clk_src clock (%d) \n", __func__, ret);
 		ret = PTR_ERR(qphy->ref_clk_src);
 		if (ret != -EPROBE_DEFER)
 			dev_err(dev, "failed to get ref_clk_src\n");
 		return ret;
 	}
 
+printk(" %s - getting ref_clk \n", __func__);
+
 	qphy->ref_clk = devm_clk_get(dev, "ref_clk");
 	if (IS_ERR(qphy->ref_clk)) {
+		printk(" %s error getting ref_clk clock (%d) \n", __func__, ret);
 		ret = PTR_ERR(qphy->ref_clk);
 		if (ret != -EPROBE_DEFER)
 			dev_err(dev, "failed to get ref_clk\n");
@@ -976,6 +988,7 @@ static int qcom_qmp_phy_probe(struct platform_device *pdev)
 	int ret = 0;
 	int id;
 
+printk(" %s ---start--- \n", __func__);
 	qphy = devm_kzalloc(dev, sizeof(*qphy), GFP_KERNEL);
 	if (!qphy)
 		return -ENOMEM;
@@ -990,6 +1003,7 @@ static int qcom_qmp_phy_probe(struct platform_device *pdev)
 
 	/* per PHY serdes; usually located at base address */
 	qphy->serdes = base;
+printk(" %s serdes located at base \n", __func__);
 
 	mutex_init(&qphy->phy_mutex);
 
@@ -1003,11 +1017,15 @@ static int qcom_qmp_phy_probe(struct platform_device *pdev)
 		return ret;
 	}
 
+printk(" %s QMP phy reg init \n", __func__);
+
 	ret = qcom_qmp_phy_regulator_init(dev);
 	if (ret) {
 		dev_err(dev, "regulator init failed\n");
 		return ret;
 	}
+
+printk(" %s reset control get phy \n", __func__);
 
 	qphy->phy_rst = devm_reset_control_get(dev, "phy");
 	if (IS_ERR(qphy->phy_rst)) {
@@ -1015,12 +1033,15 @@ static int qcom_qmp_phy_probe(struct platform_device *pdev)
 		return PTR_ERR(qphy->phy_rst);
 	}
 
+printk(" %s reset control get phy \n", __func__);
+
 	qphy->phycom_rst = devm_reset_control_get(dev, "common");
 	if (IS_ERR(qphy->phycom_rst)) {
 		dev_err(dev, "failed to get phy common reset\n");
 		return PTR_ERR(qphy->phycom_rst);
 	}
 
+printk(" %s reset control get phy \n", __func__);
 	qphy->phycfg_rst = devm_reset_control_get(dev, "cfg");
 	if (IS_ERR(qphy->phycfg_rst)) {
 		dev_dbg(dev, "failed to get phy ahb cfg reset\n");
@@ -1032,6 +1053,7 @@ static int qcom_qmp_phy_probe(struct platform_device *pdev)
 	if (!qphy->phys)
 		return -ENOMEM;
 
+printk(" %s - Just before forloop \n", __func__);
 	for (id = 0; id < qphy->cfg->nlanes; id++) {
 		struct phy *generic_phy;
 		struct qmp_phy_desc *phy_desc;
@@ -1064,8 +1086,11 @@ static int qcom_qmp_phy_probe(struct platform_device *pdev)
 		}
 
 		phy_desc->tx = base + lane_offsets[0];
+		printk(" lane offset 0 == %d \n", (int) base + lane_offsets[0]);
 		phy_desc->rx = base + lane_offsets[1];
+		printk(" lane offset 1 == %d \n", (int) base + lane_offsets[1]);
 		phy_desc->pcs = base + lane_offsets[2];
+		printk(" lane offset 2 == %d \n", (int) base + lane_offsets[2]);
 
 		/*
 		 * Get PHY's Pipe clock, if any; USB3 and PCIe are PIPE3
@@ -1117,12 +1142,16 @@ static int qcom_qmp_phy_probe(struct platform_device *pdev)
 		qphy->phys[id] = phy_desc;
 	}
 
+	printk(" Done FOR loop \n");
+
+
 	phy_provider = devm_of_phy_provider_register(dev, qcom_qmp_phy_xlate);
 	if (IS_ERR(phy_provider)) {
 		ret = PTR_ERR(phy_provider);
 		dev_err(dev, "failed to register qphy %d\n", ret);
 	}
 
+	printk(" %s returning.... \n", __func__);
 	return ret;
 }
 
